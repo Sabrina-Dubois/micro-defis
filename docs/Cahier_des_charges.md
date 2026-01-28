@@ -1,4 +1,5 @@
-# 🔥 Cahier des charges — MicroDéfis (V1) — PWA Vue.js + Supabase
+# 🔥 Cahier des charges — MicroDéfis (V1)
+
 
 > **Version** : V1 (PWA)  
 > **Stack cible** : Vue.js + Supabase (Auth + DB)  
