@@ -1,0 +1,73 @@
+{
+  "profil": {
+    "member_since": "Member since "
+  },
+  "stats": {
+    "streak": "Streaks",
+    "completed": "Completed",
+    "best": "Record"
+  },
+  "level": {
+    "level": "Level",
+    "xp_next": "XP for level"
+  },
+  "badges": {
+    "title": "🏅 Unlock Badges",
+    "badges_first": "First streak",
+    "badges_3days": "3 days",
+    "badges_7days": "7 days",
+    "badges_30days": "30 days",
+    "badges_100": "100 streaks",
+    "badges_regular": "Regularity",
+    "badges_champion": "Champion"
+  },
+  "activity": {
+    "title": "📊 Activité 7 jours"
+  },
+  "premium": {
+    "title": "✨ Passer Premium"
+  },
+  "settings": {
+    "title": "Settings",
+    "profil": {
+      "title": "👤 Profil",
+      "username": "Username",
+      "email": "Email",
+      "save": "Save"
+    },
+    "preferences": {
+      "title": "⚙️ Préférences",
+      "notifications": "Notifications",
+      "reminder": "Reminder",
+      "language": "Language",
+      "theme": "Theme"
+    },
+    "about": {
+      "title": "ℹ️ About",
+      "help_center": "Help Center",
+      "terms": "Terms",
+      "privacy_policy": "Privacy",
+      "version": "Version"
+    },
+    "accout": {
+      "logout": " Logout",
+      "delete": "Delete my account"
+    }
+  },
+  "daily": {
+    "title": "Hi, ",
+    "challenge": "Today's Challenge",
+    "loading": "Loading…",
+    "todo": "To do",
+    "done": "Done!",
+    "share": "Share"
+  },
+  "calendar": {
+    "title": "Calendar",
+    "actual_serie": "Actual serie",
+    "days_completed": "Completed days",
+    "best_serie": "Best serie",
+    "completed_streak": "My completed streaks",
+    "weekdays": ["M", "T", "W", "T", "F", "S", "S"]
+  }
+}

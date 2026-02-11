@@ -1,0 +1,139 @@
+:root {
+  --bg-primary: #f8fafc;
+  --bg-secondary: rgba(255, 255, 255, 0.95);
+  --surface: rgba(255, 255, 255, 0.95);
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --border: rgba(255, 255, 255, 0.35);
+  --backdrop-blur: blur(10px);
+  --primary: #6d28d9;
+  --primary-soft: #eef2ff;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: rgba(15, 23, 42, 0.95);
+  --surface: rgba(15, 23, 42, 0.95);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border: rgba(248, 250, 252, 0.2);
+  --backdrop-blur: blur(15px);
+  --primary: #8b5cf6;
+  --primary-soft: #312e81;
+}
+body.share-mode .v-application {
+	background: #ffffff !important;
+} 
+
+html,
+body {
+  height: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+.v-application {
+  min-height: 100vh;
+  background: radial-gradient(800px 520px at 18% 12%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 55%),
+    radial-gradient(700px 500px at 82% 22%, rgba(87, 20, 20, 0.1) 0%, rgba(255, 255, 255, 0) 55%),
+    radial-gradient(900px 600px at 55% 95%, rgba(113, 223, 240, 0.55) 0%, rgba(168, 85, 247, 0) 55%),
+    linear-gradient(180deg, #9828d9 0%, #7251eb 32%, #3f1788 100%) !important;
+  position: relative;
+}
+
+.page {
+  padding: 20px;
+  padding-bottom: 96px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 36px !important;
+  color: #ffffff !important;
+  text-align: center !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+  font-weight: 600 !important;
+}
+
+.page-subtitle {
+  font-size: 20px !important;
+  margin-bottom: 5px !important;
+  font-weight: 900 !important;
+  color: var(--text-primary) !important;
+}
+
+.text-h6 {
+  font-weight: 700 !important;
+  margin-bottom: 12px;
+  color: var(--text-primary) !important;
+}
+
+.micro-card,
+.v-card {
+  border-radius: 24px !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  backdrop-filter: var(--backdrop-blur) !important;
+  padding: 18px;
+  color: var(--text-primary) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.v-list {
+  background: transparent !important;
+}
+
+.v-list-item {
+  color: var(--text-primary) !important;
+}
+
+.v-list-item-title,
+.v-btn__text {
+  color: var(--text-primary) !important;
+}
+
+.v-btn {
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+.v-text-field label,
+.v-text-field input {
+  color: var(--text-primary) !important;
+}
+
+.v-input__details {
+  color: var(--text-secondary) !important;
+}
+
+.v-switch__track,
+.v-switch__thumb {
+  color: var(--text-secondary) !important;
+}
+
+.btn-primary {
+  height: 48px;
+  font-weight: 800;
+  text-transform: none;
+  background: var(--primary-soft) !important;
+  color: var(--primary) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.v-btn.btn-success {
+  background-color: #22c55e !important;
+}
+
+.skeleton,
+[class*="skeleton-"],
+.loading {
+  display: none !important;
+}

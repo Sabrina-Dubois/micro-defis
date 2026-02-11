@@ -1,0 +1,73 @@
+{
+  "profil": {
+    "member_since": "Membre depuis",
+  "stats": {
+    "streak": "Défis",
+    "completed": "Validés",
+    "best": "Record"
+  },
+  "level":{
+    "title": "Niveau",
+    "xp_next": "XP pour niveau"
+  },
+  "badges": {
+    "title": "🏅 Badges débloqués",
+    "badges_first": "Premier défi",
+    "badges_3days": "3 jours",
+    "badges_7days": "7 jours",
+    "badges_30days": "30 jours",
+    "badges_100": "100 défis",
+    "badges_regular": "Régulier",
+    "badges_champion": "Champion"
+  },
+  "activity": {
+    "title": "📊 Activité 7 jours"
+  },
+  "premium": {
+    "title": "✨ Passer Premium"
+  }
+},
+  "settings": {
+    "title": "Paramètres",
+    "profil": {
+      "title": "👤 Profile",
+      "username": "Nom d'utilisateur",
+      "email": "Email",
+      "save": "Enregistrer"
+    },
+    "preferences": {
+      "title": "⚙️ Préférences",
+      "notifications": "Notifications",
+      "reminder": "Rappel",
+      "language": "Langue",
+      "theme": "Thème"
+    },
+    "about": {
+      "title": "ℹ️ A propos",
+      "help_center": "Centre d'aide",
+      "terms": "Conditions d'utilisation",
+      "privacy_policy": "Politique de confidentialité",
+      "version": "Version"
+    },
+    "account": {
+      "logout": " Déconnection",
+      "delete": "Supprimer account"
+    }
+  },
+  "daily": {
+    "title": "Bonjour, ",
+    "challenge": "Défi du jour",
+    "loading": "Chargement…",
+    "todo": "À faire",
+    "done": "Fait !",
+    "share": "Partager"
+  },
+  "calendar" : {
+    "title": "Calendrier",
+    "actual_serie": "Série acuelle",
+    "days_completed": "Jours validés",
+    "best_serie": "Meilleure série",
+    "completed_streak": "Mes défis réalisés",
+    "weekdays": ["L", "M", "M", "J", "V", "S", "D"]
+  }
+}

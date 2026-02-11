@@ -1,0 +1,61 @@
+import { createRouter, createWebHistory } from "vue-router";
+
+import Login from "../views/Login.vue";
+import AuthCallback from "../views/AuthCallback.vue";
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    { path: "/", redirect: "/daily" },
+
+    { path: "/login", name: "login", component: Login },
+    { path: "/auth/callback", component: AuthCallback },
+
+    {
+      path: "/daily",
+      name: "daily",
+      component: () => import("../views/DailyChallenge.vue"),
+      meta: { requiresAuth: true },
+    },
+    { path: "/share", name: "ShareStats", component: () => import("@/views/Share.vue")},
+    {
+      path: "/calendar",
+      name: "calendar",
+      component: () => import("../views/Calendar.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/profile",
+      name: "profile",
+      component: () => import("../views/Profile.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/settings",
+      name: "settings",
+      component: () => import("../views/Settings.vue"),
+      meta: { requiresAuth: true },
+    },
+    { path: "/premium", name: "premium", component: () => import("../views/Premium.vue") },
+    { path: "/help", name: "help", component: () => import("@/views/Help.vue") },
+    { path: "/terms", name: "terms", component: () => import("@/views/Terms.vue") },
+    { path: "/privacy", name: "privacy", component: () => import("@/views/Privacy.vue") },
+  ],
+});
+
+import { supabase } from "../lib/supabase";
+
+router.beforeEach(async (to) => {
+  const { data } = await supabase.auth.getSession();
+  const isAuthed = !!data.session;
+
+  if (to.path === "/login" && isAuthed) return "/daily";
+
+  if (to.meta.requiresAuth && !isAuthed) {
+    return { path: "/login", query: { redirect: to.fullPath } };
+  }
+
+  return true;
+});
+
+export default router;
