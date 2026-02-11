@@ -1,3 +1,14 @@
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Build & cache
+dist
+dist-ssr
+*.tsbuildinfo
+coverage
+
 # Logs
 logs
 *.log
@@ -7,24 +18,19 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-.DS_Store
-dist
-dist-ssr
-coverage
-*.local
 
-# Editor directories and files
+# Editor & OS
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
+.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-
-*.tsbuildinfo
+node_modules
+*.local
 
 .eslintcache
 
