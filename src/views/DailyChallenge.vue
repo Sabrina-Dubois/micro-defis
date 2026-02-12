@@ -49,7 +49,7 @@
 
 		<!-- Bouton PWA -->
 		
-		<PWAButton @click="console.log('PWA clicked')" />
+		<PWAButton />
 	</div>
 </template>
 
