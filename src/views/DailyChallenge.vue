@@ -4,6 +4,7 @@
 			<div class="page-title">{{ t("daily.title") }} {{ userName }}</div>
 		</div>
 
+		<!-- Carte du défi -->
 		<v-card class="micro-card pa-5">
 			<div class="page-subtitle">{{ t("daily.challenge") }}</div>
 
@@ -30,6 +31,7 @@
 			</v-btn>
 		</v-card>
 
+		<!-- Carte des flammes / partage -->
 		<v-card class="micro-card pa-5 mt-4">
 			<div class="share-visual">
 				<div
@@ -44,6 +46,10 @@
 				{{ t("daily.share") }}
 			</v-btn>
 		</v-card>
+
+		<!-- Bouton PWA -->
+		
+		<PWAButton @click="console.log('PWA clicked')" />
 	</div>
 </template>
 
@@ -51,6 +57,7 @@
 import { ref, onMounted } from "vue";
 import { supabase } from "@/lib/supabase";
 import { useI18n } from "vue-i18n";
+import PWAButton from "@/components/PWAButton.vue";
 
 const { t } = useI18n();
 
@@ -64,8 +71,12 @@ const isDone = ref(false);
 const flamesCount = ref(0);
 
 const shareRef = ref(null);
-const baseUrl = "";
 
+/* ===== PWA ===== */
+const deferredPrompt = ref(null);
+const pwaInstalled = ref(false);
+
+/* ===== Dates ===== */
 function todayISO() {
 	return new Date().toISOString().slice(0, 10);
 }
@@ -81,7 +92,6 @@ async function getUserOrThrow() {
 }
 
 async function getOrCreateDailyAssignment(userId, day) {
-	// 1) déjà assigné ?
 	const { data: existing, error: exErr } = await supabase
 		.from("daily_assignments")
 		.select("day, challenge_id")
@@ -92,7 +102,6 @@ async function getOrCreateDailyAssignment(userId, day) {
 	if (exErr) throw exErr;
 	if (existing) return existing;
 
-	// 2) pick random challenge actif
 	const { data: list, error: listErr } = await supabase
 		.from("challenges")
 		.select("id, title_fr, description_fr")
@@ -103,8 +112,6 @@ async function getOrCreateDailyAssignment(userId, day) {
 
 	const pick = list[Math.floor(Math.random() * list.length)];
 
-	// 3) insert assignation + retour de la ligne
-	// Supabase ne renvoie des lignes après insert que si tu ajoutes `.select()` [page:2]
 	const { data: created, error: insErr } = await supabase
 		.from("daily_assignments")
 		.insert({ user_id: userId, day, challenge_id: pick.id })
@@ -113,7 +120,6 @@ async function getOrCreateDailyAssignment(userId, day) {
 
 	if (insErr) throw insErr;
 
-	// On garde le défi “pick” en mémoire pour éviter une requête de plus
 	return { ...created, _picked: pick };
 }
 
@@ -129,7 +135,6 @@ async function getChallengeText(challengeId) {
 }
 
 async function calculateCurrentStreak(userId) {
-	// Récupère toutes les dates de completion, triées décroissant
 	const { data: completions, error } = await supabase
 		.from("daily_completions")
 		.select("day")
@@ -146,14 +151,10 @@ async function calculateCurrentStreak(userId) {
 	for (const comp of completions) {
 		if (comp.day === expectedDay) {
 			streak++;
-			// Jour précédent attendu
 			const d = new Date(expectedDay);
 			d.setDate(d.getDate() - 1);
 			expectedDay = d.toISOString().slice(0, 10);
-		} else {
-			// Trou détecté → arrêt
-			break;
-		}
+		} else break;
 	}
 
 	return streak;
@@ -168,7 +169,6 @@ async function loadScreen() {
 
 	try {
 		const user = await getUserOrThrow();
-
 		const { data: profile, error: profileErr } = await supabase
 			.from("user_profiles")
 			.select("username")
@@ -176,33 +176,26 @@ async function loadScreen() {
 			.maybeSingle();
 
 		if (profileErr) throw profileErr;
-
 		userName.value = profile.username;
 
 		const day = todayISO();
-
 		const a = await getOrCreateDailyAssignment(user.id, day);
 		assignment.value = a;
 
-		// Texte du défi
-		if (a._picked) {
+		if (a._picked)
 			challengeText.value = a._picked.description_fr || a._picked.title_fr;
-		} else {
-			challengeText.value = await getChallengeText(a.challenge_id);
-		}
+		else challengeText.value = await getChallengeText(a.challenge_id);
 
-		// isDone aujourd’hui ?
 		const { data: done, error: doneErr } = await supabase
 			.from("daily_completions")
 			.select("day")
 			.eq("user_id", user.id)
 			.eq("day", day)
-			.maybeSingle(); // 0 ou 1 ligne [page:1]
+			.maybeSingle();
 
 		if (doneErr) throw doneErr;
 		isDone.value = !!done;
 
-		// flamesCount = nombre total de validations (V1 simple)
 		flamesCount.value = await calculateCurrentStreak(user.id);
 	} catch (e) {
 		errorMsg.value = e?.message ?? String(e);
@@ -210,8 +203,6 @@ async function loadScreen() {
 		loading.value = false;
 	}
 }
-
-onMounted(loadScreen);
 
 /* =========================
    C) ACTIONS
@@ -239,14 +230,47 @@ async function markDone() {
 	}
 }
 
-async function onShareStory() {
-	await shareRef.value?.shareImage();
+function installPWA() {
+	if (!deferredPrompt.value) return;
+	deferredPrompt.value.prompt();
+	deferredPrompt.value.userChoice.then((choiceResult) => {
+		if (choiceResult.outcome === "accepted") {
+			pwaInstalled.value = true;
+			console.log("PWA installée ✅");
+		}
+		deferredPrompt.value = null;
+	});
 }
-</script>
 
+/* =========================
+   PWA EVENT LISTENERS
+   ========================= */
+onMounted(() => {
+	loadScreen();
+
+	window.addEventListener("beforeinstallprompt", (e) => {
+		e.preventDefault();
+		deferredPrompt.value = e;
+	});
+
+	window.addEventListener("appinstalled", () => {
+		pwaInstalled.value = true;
+	});
+});
+</script>
 
 <style scoped>
 .top {
 	margin: 6px 0 14px;
+}
+.pwa-btn {
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.pwa-btn-test {
+	position: fixed !important;
+	bottom: 110px !important;
+	right: 16px !important;
+	z-index: 1001 !important;
 }
 </style>
