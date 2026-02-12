@@ -29,14 +29,12 @@
 				<!-- iOS Safari -->
 				<v-card-text class="text-body-1 mb-6">
 					<strong>🍎 iPhone (Safari)</strong><br />
-					1. Partager ⏵️<br />
-					2. "Sur l'écran d'accueil"<br />
-					3. App installée !
+					1. **Haut écran** → icône ⏵️ (carré + flèche)⏵️<br />
+					2. "Ajouter à l'écran d'accueil"<br />
+					3. Nom app → "Ajouter"<br />
+					4. ✅ Icône sur écran d'accueil !
 				</v-card-text>
 
-				<div class="text-caption text-center mb-4" style="color: #64748b">
-					Fonctionne hors ligne + notifications 🚀
-				</div>
 
 				<v-card-actions>
 					<v-spacer />
