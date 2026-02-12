@@ -1,7 +1,7 @@
 {
   "name": "micro_defis",
   "short_name": "MicroDéfis",
-  "icons": [{ "src": "assets/images/microdefis-logo.png", "sizes": "192x192", "type": "image/png" }],
+  "icons": [{ "src": "/images/microdefis-logo.png", "sizes": "192x192", "type": "image/png" }],
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#9333ea",
