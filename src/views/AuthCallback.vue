@@ -5,7 +5,7 @@
 				indeterminate
 				color="primary"
 				:size="56"
-				:width="6"
+				:widxth="6"
 			/>
 			<div class="page-title" >
 				Connexion...
