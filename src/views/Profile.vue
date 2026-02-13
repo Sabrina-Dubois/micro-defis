@@ -27,7 +27,7 @@
 			</div>
 		</div>
 
-		<!-- Stats Rapides (grille 3 colonnes) -->
+		<!-- Stats Rapides -->
 		<StatsCards
 			:stats="[
 				{ icon: '🔥', value: currentStreak, label: t('profil.stats.streak') },

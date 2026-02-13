@@ -13,10 +13,12 @@
 		<!-- Boutons -->
 		<div class="share-buttons">
 			<v-btn block color="primary" @click="downloadImage">
-				Télécharger l’image
+				{{ t("share.download") }}
 			</v-btn>
 
-			<v-btn block color="secondary" @click="shareNow"> Partager </v-btn>
+			<v-btn block color="secondary" @click="shareNow">
+				{{ t("share.share") }}</v-btn
+			>
 		</div>
 
 		<div v-if="infoMsg" class="info-msg">
@@ -28,13 +30,15 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { supabase } from "@/lib/supabase";
+import { useI18n } from "vue-i18n";
 
+const { t, locale } = useI18n();
 const canvas = ref(null);
 const infoMsg = ref("");
 
 // Stats
-const userName = ref("Champion");
-const todayChallenge = ref("Mon défi du jour");
+const userName = ref(t("share.default_user"));
+const todayChallenge = ref(t("share.default_challenge"));
 const currentStreak = ref(0);
 const bestStreak = ref(0);
 const totalCompleted = ref(0);
@@ -52,7 +56,7 @@ onUnmounted(() => {
 async function loadStats() {
 	const { data: userData } = await supabase.auth.getUser();
 	if (!userData?.user) {
-		infoMsg.value = "Connecte-toi pour partager tes stats.";
+		infoMsg.value = t("share.login_required");
 		return;
 	}
 
@@ -64,7 +68,7 @@ async function loadStats() {
 		.eq("user_id", user.id)
 		.single();
 
-	userName.value = profile?.username || "Champion";
+	userName.value = profile?.username || t("share.default_user");
 
 	// Completions
 	const { data: completions } = await supabase
@@ -73,42 +77,45 @@ async function loadStats() {
 		.eq("user_id", user.id)
 		.order("day", { ascending: false });
 
-	if (completions){
-	totalCompleted.value = completions.length;
+	if (completions) {
+		totalCompleted.value = completions.length;
 
-	let streak = 0;
-	let expectedDay = new Date().toISOString().slice(0, 10);
+		let streak = 0;
+		let expectedDay = new Date().toISOString().slice(0, 10);
 
-	for (const c of completions) {
-		if (c.day === expectedDay) {
-			streak++;
-			const d = new Date(expectedDay);
-			d.setDate(d.getDate() - 1);
-			expectedDay = d.toISOString().slice(0, 10);
-		} else break;
+		for (const c of completions) {
+			if (c.day === expectedDay) {
+				streak++;
+				const d = new Date(expectedDay);
+				d.setDate(d.getDate() - 1);
+				expectedDay = d.toISOString().slice(0, 10);
+			} else break;
+		}
+
+		currentStreak.value = streak;
+		bestStreak.value = streak;
 	}
 
-	currentStreak.value = streak;
-	bestStreak.value = streak;
-}
-	
 	// Défi du jour (via daily_assignments → challenges)
 	const today = new Date().toISOString().slice(0, 10);
 
 	const { data: assignment } = await supabase
 		.from("daily_assignments")
-		.select(`
+		.select(
+			`
 			challenges (
-				title_fr
+				title_fr,
+				title_en
 			)
-		`)
+		`
+		)
 		.eq("user_id", user.id)
 		.eq("day", today)
 		.single();
 
 	todayChallenge.value =
-		assignment?.challenges?.title_fr ||
-		"Relève ton défi aujourd’hui";
+		assignment?.challenges?.[`title_${locale.value}`] ||
+		t("share.default_challenge");
 }
 
 /* ================= IMAGE ================= */
@@ -148,7 +155,7 @@ function generateImage() {
 
 	ctx.fillStyle = "#6d28d9";
 	ctx.font = "bold 60px Arial";
-	ctx.fillText("Défi du jour", w / 2, challengeY + 60);
+	ctx.fillText(t("share.day_challenge"), w / 2, challengeY + 60);
 
 	ctx.fillStyle = "#64748b";
 	ctx.font = "bold 70px Arial";
@@ -178,7 +185,7 @@ function generateImage() {
 
 	ctx.fillStyle = "#64748b";
 	ctx.font = "bold 46px Arial";
-	ctx.fillText("jours de série 🔥", w / 2, streakY + 280);
+	ctx.fillText(t("share.streak_label"), w / 2, streakY + 280);
 
 	/* ========== PETITES CARTES ========== */
 	const smallW = (w - 200) / 2;
@@ -197,7 +204,7 @@ function generateImage() {
 
 	ctx.fillStyle = "#64748b";
 	ctx.font = "bold 40px Arial";
-	ctx.fillText("🏆 Record", 80 + smallW / 2, smallY + 160);
+	ctx.fillText(t("share.record"), 80 + smallW / 2, smallY + 160);
 
 	// total validés
 	ctx.fillStyle = "#ffffff";
@@ -211,7 +218,7 @@ function generateImage() {
 
 	ctx.fillStyle = "#64748b";
 	ctx.font = "bold 40px Arial";
-	ctx.fillText("✅ Validés", 120 + smallW + smallW / 2, smallY + 160);
+	ctx.fillText(t("share.completed"), 120 + smallW + smallW / 2, smallY + 160);
 
 	/* ========== BOUTON ========== */
 	const btnX = w / 2 - 260;
@@ -226,12 +233,12 @@ function generateImage() {
 
 	ctx.fillStyle = "#6d28d9";
 	ctx.font = "bold 42px Arial";
-	ctx.fillText("Rejoins MicroDéfis", w / 2, btnY + 65);
+	ctx.fillText(t("share.cta"), w / 2, btnY + 65);
 
 	/* ========== URL ========== */
 	ctx.fillStyle = "#e9d5ff";
 	ctx.font = "bold 30px Arial";
-	ctx.fillText("microdefis.app", w / 2, 1240);
+	ctx.fillText(t("share.microdefis"), w / 2, 1240);
 }
 
 /* ================= HELPERS ================= */
@@ -274,17 +281,6 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
 	ctx.fillText(line, x, currentY);
 }
 
-// QR code simple (vers ton app)
-function drawQRCode(ctx, x, y, size) {
-	const qr = new Image();
-	qr.src =
-		"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://microdefis.app";
-
-	qr.onload = () => {
-		ctx.drawImage(qr, x, y, size, size);
-	};
-}
-
 /* ================= SHARE ================= */
 
 function downloadImage() {
@@ -297,7 +293,7 @@ function downloadImage() {
 		a.download = "microdefis-stats.png";
 		a.click();
 		URL.revokeObjectURL(url);
-		infoMsg.value = "Image téléchargée";
+		infoMsg.value = t("share.image_downloaded");
 	});
 }
 
@@ -313,9 +309,9 @@ async function shareNow() {
 			try {
 				await navigator.share({
 					files: [file],
-					title: "Mes stats MicroDéfis",
+					title: t("share.share_title"),
 				});
-				infoMsg.value = "Partagé";
+				infoMsg.value = t("share.shared");
 				return;
 			} catch {}
 		}

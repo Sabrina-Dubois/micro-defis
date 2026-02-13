@@ -5,12 +5,15 @@
 		</div>
 
 		<!-- Stats -->
-		
-			<StatsCards class="pa-4 mb-4" :stats="[
-  { icon: '🔥', value: currentStreak, label: t('calendar.actual_serie') },
-  { icon: '✅', value: totalDays, label: t('calendar.days_completed') },
-  { icon: '🏆', value: bestStreak, label: t('calendar.best_serie') }
-]" />
+
+		<StatsCards
+			class="pa-4 mb-4"
+			:stats="[
+				{ icon: '🔥', value: currentStreak, label: t('calendar.actual_serie') },
+				{ icon: '✅', value: totalDays, label: t('calendar.days_completed') },
+				{ icon: '🏆', value: bestStreak, label: t('calendar.best_serie') },
+			]"
+		/>
 
 		<!-- Calendrier manuel NON CLIQUABLE -->
 		<v-card class="micro-card pa-4">
@@ -201,7 +204,6 @@ async function calculateStreaks(completions) {
 	let expectedDay = today;
 
 	for (const comp of completions) {
-
 		if (comp.day === expectedDay) {
 			streak++;
 			const d = new Date(expectedDay);
@@ -237,7 +239,6 @@ async function calculateStreaks(completions) {
 }
 
 async function loadCalendar() {
-
 	try {
 		const { data, error } = await supabase.auth.getUser();
 

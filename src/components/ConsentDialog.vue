@@ -2,14 +2,14 @@
 <template>
 	<v-dialog v-model="show" persistent max-width="500">
 		<v-card class="pa-6">
-			<v-card-title class="text-h5">🚀 Bienvenue sur MicroDéfis !</v-card-title>
+			<v-card-title class="text-h5">{{ t("consent.title") }}</v-card-title>
 			<v-card-text>
-				<p>Avant de commencer, vous devez accepter :</p>
+				<p>{{ t("consent.intro") }}</p>
 				<ul class="mt-2">
-					<li><a href="/terms" target="_blank">Conditions d'utilisation</a></li>
+					<li><a href="/terms" target="_blank">{{ t("consent.cgu") }}</a></li>
 					<li>
 						<a href="/privacy" target="_blank"
-							>Politique de confidentialité (RGPD)</a
+							>{{ t("consent.privacy") }}</a
 						>
 					</li>
 				</ul>
@@ -32,7 +32,7 @@
 					class="btn-primary mt-4"
 					:disabled="!acceptCgu || !acceptPrivacy" 
 					@click="acceptConsent" >
-					Commencer
+					{{ t("consent.start") }}
 			</v-btn>
 			</v-card-actions>
 		</v-card>
@@ -58,7 +58,6 @@ function acceptConsent() {
 </script>
 
 <style>
-/* Fond assombri derrière la popup */
 .consent-dialog :deep(.v-overlay__scrim) {
 	background: rgba(0, 0, 0, 0.6);
 }
@@ -73,7 +72,6 @@ a:hover {
 	text-decoration: underline;
 }
 
-/* Petit confort visuel */
 ul {
 	padding-left: 18px;
 }

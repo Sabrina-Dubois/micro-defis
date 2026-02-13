@@ -1,32 +1,56 @@
 {
+  "consent": {
+    "title": "🚀 Bienvenue sur MicroDéfis !",
+    "intro": "Avant de commencer, vous devez accepter :",
+    "cgu": "J'accepte les Conditions d'utilisation",
+    "privacy": "J'accepte la Politique de confidentialité (RGPD)",
+    "start": "Commencer"
+  },
+  "auth": {
+    "login_title": "Connexion",
+    "subtitle": "Garde tes flammes synchronisées partout",
+    "email_placeholder": "Email",
+    "password_placeholder": "Mot de passe",
+    "continue": "Continuer",
+    "login_google": "Google",
+    "login_apple": "Apple"
+  },
+  "login": {
+    "title": "🔥 MicroChallenges",
+    "login": "Login",
+    "email": "Email",
+    "info": "No password. We send you a login link by email.",
+    "link": "Send link",
+    "sent": "Link sent. Check your email."
+  },
   "profil": {
     "member_since": "Membre depuis",
-  "stats": {
-    "streak": "Défis",
-    "completed": "Validés",
-    "best": "Record"
+    "stats": {
+      "streak": "Défis",
+      "completed": "Validés",
+      "best": "Record"
+    },
+    "level": {
+      "title": "Niveau",
+      "xp_next": "XP pour niveau"
+    },
+    "badges": {
+      "title": "🏅 Badges débloqués",
+      "badges_first": "Premier défi",
+      "badges_3days": "3 jours",
+      "badges_7days": "7 jours",
+      "badges_30days": "30 jours",
+      "badges_100": "100 défis",
+      "badges_regular": "Régulier",
+      "badges_champion": "Champion"
+    },
+    "activity": {
+      "title": "📊 Activité 7 jours"
+    },
+    "premium": {
+      "title": "✨ Passer Premium"
+    }
   },
-  "level":{
-    "title": "Niveau",
-    "xp_next": "XP pour niveau"
-  },
-  "badges": {
-    "title": "🏅 Badges débloqués",
-    "badges_first": "Premier défi",
-    "badges_3days": "3 jours",
-    "badges_7days": "7 jours",
-    "badges_30days": "30 jours",
-    "badges_100": "100 défis",
-    "badges_regular": "Régulier",
-    "badges_champion": "Champion"
-  },
-  "activity": {
-    "title": "📊 Activité 7 jours"
-  },
-  "premium": {
-    "title": "✨ Passer Premium"
-  }
-},
   "settings": {
     "title": "Paramètres",
     "profil": {
@@ -62,12 +86,146 @@
     "done": "Fait !",
     "share": "Partager"
   },
-  "calendar" : {
+  "calendar": {
     "title": "Calendrier",
     "actual_serie": "Série acuelle",
     "days_completed": "Jours validés",
     "best_serie": "Meilleure série",
     "completed_streak": "Mes défis réalisés",
     "weekdays": ["L", "M", "M", "J", "V", "S", "D"]
+  },
+  "share": {
+    "download": "Télécharger l’image",
+    "share": "Partager",
+    "login_required": "Connecte-toi pour partager tes stats.",
+    "default_user": "Champion",
+    "default_challenge": "Relève ton défi aujourd’hui",
+    "day_challenge": "Défi du jour",
+    "image_downloaded": "Image téléchargée",
+    "shared": "Partagé",
+    "share_title": "Mes stats MicroDéfis",
+    "streak_label": "jours de série 🔥",
+    "record": "🏆 Record",
+    "completed": "✅ Validés",
+    "cta": "Rejoins MicroDéfis",
+    "microdefis": "microdefis.app"
+  },
+  "help": {
+    "title": "💡 Centre d'aide",
+    "search": {
+      "title": "🔍 Recherche rapide",
+      "placeholder": "streak, valider, progression..."
+    },
+    "faq_title": "❓ FAQ MicroDéfis",
+    "faqs": [
+      {
+        "question": "Comment commencer les défis ?",
+        "answer": "Ouvrez le défi → Complétez → \"Valider\" (option : photo preuve). Streak mis à jour instant !"
+      },
+      {
+        "question": "Comment valider un défi ?",
+        "answer": "Défi ouvert → Faites-le → Bouton \"✓ Validé\" en bas. Progression + streak mis à jour instantanément."
+      },
+      {
+        "question": "C'est quoi mon streak ?",
+        "answer": "Série défis validés consécutivement. Ex: 7j = streak 7. Perdu si 1 jour manqué."
+      },
+      {
+        "question": "Où voir ma progression ?",
+        "answer": "Menu bas → Profil/Stats : liste défis faits, streak actuel, total validés, graph simple."
+      },
+      {
+        "question": "J'ai pas reçu le lien signup ?",
+        "answer": "Vérifiez spam/promos. Demandez nouveau via bouton \"Recommencer\" ou support@microdefis.com."
+      },
+      {
+        "question": "Partager mes stats ?",
+        "answer": "Profil → Bouton \"Partager\" → Image streak prête (copie/Whatsapp). Anonyme."
+      },
+      {
+        "question": "Notifications/rappels ?",
+        "answer": "Activez push notifications (premier lancement). Rappels quotidiens streak."
+      },
+      {
+        "question": "Changer langue ?",
+        "answer": "Paramètres → \"Langue\" → Choix Français/English. Reboot app pour appliquer."
+      },
+      {
+        "question": "Problème technique ?",
+        "answer": "1. Refresh page. 2. Videz cache (Paramètres navigateur). 3. Support support@microdefis.com + : App version ? Navigateur ? Screenshot ? Étape exacte ?"
+      },
+      {
+        "question": "Données personnelles ?",
+        "answer": "Email + progression stockés (RGPD). Voir /privacy. Demandez suppression."
+      },
+      {
+        "question": "Notifications ne marchent pas ?",
+        "answer": "Paramètres → \"Notifications\" → Activez push. Vérifiez permissions app (iOS/Android)."
+      },
+      {
+        "question": "Supprimer mon compte ?",
+        "answer": "Paramètres → \"Supprimer compte\" → Confirmez email. Données effacées 30j (RGPD)."
+      },
+      {
+        "question": "Partager mon streak ?",
+        "answer": "Profil → \"Partager\" → Image prête (Twitter/Insta/WhatsApp). Anonyme par défaut."
+      },
+      {
+        "question": "Activer mode sombre ?",
+        "answer": "Paramètres → Apparence → \"Mode sombre\" (auto/système/manuel)."
+      }
+    ],
+    "support": {
+      "title": "🆘 Support",
+      "email": "support@microdefis.com",
+      "subtitle": "Réponse < 24h (dites version app + bug)"
+    }
+  },
+  "privacy": {
+    "title": "🔒 Politique de Confidentialité de MicroDéfis",
+
+    "intro_title": "1. Introduction",
+    "intro_tex1": "L'Équipe de développement de MicroDéfis (Sabrina Dubois, France ; contact : contact@microdefis.fr) s'engage à protéger vos données personnelles conformément au RGPD (Règlement UE 2016/679).",
+    "intro_text2": "Cette politique explique comment nous collectons, utilisons et protégeons vos données dans l'app MicroDéfis. Date : 1er février 2026.",
+    "data_title": "2. Données collectées",
+    "data_intro": "Nous collectons uniquement les données nécessaires :",
+    "data_identity": "Identité : nom/prénom (optionnel), email (requis pour le compte).",
+    "data_technical": "Technique : progression des défis, streaks, ID appareil, IP anonymisée.",
+    "data_usage": "Usage : notifications lues, préférences (opt-in).",
+    "data_sensitive": "Aucune donnée sensible (santé, etc.).",
+
+    "legal_title": "3. Bases légales et utilisations",
+    "legal_intro": "Bases RGPD :",
+    "legal_consent": "Consentement (notifications, cookies).",
+    "legal_contract": "Exécution du contrat (gestion du compte, défis).",
+    "legal_interest": "Intérêt légitime (amélioration de l’app, sécurité).",
+    "legal_usage": "Utilisations : gestion du compte, suivi des défis et streaks, notifications, analytics anonymes, support.",
+
+    "share_title": "4. Partage et destinataires",
+    "share_intro": "Pas de vente ni partage commercial. Destinataires limités :",
+    "share_host": "Hébergeurs (UE, contrat DPA).",
+    "share_analytics": "Analytics anonymisés.",
+    "share_legal": "Autorités légales sur réquisition.",
+
+    "retention_title": "5. Conservation des données",
+    "retention_text": "Compte actif : durée d’utilisation + 1 an. Compte supprimé : 30 jours (sauf obligations légales : 5 ans fiscal). Logs de sécurité : 6 mois.",
+
+    "security_title": "6. Sécurité des données",
+    "security_text": "Mesures : chiffrement HTTPS, stockage sécurisé, accès restreint. Notification de violation sous 72h en cas de risque élevé.",
+
+    "cookies_title": "7. Cookies et technologies similaires",
+    "cookies_text": "Cookies essentiels pour session et sécurité. Analytics anonymes avec consentement. Pas de trackers publicitaires.",
+
+    "rights_title": "8. Vos droits RGPD",
+    "rights_text": "Accès, rectification, opposition, portabilité, droit à l’oubli et limitation. Via paramètres de l’app ou email contact@microdefis.fr (réponse sous 1 mois). Réclamation possible auprès de la CNIL.",
+
+    "transfer_title": "9. Transferts hors UE",
+    "transfer_text": "Aucun transfert hors UE sauf outils certifiés avec garanties contractuelles. Serveurs situés en UE.",
+
+    "changes_title": "10. Modifications",
+    "changes_text": "Les mises à jour seront notifiées dans l’app ou par email. La poursuite de l’utilisation vaut acceptation.",
+
+    "contact_title": "11. Contact",
+    "contact_text": "Contact : contact@microdefis.fr"
   }
 }

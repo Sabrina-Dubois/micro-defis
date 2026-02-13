@@ -15,9 +15,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue"; // ✅ IMPORT
+import { ref } from "vue";
 
-const isPremium = ref(false); // ✅ DANS setup
+const isPremium = ref(false);
 
 const goPremium = () => {
 	// ✅ FONCTION setup

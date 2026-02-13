@@ -1,4 +1,28 @@
 {
+  "consent": {
+    "title": "🚀 Welcome to MicroDéfis!",
+    "intro": "Before getting started, you must accept:",
+    "cgu": "I accept the Terms of Use",
+    "privacy": "I accept the Privacy Policy (GDPR)",
+    "start": "Start"
+  },
+  "auth": {
+    "login_title": "Login",
+    "subtitle": "Keep your flames synced everywhere",
+    "email_placeholder": "Email",
+    "password_placeholder": "Password",
+    "continue": "Continue",
+    "login_google": "Google",
+    "login_apple": "Apple"
+  },
+  "login": {
+    "title": "🔥 MicroDéfis",
+    "login": "Connexion",
+    "email": "Email",
+    "info": "Pas de mot de passe. On t’envoie un lien de connexion par email.",
+    "link": "Recevoir un lien",
+    "sent": "Lien envoyé. Regarde tes emails."
+  },
   "profil": {
     "member_since": "Member since "
   },
@@ -69,5 +93,139 @@
     "best_serie": "Best serie",
     "completed_streak": "My completed streaks",
     "weekdays": ["M", "T", "W", "T", "F", "S", "S"]
+  },
+  "share": {
+    "download": "Download image",
+    "share": "Share",
+    "login_required": "Log in to share your stats.",
+    "default_user": "Champion",
+    "default_challenge": "Take on your challenge today",
+    "day_challenge": "Day challenge",
+    "image_downloaded": "Image downloaded",
+    "shared": "Shared",
+    "share_title": "My MicroChallenges stats",
+    "streak_label": "day streak 🔥",
+    "record": "🏆 Record",
+    "completed": "✅ Completed",
+    "cta": "Join MicroChallenges",
+    "microdefis": "microdefis.app"
+  },
+  "help": {
+    "title": "💡 Help Center",
+    "search": {
+      "title": "🔍 Quick Search",
+      "placeholder": "streak, validate, progress..."
+    },
+    "faq_title": "❓ MicroChallenges FAQ",
+    "faqs": [
+      {
+        "question": "How to start challenges?",
+        "answer": "Open the challenge → Complete it → \"Validate\" (option: photo proof). Streak updates instantly!"
+      },
+      {
+        "question": "How to validate a challenge?",
+        "answer": "Open the challenge → Do it → \"✓ Validated\" button at the bottom. Progress + streak updates instantly."
+      },
+      {
+        "question": "What is my streak?",
+        "answer": "Series of consecutive completed challenges. Ex: 7d = streak 7. Lost if 1 day missed."
+      },
+      {
+        "question": "Where to see my progress?",
+        "answer": "Bottom menu → Profile/Stats: list of completed challenges, current streak, total completed, simple graph."
+      },
+      {
+        "question": "Didn't receive signup link?",
+        "answer": "Check spam/promotions. Request new one via \"Restart\" button or support@microdefis.com."
+      },
+      {
+        "question": "Share my stats?",
+        "answer": "Profile → \"Share\" button → Streak image ready (copy/Whatsapp). Anonymous."
+      },
+      {
+        "question": "Notifications/reminders?",
+        "answer": "Enable push notifications (first launch). Daily streak reminders."
+      },
+      {
+        "question": "Change language?",
+        "answer": "Settings → \"Language\" → Choose French/English. Restart app to apply."
+      },
+      {
+        "question": "Technical issue?",
+        "answer": "1. Refresh page. 2. Clear cache (browser settings). 3. Contact support@microdefis.com +: App version? Browser? Screenshot? Exact step?"
+      },
+      {
+        "question": "Personal data?",
+        "answer": "Email + progress stored (GDPR). See /privacy. Request deletion."
+      },
+      {
+        "question": "Notifications not working?",
+        "answer": "Settings → \"Notifications\" → Enable push. Check app permissions (iOS/Android)."
+      },
+      {
+        "question": "Delete my account?",
+        "answer": "Settings → \"Delete account\" → Confirm email. Data erased in 30d (GDPR)."
+      },
+      {
+        "question": "Share my streak?",
+        "answer": "Profile → \"Share\" → Image ready (Twitter/Insta/WhatsApp). Anonymous by default."
+      },
+      {
+        "question": "Enable dark mode?",
+        "answer": "Settings → Appearance → \"Dark mode\" (auto/system/manual)."
+      }
+    ],
+    "support": {
+      "title": "🆘 Support",
+      "email": "support@microdefis.com",
+      "subtitle": "Response < 24h (mention app version + bug)"
+    }
+  },
+  "privacy": {
+    "title": "🔒 MicroChallenges Privacy Policy",
+
+    "intro_title": "1. Introduction",
+    "intro_text1": "The MicroChallenges development team (Sabrina Dubois, France; contact: contact@microdefis.fr) is committed to protecting your personal data in accordance with GDPR (EU Regulation 2016/679).",
+    "intro_text2": "This policy explains how we collect, use, and protect your data in the MicroChallenges app. Date: February 1, 2026.",
+    "data_title": "2. Data collected",
+    "data_intro": "We only collect necessary data:",
+    "data_identity": "Identity: name (optional), email (required for account).",
+    "data_technical": "Technical: challenge progress, streaks, device ID, anonymized IP.",
+    "data_usage": "Usage: read notifications, preferences (opt-in).",
+    "data_sensitive": "No sensitive data (health, etc.).",
+
+    "legal_title": "3. Legal bases and uses",
+    "legal_intro": "GDPR bases:",
+    "legal_consent": "Consent (notifications, cookies).",
+    "legal_contract": "Contract execution (account, challenges).",
+    "legal_interest": "Legitimate interest (app improvement, security).",
+    "legal_usage": "Uses: account management, challenge tracking, notifications, anonymous analytics, support.",
+
+    "share_title": "4. Sharing and recipients",
+    "share_intro": "No sale or commercial sharing. Limited recipients:",
+    "share_host": "Hosting providers (EU, DPA contract).",
+    "share_analytics": "Anonymous analytics.",
+    "share_legal": "Legal authorities when required.",
+
+    "retention_title": "5. Data retention",
+    "retention_text": "Active account: duration of use + 1 year. Deleted account: 30 days (except legal obligations: 5 years). Security logs: 6 months.",
+
+    "security_title": "6. Data security",
+    "security_text": "Measures: HTTPS encryption, secure storage, restricted access. Breach notification within 72 hours if high risk.",
+
+    "cookies_title": "7. Cookies and similar technologies",
+    "cookies_text": "Essential cookies for session and security. Anonymous analytics with consent. No advertising trackers.",
+
+    "rights_title": "8. Your GDPR rights",
+    "rights_text": "Access, rectification, objection, portability, right to erasure, and restriction. Via app settings or email contact@microdefis.fr (response within 1 month). Complaint possible with your data protection authority.",
+
+    "transfer_title": "9. Transfers outside the EU",
+    "transfer_text": "No transfers outside the EU except certified tools with contractual safeguards. Servers located in the EU.",
+
+    "changes_title": "10. Changes",
+    "changes_text": "Updates will be notified via app or email. Continued use implies acceptance.",
+
+    "contact_title": "11. Contact",
+    "contact_text": "Contact: contact@microdefis.fr"
   }
 }

@@ -1,18 +1,18 @@
 <template>
 	<div>
 		<div class="header">
-			<div class="page-title">🔥 MicroDéfis</div>
+			<div class="page-title">{{ t("login.title") }}</div>
 		</div>
 
 		<v-card class="micro-card pa-6">
 			<div style="font-weight: 900; font-size: 18px; margin-bottom: 10px">
-				Connexion
+				{{ t("login.login") }}
 			</div>
 
 			<v-card-text class="pa-0">
 				<v-text-field
 					v-model="email"
-					label="Email"
+					label="t('login.email')"
 					type="email"
 					prepend-inner-icon="mdi-email-outline"
 				/>
@@ -25,7 +25,7 @@
 						margin-top: -6px;
 					"
 				>
-					Pas de mot de passe. On t’envoie un lien de connexion par email.
+					{{ t("login.info") }}
 				</div>
 
 				<v-btn
@@ -34,11 +34,11 @@
 					:loading="loading"
 					@click="sendLink"
 				>
-					Recevoir un lien
+					{{ t("login.link") }}
 				</v-btn>
 
 				<div v-if="sent" class="mt-3" style="color: #16a34a; font-weight: 800">
-					Lien envoyé. Regarde tes emails.
+					{{ t("login.sent") }}
 				</div>
 
 				<div v-if="error" class="mt-3" style="color: #ef4444; font-weight: 800">
@@ -52,7 +52,9 @@
 <script setup>
 import { ref } from "vue";
 import { supabase } from "../lib/supabase";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const email = ref("");
 const loading = ref(false);
 const sent = ref(false);
