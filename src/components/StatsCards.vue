@@ -20,7 +20,6 @@ const props = defineProps({
     type: Array,
     required: true,
     default: () => [],
-    // Chaque stat = { icon: "🔥", value: 0, label: "Streak" }
   },
 });
 </script>

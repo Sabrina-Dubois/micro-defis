@@ -20,7 +20,6 @@ import { ref } from "vue";
 const isPremium = ref(false);
 
 const goPremium = () => {
-	// ✅ FONCTION setup
 	window.open("https://sumup.com/ton-lien", "_blank");
 };
 </script>

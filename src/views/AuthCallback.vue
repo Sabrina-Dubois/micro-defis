@@ -8,7 +8,7 @@
 				:widxth="6"
 			/>
 			<div class="page-title" >
-				Connexion...
+				{{ t("authCallBack.connexion") }}
 			</div>
 			<div
 				style="
@@ -18,7 +18,7 @@
 					margin-top: 6px;
 				"
 			>
-				On finalise ton accès.
+				{{ t("authCallBack.access") }}
 			</div>
 		</div>
 	</v-container>

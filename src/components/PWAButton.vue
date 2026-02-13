@@ -9,37 +9,38 @@
 		>
 			<v-icon color="white" size="28">mdi-cellphone</v-icon>
 		</v-btn>
-		<div class="hint-text">App mobile</div>
+		<div class="hint-text">{{ t("pwa.button") }}</div>
 
-		<!-- ✅ POPUP INSTRUCTIONS DÉTAILLÉES -->
+		<!-- POPUP INSTRUCTIONS -->
 		<v-dialog v-model="showDialog" max-width="420" persistent>
 			<v-card class="pa-6 install-card">
 				<v-card-title class="text-h5 orange--text text-center mb-4">
-					📱 Installer l'app
+					{{ t("pwa.dialog.title") }}
 				</v-card-title>
 
 				<!-- Chrome Android -->
 				<v-card-text class="text-body-1 mb-6">
-					<strong>📱 Android (Chrome)</strong><br />
-					1. Cliquez ⋮ (3 points)<br />
-					2. "Ajouter à l'écran d'accueil"<br />
-					3. Ouvrez comme app !
+					<strong>{{ t("pwa.dialog.android.title") }}</strong
+					><br />
+					{{ t("pwa.dialog.android.step1") }}<br />
+					{{ t("pwa.dialog.android.step2") }}<br />
+					{{ t("pwa.dialog.android.step3") }}
 				</v-card-text>
 
 				<!-- iOS Safari -->
 				<v-card-text class="text-body-1 mb-6">
-					<strong>🍎 iPhone (Safari)</strong><br />
-					1. **Haut écran** → icône ⏵️ (carré + flèche)⏵️<br />
-					2. "Ajouter à l'écran d'accueil"<br />
-					3. Nom app → "Ajouter"<br />
-					4. ✅ Icône sur écran d'accueil !
+					<strong>{{ t("pwa.dialog.ios.title") }}</strong
+					><br />
+					{{ t("pwa.dialog.ios.step1") }}<br />
+					{{ t("pwa.dialog.ios.step2") }}<br />
+					{{ t("pwa.dialog.ios.step3") }}<br />
+					{{ t("pwa.dialog.ios.step4") }}
 				</v-card-text>
-
 
 				<v-card-actions>
 					<v-spacer />
 					<v-btn
-						color="primary"
+						class="btn-primary mt-4"
 						rounded
 						@click="
 							showDialog = false;
@@ -47,7 +48,7 @@
 						"
 						block
 					>
-						J'installe 👍
+						{{ t("pwa.dialog.install_button") }}
 					</v-btn>
 				</v-card-actions>
 			</v-card>
@@ -60,7 +61,6 @@ import { ref } from "vue";
 const showDialog = ref(false);
 
 const trackInstall = () => {
-	// Track Analytics (optionnel)
 	console.log("User clicked install");
 	localStorage.setItem("pwa-shown", "true");
 };

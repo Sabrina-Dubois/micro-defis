@@ -6,6 +6,10 @@
     "privacy": "J'accepte la Politique de confidentialité (RGPD)",
     "start": "Commencer"
   },
+  "authCallBack": {
+    "connexion": "Connexion ...",
+    "access": "On finalise ton accès."
+  },
   "auth": {
     "login_title": "Connexion",
     "subtitle": "Garde tes flammes synchronisées partout",
@@ -109,6 +113,57 @@
     "completed": "✅ Validés",
     "cta": "Rejoins MicroDéfis",
     "microdefis": "microdefis.app"
+  },
+  "terms": {
+    "title": "📄 Conditions d'utilisation de Micro Défis",
+    "intro": {
+      "title": "1. Introduction et Acceptation",
+      "content": "MicroDéfis est une application gratuite de défis personnels développée par l'équipe de Sabrina Dubois (ci-après \"nous\", \"nos\" ou \"l'Équipe\"). En créant un compte ou en utilisant l'application, vous acceptez pleinement ces Conditions Générales d'Utilisation (CGU). Si vous n'êtes pas d'accord, ne l'utilisez pas. Date de dernière mise à jour : 1er février 2026."
+    },
+    "account": {
+      "title": "2. Création et Gestion du Compte",
+      "content": "Vous devez avoir au moins 18 ans ou l'accord parental pour créer un compte. Vous êtes seul responsable de la confidentialité de vos identifiants (email et mot de passe). Informez-nous immédiatement de toute utilisation non autorisée. Nous pouvons suspendre ou supprimer un compte en cas de violation des présentes conditions."
+    },
+    "usage": {
+      "title": "3. Utilisation de l'Application et des Défis",
+      "content": "L'application est destinée à un usage personnel et non commercial. Vous pouvez relever les défis proposés, mais toute triche ou contournement des règles (par exemple utilisation de bots ou partage frauduleux) entraînera une suspension immédiate. Vous devez respecter les autres utilisateurs et ne publier aucun contenu illégal ou harcelant."
+    },
+    "forbidden": {
+      "title": "4. Utilisations Interdites",
+      "content": "Il est interdit de procéder à du reverse engineering, de la décompilation, de la diffusion massive non autorisée, d'utiliser des logiciels malveillants ou toute action nuisant au bon fonctionnement de l'application. L'application est gratuite ; toute tentative de monétisation sans autorisation écrite est interdite."
+    },
+    "ip": {
+      "title": "5. Propriété Intellectuelle",
+      "content": "L'application, les logos, les défis, les icônes et tous les contenus sont notre propriété exclusive et protégés par les droits d'auteur et le droit des marques. Un usage personnel est autorisé. Toute reproduction, modification ou distribution sans autorisation écrite est strictement interdite."
+    },
+    "data": {
+      "title": "6. Données Personnelles et RGPD",
+      "content": "Vos données personnelles (email, progression, statistiques) sont traitées uniquement pour le fonctionnement de l'application. Responsable du traitement : Sabrina Dubois (contact@microdefis).",
+      "content1": "Consultez notre",
+      "content2": "Politique de Confidentialité",
+      "content3": "pour plus de détails sur la collecte et l'utilisation de vos données.",
+      "content4": "Vous disposez d'un droit d'accès, de rectification et de suppression de vos données en nous contactant à cette adresse. Nous sommes conformes au RGPD et ne vendons jamais vos données."
+    },
+    "liability": {
+      "title": "7. Limitation de Responsabilité",
+      "content": "L'application est fournie \"telle quelle\". Nous ne garantissons pas l'absence d'erreurs ou de bugs ni l'adéquation à vos besoins spécifiques. Nous ne sommes pas responsables des pertes indirectes, pertes de données ou dommages résultant de l'utilisation de l'application, sauf en cas de faute grave ou dol. Les cas de force majeure sont exclus."
+    },
+    "termination": {
+      "title": "8. Résiliation",
+      "content": "Vous pouvez supprimer votre compte à tout moment via les paramètres de l'application. Nous pouvons résilier ou suspendre un compte en cas de violation des présentes conditions, sans préavis. Certaines obligations, notamment liées à la confidentialité, survivent à la résiliation."
+    },
+    "changes": {
+      "title": "9. Modifications des CGU",
+      "content": "Nous pouvons modifier les présentes Conditions Générales d'Utilisation à tout moment. Toute modification sera notifiée via l'application ou par email. La poursuite de l'utilisation de l'application vaut acceptation des nouvelles conditions. Nous vous invitons à consulter régulièrement cette page."
+    },
+    "law": {
+      "title": "10. Loi Applicable et Litiges",
+      "content": "Les présentes conditions sont régies exclusivement par le droit français. En cas de litige, une tentative de médiation pourra être engagée via le médiateur CNCM (https://www.mediation-conso.fr). À défaut d'accord amiable, compétence exclusive est attribuée au Tribunal de Paris."
+    },
+    "contact": {
+      "title": "11. Contact",
+      "content": "Pour toute question concernant ces conditions, vous pouvez nous contacter à l'adresse suivante : contact@microdefis.fr."
+    }
   },
   "help": {
     "title": "💡 Centre d'aide",
@@ -227,5 +282,25 @@
 
     "contact_title": "11. Contact",
     "contact_text": "Contact : contact@microdefis.fr"
+  },
+  "pwa": {
+    "button": "App mobile",
+    "dialog": {
+      "title": "📱 Installer l'app",
+      "android": {
+        "title": "📱 Android (Chrome)",
+        "step1": "1. Cliquez ⋮ (3 points)",
+        "step2": "2. \"Ajouter à l'écran d'accueil\"",
+        "step3": "3. Ouvrez comme app !"
+      },
+      "ios": {
+        "title": "🍎 iPhone (Safari)",
+        "step1": "1. Haut écran → icône ⏵️ (carré + flèche) ⏵️",
+        "step2": "2. \"Ajouter à l'écran d'accueil\"",
+        "step3": "3. Nom app → \"Ajouter\"",
+        "step4": "4. ✅ Icône sur écran d'accueil !"
+      },
+      "install_button": "J'installe 👍"
+    }
   }
 }

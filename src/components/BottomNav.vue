@@ -18,7 +18,7 @@
 	</nav>
 </template>
 
-<style scoped>
+<style>
 .bottom-nav {
 	position: fixed;
 	left: 12px;

@@ -22,8 +22,22 @@
   --primary-soft: #312e81;
 }
 body.share-mode .v-application {
-	background: #ffffff !important;
-} 
+  background: #ffffff !important;
+}
+
+body.share-mode .bottom-nav {
+  background: #6d28d9;
+  border: none;
+}
+
+body.share-mode .bottom-nav .item {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+body.share-mode .bottom-nav .item.active {
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+}
 
 html,
 body {
