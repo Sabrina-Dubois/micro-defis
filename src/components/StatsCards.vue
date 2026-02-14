@@ -3,7 +3,7 @@
     <v-card
       v-for="(stat, index) in stats"
       :key="index"
-      class="micro-card pa-3 text-center"
+      class="micro-card pa-3 text-center "
     >
       <div class="stat-icon">{{ stat.icon }}</div>
       <div class="stat-value">{{ stat.value }}</div>

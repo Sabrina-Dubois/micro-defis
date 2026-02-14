@@ -13,19 +13,19 @@
   "auth": {
     "login_title": "Connexion",
     "subtitle": "Garde tes flammes synchronisées partout",
-    "email_placeholder": "Email",
-    "password_placeholder": "Mot de passe",
+    "email": "Email",
+    "password": "Mot de passe",
     "continue": "Continuer",
     "login_google": "Google",
     "login_apple": "Apple"
   },
   "login": {
-    "title": "🔥 MicroChallenges",
-    "login": "Login",
+    "title": "🔥MicroDéfis",
+    "login": "Connexion",
     "email": "Email",
-    "info": "No password. We send you a login link by email.",
-    "link": "Send link",
-    "sent": "Link sent. Check your email."
+    "info": "On t’envoie un lien de connection par email.",
+    "link": "Recevoir un lien",
+    "sent": "Lien envoyé. Regarde tes emails."
   },
   "profil": {
     "member_since": "Membre depuis",

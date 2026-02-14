@@ -21,6 +21,9 @@
   --primary: #8b5cf6;
   --primary-soft: #312e81;
 }
+.main-content {
+  padding-bottom: 96px; /* >= hauteur de la bottom nav + margin */
+}
 
 /* FIX ANTI-SCROLL/OVERFLOW UNIQUEMENT */
 html {

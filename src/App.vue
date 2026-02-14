@@ -1,10 +1,16 @@
 <template>
 	<v-app>
 		<ConsentDialog v-model:show="showConsent" />
+
+		<!-- Contenu principal -->
 		<v-main class="page">
-			<RouterView />
-			<BottomNav v-if="showNav" />
+			<div class="main-content">
+				<RouterView />
+			</div>
 		</v-main>
+
+		<!-- Bottom Nav -->
+		<BottomNav v-if="showNav" />
 	</v-app>
 </template>
 

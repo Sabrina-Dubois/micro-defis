@@ -13,19 +13,19 @@
   "auth": {
     "login_title": "Login",
     "subtitle": "Keep your flames synced everywhere",
-    "email_placeholder": "Email",
-    "password_placeholder": "Password",
+    "email": "Email",
+    "password": "Password",
     "continue": "Continue",
     "login_google": "Google",
     "login_apple": "Apple"
   },
   "login": {
     "title": "🔥 MicroDéfis",
-    "login": "Connexion",
+    "login": "Login",
     "email": "Email",
-    "info": "Pas de mot de passe. On t’envoie un lien de connection par email.",
-    "link": "Recevoir un lien",
-    "sent": "Lien envoyé. Regarde tes emails."
+    "info": "We send you a login link by email.",
+    "link": "Send link",
+    "sent": "Link sent. Check your email."
   },
   "profil": {
     "member_since": "Member since ",
@@ -305,7 +305,7 @@
       "install_button": "Install 👍"
     }
   },
-    "errors": {
+  "errors": {
     "404": "404",
     "not_found_title": "Oops! Page not found",
     "not_found_message": "This page does not exist .",

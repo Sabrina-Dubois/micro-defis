@@ -12,7 +12,7 @@
 			<v-card-text class="pa-0">
 				<v-text-field
 					v-model="email"
-					label="t('login.email')"
+					:label="t('login.email')"
 					type="email"
 					prepend-inner-icon="mdi-email-outline"
 				/>

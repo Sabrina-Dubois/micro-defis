@@ -35,6 +35,7 @@
 	border: 1px solid var(--border);
 	border-radius: 18px;
 	backdrop-filter: blur(10px);
+		z-index: 1000; /* toujours au-dessus */
 }
 .item {
 	flex: 1;

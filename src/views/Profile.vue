@@ -21,6 +21,7 @@
 					font-weight: 600;
 					font-size: 12px;
 					margin-top: 4px;
+					margin-bottom: 15px;
 				"
 			>
 				{{ t("profil.member_since") }} {{ memberSince }}
