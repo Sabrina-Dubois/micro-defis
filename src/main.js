@@ -42,3 +42,24 @@ i18n.global.locale.value = userLang;
 app.mount("#app");
 
 console.log("App démarrée avec la langue :", i18n.global.locale.value);
+
+// 🔥 PWA SERVICE WORKER + DETECT
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js");
+}
+
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Auto-trigger bouton "App mobile" ou popup
+  console.log("PWA install prompt ready");
+});
+
+// Expose pour composant (ton bouton "App mobile")
+window.installPWA = () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => (deferredPrompt = null));
+  }
+};
