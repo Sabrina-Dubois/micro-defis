@@ -19,7 +19,7 @@
 		</v-card>
 
 		<v-card class="micro-card mb-6 ">
-			<h2>{{ t("help.fad_title") }}/h2>
+			<h2>{{ t("help.fad_title") }} </h2>
 			<v-expansion-panels v-model="activePanels" multiple flat>
 				<v-expansion-panel
 					v-for="(faq, index) in filteredFaqs"
@@ -37,7 +37,7 @@
 		</v-card>
 
 		<v-card class="micro-card">
-			<h2>{{ t("help.support.title") }}/h2>
+			<h2>{{ t("help.support.title") }}</h2>
 			<v-list density="comfortable">
 				<v-list-item
 					title="t('help.search.email')"
