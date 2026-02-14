@@ -7,7 +7,7 @@
 				:size="56"
 				:widxth="6"
 			/>
-			<div class="page-title" >
+			<div class="page-title">
 				{{ t("authCallBack.connexion") }}
 			</div>
 			<div
@@ -33,6 +33,23 @@ const router = useRouter();
 const route = useRoute();
 
 onMounted(async () => {
+	// MAGIC LINK = token_hash dans #hash
+	const hash = window.location.hash.slice(1);
+	const urlParams = new URLSearchParams(hash);
+	const token_hash = urlParams.get("token_hash");
+
+	if (token_hash) {
+		const { error } = await supabase.auth.verifyOtp({
+			token_hash,
+			type: "magiclink",
+		});
+		if (!error) {
+			router.replace("/");
+			return;
+		}
+	}
+
+	// Fallback OAuth/normal
 	const redirect = route.query.redirect?.toString() || "/daily";
 
 	for (let i = 0; i < 3; i++) {
