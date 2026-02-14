@@ -184,3 +184,26 @@ iframe,
   display: block;
   box-sizing: border-box;
 }
+
+
+.pub, .bloc-pub, iframe.pub-iframe, /* adapte à ton class/id pub */ 
+.v-card .pub-container {  /* Si pubs dans v-card */
+  max-width: 100% !important;
+  width: 100% !important;
+  flex-shrink: 1;  /* Rétrécit si besoin */
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;  /* Empêche push horizontal */
+  overflow-x: hidden;
+}
+
+/* Si profil/calendar en grille/flex */
+.profil, .calendar {
+  flex: 1 1 auto;
+  min-width: 0;  /* Permet rétrécir sans overflow */
+  overflow-x: hidden;
+}
