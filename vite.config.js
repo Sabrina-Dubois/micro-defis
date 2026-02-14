@@ -4,6 +4,10 @@ import vue from "@vitejs/plugin-vue";
 import vuetify from "vite-plugin-vuetify";
 import vueDevTools from "vite-plugin-vue-devtools";
 
+import { VitePWA } from 'vite-plugin-pwa'
+
+    
+
 export default defineConfig({
   plugins: [
     vue(),
@@ -11,6 +15,10 @@ export default defineConfig({
       autoImport: true,
     }),
     vueDevTools(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: true
+    })
   ],
   resolve: {
     alias: {

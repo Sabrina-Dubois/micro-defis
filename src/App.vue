@@ -1,16 +1,22 @@
 <template>
 	<v-app>
+		<!-- Consent dialog -->
 		<ConsentDialog v-model:show="showConsent" />
 
 		<!-- Contenu principal -->
 		<v-main class="page">
 			<div class="main-content">
-				<RouterView />
+				<!-- On affiche RouterView uniquement quand la session a été vérifiée -->
+				<RouterView v-if="authChecked" />
+				<div v-else class="loading-container">
+					<!-- loader simple pendant que Supabase récupère la session -->
+					Loading...
+				</div>
 			</div>
 		</v-main>
 
 		<!-- Bottom Nav -->
-		<BottomNav v-if="showNav" />
+		<BottomNav v-if="showNav && authChecked" />
 	</v-app>
 </template>
 
@@ -20,31 +26,19 @@ import { useRoute } from "vue-router";
 import BottomNav from "./components/BottomNav.vue";
 import ConsentDialog from "./components/ConsentDialog.vue";
 import { useTheme } from "vuetify";
+import { supabase } from "./lib/supabase";
 
+// ------------------ ROUTE & NAV ------------------
 const route = useRoute();
 const hiddenRoutes = ["/login", "/auth/callback"];
 const showNav = computed(() => !hiddenRoutes.includes(route.path));
 
+// ------------------ THEME ------------------
 const vuetifyTheme = useTheme();
 const showConsent = ref(false);
 
-onMounted(() => {
-	if (
-		!localStorage.getItem("microdefis-consent") &&
-		!hiddenRoutes.includes(route.path)
-	) {
-		showConsent.value = true;
-	}
-	const savedTheme = localStorage.getItem("theme") || "light";
-	vuetifyTheme.global.name.value = savedTheme;
-});
-
-const toggleTheme = () => {
-	const newTheme =
-		vuetifyTheme.global.name.value === "light" ? "dark" : "light";
-	vuetifyTheme.global.name.value = newTheme;
-	localStorage.setItem("theme", newTheme);
-};
+const savedTheme = localStorage.getItem("theme") || "light";
+vuetifyTheme.global.name.value = savedTheme;
 
 watch(
 	() => vuetifyTheme.global.name.value,
@@ -54,5 +48,47 @@ watch(
 	}
 );
 
-defineExpose({ toggleTheme });
+const toggleTheme = () => {
+	const newTheme =
+		vuetifyTheme.global.name.value === "light" ? "dark" : "light";
+	vuetifyTheme.global.name.value = newTheme;
+};
+
+// ------------------ AUTH ------------------
+const authChecked = ref(false); // On n'affiche RouterView qu'après avoir vérifié la session
+const session = ref(null);
+
+onMounted(async () => {
+	// Affiche le consent si besoin
+	if (
+		!localStorage.getItem("microdefis-consent") &&
+		!hiddenRoutes.includes(route.path)
+	) {
+		showConsent.value = true;
+	}
+
+	// Récupère la session Supabase
+	const { data } = await supabase.auth.getSession();
+	session.value = data.session;
+	authChecked.value = true;
+
+	// Écoute les changements de session (login/logout)
+	supabase.auth.onAuthStateChange((_event, newSession) => {
+		session.value = newSession;
+	});
+});
+
+defineExpose({ toggleTheme, session, authChecked });
 </script>
+
+<style scoped>
+.loading-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	color: var(--text-primary);
+	font-weight: 700;
+	font-size: 18px;
+}
+</style>
