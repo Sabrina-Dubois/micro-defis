@@ -302,5 +302,11 @@
       },
       "install_button": "J'installe 👍"
     }
+  },
+  "errors": {
+    "404": "404",
+    "not_found_title": "Oups ! Page non trouvée",
+    "not_found_message": "Cette page n'existe pas.",
+    "back_home": "Retour accueil"
   }
 }

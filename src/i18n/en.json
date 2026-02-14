@@ -304,5 +304,11 @@
       },
       "install_button": "Install 👍"
     }
+  },
+    "errors": {
+    "404": "404",
+    "not_found_title": "Oops! Page not found",
+    "not_found_message": "This page does not exist .",
+    "back_home": "Bad"
   }
 }

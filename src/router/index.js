@@ -17,7 +17,7 @@ const router = createRouter({
       component: () => import("../views/DailyChallenge.vue"),
       meta: { requiresAuth: true },
     },
-    { path: "/share", name: "ShareStats", component: () => import("@/views/Share.vue")},
+    { path: "/share", name: "ShareStats", component: () => import("@/views/Share.vue") },
     {
       path: "/calendar",
       name: "calendar",
@@ -40,6 +40,11 @@ const router = createRouter({
     { path: "/help", name: "help", component: () => import("@/views/Help.vue") },
     { path: "/terms", name: "terms", component: () => import("@/views/Terms.vue") },
     { path: "/privacy", name: "privacy", component: () => import("@/views/Privacy.vue") },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "not-found",
+      component: () => import("@/views/NotFound.vue"),
+    },
   ],
 });
 

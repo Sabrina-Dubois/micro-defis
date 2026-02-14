@@ -85,6 +85,8 @@
 				</div>
 			</div>
 		</v-card>
+		<!-- ProfilView.vue -->
+		<GoogleAd adSlot="2127045122" />
 
 		<!-- Graphique Activité -->
 		<v-card class="micro-card pa-4 mt-4">
@@ -119,6 +121,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { supabase } from "@/lib/supabase";
 import StatsCards from "@/components/StatsCards.vue";
+import GoogleAd from "@/components/GoogleAd.vue";
 
 // USER STAT : authe -> Supabase
 const authUser = ref(null);
@@ -254,7 +257,6 @@ async function loadProfile() {
 	badges.value[5].unlocked = bestStreak.value >= 14;
 	badges.value[6].unlocked = bestStreak.value >= 50;
 
-	/* ----- ACTIVITÉ : 7 DERNIERS JOURS ----- */
 	/* ----- ACTIVITÉ : 7 DERNIERS JOURS ----- */
 	const completedDates = new Set(completionsList.map((c) => c.day));
 	last7Days.value = [];

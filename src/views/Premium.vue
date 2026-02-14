@@ -24,4 +24,3 @@ const goPremium = () => {
 };
 </script>
 
-<style></style>

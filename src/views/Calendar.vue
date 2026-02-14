@@ -14,6 +14,7 @@
 				{ icon: '🏆', value: bestStreak, label: t('calendar.best_serie') },
 			]"
 		/>
+		<GoogleAd adSlot="3324576724" />
 
 		<!-- Calendrier manuel NON CLIQUABLE -->
 		<v-card class="micro-card pa-4">
@@ -102,6 +103,7 @@ import { supabase } from "@/lib/supabase";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import StatsCards from "@/components/StatsCards.vue";
+import GoogleAd from "@/components/GoogleAd.vue";
 
 const route = useRoute();
 const { t, tm, locale } = useI18n();
