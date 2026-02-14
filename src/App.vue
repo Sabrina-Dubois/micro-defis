@@ -26,7 +26,7 @@ import { useRoute } from "vue-router";
 import BottomNav from "./components/BottomNav.vue";
 import ConsentDialog from "./components/ConsentDialog.vue";
 import { useTheme } from "vuetify";
-import { supabase } from "./lib/supabase";
+import { supabase } from "@/lib/supabase"; 
 
 // ------------------ ROUTE & NAV ------------------
 const route = useRoute();
@@ -39,6 +39,30 @@ const showConsent = ref(false);
 
 const savedTheme = localStorage.getItem("theme") || "light";
 vuetifyTheme.global.name.value = savedTheme;
+supabase.auth.onAuthStateChange((event, session) => {
+	if (event === "PASSWORD_RECOVERY") {
+		console.log("🔑 Reset password détecté → /reset-password");
+		route.push("/reset-password");
+	}
+});
+
+onMounted(() => {
+	if (
+		!localStorage.getItem("microdefis-consent") &&
+		!hiddenRoutes.includes(route.path)
+	) {
+		showConsent.value = true;
+	}
+	const savedTheme = localStorage.getItem("theme") || "light";
+	vuetifyTheme.global.name.value = savedTheme;
+});
+
+const toggleTheme = () => {
+	const newTheme =
+		vuetifyTheme.global.name.value === "light" ? "dark" : "light";
+	vuetifyTheme.global.name.value = newTheme;
+	localStorage.setItem("theme", newTheme);
+};
 
 watch(
 	() => vuetifyTheme.global.name.value,
@@ -47,12 +71,6 @@ watch(
 		localStorage.setItem("theme", newTheme);
 	}
 );
-
-const toggleTheme = () => {
-	const newTheme =
-		vuetifyTheme.global.name.value === "light" ? "dark" : "light";
-	vuetifyTheme.global.name.value = newTheme;
-};
 
 // ------------------ AUTH ------------------
 const authChecked = ref(false); // On n'affiche RouterView qu'après avoir vérifié la session

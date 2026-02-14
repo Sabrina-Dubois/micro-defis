@@ -11,21 +11,25 @@
     "access": "On finalise ton accès."
   },
   "auth": {
-    "login_title": "Connexion",
-    "subtitle": "Garde tes flammes synchronisées partout",
-    "email": "Email",
-    "password": "Mot de passe",
-    "continue": "Continuer",
-    "login_google": "Google",
-    "login_apple": "Apple"
-  },
-  "login": {
-    "title": "🔥MicroDéfis",
-    "login": "Connexion",
-    "email": "Email",
-    "info": "On t’envoie un lien de connection par email.",
-    "link": "Recevoir un lien",
-    "sent": "Lien envoyé. Regarde tes emails."
+    "title": "🔥 MicroDéfis",
+    "login": {
+      "login": "Connexion",
+      "email": "Email",
+      "password": "Mot de passe",
+      "forgot_password": "Mot de passe oublié ?",
+      "switch_to_login": "J'ai déjà un compte",
+      "enter_email": "Entre ton email d'abord 💌",
+      "reset_email_sent": "Email de réinitialisation envoyé ✉️"
+    },
+    "signup": {
+      "title": "Inscription",
+      "create_account": "Créer un compte",
+      "username": "Nom d'utilisateur",
+      "confirm_password": "Confirmer le mot de passe",
+      "password_mismatch": "Les mots de passe ne correspondent pas",
+      "account_created": "Compte créé 🎉 Vérifie ton email !",
+      "switch_to_signup": "Créer un compte"
+    }
   },
   "profil": {
     "member_since": "Membre depuis",
