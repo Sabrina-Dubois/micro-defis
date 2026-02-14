@@ -21,6 +21,22 @@
   --primary: #8b5cf6;
   --primary-soft: #312e81;
 }
+
+/* === RESET ANTI-DÉCALAGE GLOBAL (NOUVEAU) === */
+* {
+  box-sizing: border-box !important;
+}
+
+html, body, .v-application, .page {
+  width: 100% !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  overflow-x: hidden !important;
+}
+
 body.share-mode .v-application {
   background: #ffffff !important;
 }
@@ -39,8 +55,7 @@ body.share-mode .bottom-nav .item.active {
   background: rgba(255, 255, 255, 0.2);
 }
 
-html,
-body {
+html, body {
   height: 100%;
   background: var(--bg-primary);
   color: var(--text-primary);
@@ -66,6 +81,31 @@ body {
   padding-bottom: 96px;
   max-width: 520px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+/* === FIX PUBS TROP LARGES (TUER TOUT DÉPASSEMENT) === */
+.pub, .bloc-pub, .ads, iframe, ins.adsbygoogle, div[id*="google_ads"], [class*="ad"], .v-card .pub-container {
+  max-width: 100% !important;
+  width: 100% !important;
+  max-height: 250px !important;
+  position: relative !important;
+  left: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  overflow: hidden !important;
+  flex-shrink: 1;
+  box-sizing: border-box;
+}
+
+/* Profil/Calendar anti-push */
+.profil, .calendar, .profile, .v-calendar {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 .page-title {
@@ -89,8 +129,7 @@ body {
   color: var(--text-primary) !important;
 }
 
-.micro-card,
-.v-card {
+.micro-card, .v-card {
   border-radius: 24px !important;
   background: var(--surface) !important;
   border: 1px solid var(--border) !important;
@@ -101,37 +140,12 @@ body {
   transition: all 0.3s ease;
 }
 
-.v-list {
-  background: transparent !important;
-}
-
-.v-list-item {
-  color: var(--text-primary) !important;
-}
-
-.v-list-item-title,
-.v-btn__text {
-  color: var(--text-primary) !important;
-}
-
-.v-btn {
-  border-color: var(--border) !important;
-  color: var(--text-primary) !important;
-}
-
-.v-text-field label,
-.v-text-field input {
-  color: var(--text-primary) !important;
-}
-
-.v-input__details {
-  color: var(--text-secondary) !important;
-}
-
-.v-switch__track,
-.v-switch__thumb {
-  color: var(--text-secondary) !important;
-}
+.v-list { background: transparent !important; }
+.v-list-item, .v-list-item-title, .v-btn__text { color: var(--text-primary) !important; }
+.v-btn { border-color: var(--border) !important; color: var(--text-primary) !important; }
+.v-text-field label, .v-text-field input { color: var(--text-primary) !important; }
+.v-input__details { color: var(--text-secondary) !important; }
+.v-switch__track, .v-switch__thumb { color: var(--text-secondary) !important; }
 
 .btn-primary {
   height: 48px;
@@ -142,68 +156,6 @@ body {
   border: 1px solid var(--border) !important;
 }
 
-.v-btn.btn-success {
-  background-color: #22c55e !important;
-}
+.v-btn.btn-success { background-color: #22c55e !important; }
 
-.skeleton,
-[class*="skeleton-"],
-.loading {
-  display: none !important;
-}
-html {
-  overflow-x: hidden; /* Bloque scroll horizontal global */
-}
-
-body {
-  overflow-x: hidden; /* + sûr */
-  max-width: 100vw;
-}
-
-.v-application {
-  max-width: 100vw;
-  overflow-x: hidden; /* Contient les gradients/iframes */
-  box-sizing: border-box;
-}
-
-.page {
-  max-width: 520px;
-  overflow-x: hidden; /* Pour pubs dedans */
-  position: relative; /* Aide au clipping */
-}
-
-/* Spécifique pubs/iframes */
-iframe,
-.ads,
-[class*="ad"],
-.pub {
-  max-width: 100% !important;
-  width: 100% !important;
-  max-height: 250px;
-  overflow: hidden !important;
-  display: block;
-  box-sizing: border-box;
-}
-
-
-.pub, .bloc-pub, iframe.pub-iframe, /* adapte à ton class/id pub */ 
-.v-card .pub-container {  /* Si pubs dans v-card */
-  max-width: 100% !important;
-  width: 100% !important;
-  flex-shrink: 1;  /* Rétrécit si besoin */
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-.page {
-  display: flex;
-  flex-direction: column;  /* Empêche push horizontal */
-  overflow-x: hidden;
-}
-
-/* Si profil/calendar en grille/flex */
-.profil, .calendar {
-  flex: 1 1 auto;
-  min-width: 0;  /* Permet rétrécir sans overflow */
-  overflow-x: hidden;
-}
+.skeleton, [class*="skeleton-"], .loading { display: none !important; }
