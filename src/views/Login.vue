@@ -68,7 +68,7 @@ const sendLink = async () => {
 	const { error: e } = await supabase.auth.signInWithOtp({
 		email: email.value,
 		options: {
-			emailRedirectTo: import.meta.env.VITE_SUPABASE_REDIRECT ,
+			emailRedirectTo: import.meta.env.VITE_SUPABASE_REDIRECT,
 		},
 	});
 
