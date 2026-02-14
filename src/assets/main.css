@@ -151,3 +151,36 @@ body {
 .loading {
   display: none !important;
 }
+html {
+  overflow-x: hidden; /* Bloque scroll horizontal global */
+}
+
+body {
+  overflow-x: hidden; /* + sûr */
+  max-width: 100vw;
+}
+
+.v-application {
+  max-width: 100vw;
+  overflow-x: hidden; /* Contient les gradients/iframes */
+  box-sizing: border-box;
+}
+
+.page {
+  max-width: 520px;
+  overflow-x: hidden; /* Pour pubs dedans */
+  position: relative; /* Aide au clipping */
+}
+
+/* Spécifique pubs/iframes */
+iframe,
+.ads,
+[class*="ad"],
+.pub {
+  max-width: 100% !important;
+  width: 100% !important;
+  max-height: 250px;
+  overflow: hidden !important;
+  display: block;
+  box-sizing: border-box;
+}
