@@ -21,11 +21,11 @@
   },
   "login": {
     "title": "🔥 MicroDéfis",
-    "login": "Connexion",
+    "connexion": "Connection",
     "email": "Email",
-    "info": "Pas de mot de passe. On t’envoie un lien de connection par email.",
+    "password": "Password",
     "link": "Recevoir un lien",
-    "sent": "Lien envoyé. Regarde tes emails."
+    "connection": "Connect"
   },
   "profil": {
     "member_since": "Member since ",
