@@ -3,7 +3,35 @@
 		<div class="top">
 			<div class="page-title">{{ t("daily.title") }} {{ userName }}</div>
 		</div>
+		<!-- Niveaux -->
+		<div class="mb-3">
+			<v-chip
+				v-for="level in levels"
+				:key="level.value"
+				:color="selectedLevel === level.value ? 'primary' : 'grey lighten-2'"
+				@click="selectLevel(level)"
+				:disabled="level.isPremium && !user.isPremium"
+				class="ma-1"
+			>
+				{{ level.label }}
+			</v-chip>
+		</div>
 
+		<!-- Catégories -->
+		<div class="mb-3">
+			<v-chip
+				v-for="cat in categories"
+				:key="cat.id"
+				:color="
+					selectedCategories.includes(cat.id) ? 'primary' : 'grey lighten-2'
+				"
+				@click="toggleCategory(cat)"
+				:disabled="cat.isPremium && !user.isPremium"
+				class="ma-1"
+			>
+				{{ cat.name }} <span v-if="cat.isPremium">🔒</span>
+			</v-chip>
+		</div>
 		<!-- Carte du défi -->
 		<v-card class="micro-card pa-5">
 			<div class="page-subtitle">{{ t("daily.challenge") }}</div>
@@ -48,7 +76,7 @@
 		</v-card>
 
 		<!-- Bouton PWA -->
-		
+
 		<PWAButton />
 	</div>
 </template>

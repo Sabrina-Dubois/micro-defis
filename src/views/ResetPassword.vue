@@ -1,30 +1,63 @@
 <template>
-	<div class="pa-6">
-		<h2>Choisis ton mot de passe</h2>
-		<v-text-field
-			v-model="newPassword"
-			label="Nouveau mot de passe (8+ chars)"
-			type="password"
-			:rules="[(v) => v.length >= 8 || 'Min 8 chars']"
-		/>
-		<v-btn @click="updatePassword" color="primary" :loading="loading">
-			Confirmer
-		</v-btn>
-		<div v-if="error" class="error">{{ error }}</div>
+	<div>
+		<div class="header">
+			<div class="page-title">{{ t("reset_password.title") }}</div>
+		</div>
+
+		<v-card class="micro-card pa-6 text-center">
+			<v-text-field
+				v-model="newPassword"
+				prepend-inner-icon="mdi-lock-outline"
+				:placeholder="t('reset_password.new_password')"
+				:type="showPassword ? 'text' : 'password'"
+				:append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+				@click:append-inner="togglePassword"
+				:rules="[
+					(v) => !!v || t('reset_password.required'),
+					(v) => v.length >= 8 || t('reset_password.min_chars'),
+				]"
+				required
+			/>
+
+			<v-btn
+				class="btn-primary mt-4"
+				block
+				color="primary"
+				:loading="loading"
+				@click="updatePassword"
+			>
+				{{ t("reset_password.confirm") }}
+			</v-btn>
+
+			<div v-if="error" class="error mt-2">{{ error }}</div>
+		</v-card>
 	</div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { supabase } from "@/lib/supabase"; // Ton import
+import { supabase } from "@/lib/supabase";
+import { useI18n } from "vue-i18n";
 
-const newPassword = ref("");
-const error = ref("");
-const loading = ref(false);
+const { t } = useI18n();
 const router = useRouter();
 
+const newPassword = ref("");
+const showPassword = ref(false);
+const error = ref("");
+const loading = ref(false);
+
+const togglePassword = () => {
+	showPassword.value = !showPassword.value;
+};
+
 const updatePassword = async () => {
+	if (newPassword.value.length < 8) {
+		error.value = t("reset_password.min_chars");
+		return;
+	}
+
 	loading.value = true;
 	error.value = "";
 
@@ -37,9 +70,19 @@ const updatePassword = async () => {
 	if (updateError) {
 		error.value = updateError.message;
 	} else {
-		alert("✅ Mot de passe changé ! Déconnexion...");
+		alert(t("reset_password.success_alert"));
 		await supabase.auth.signOut();
 		router.push("/login");
 	}
 };
 </script>
+
+<style scoped>
+.header {
+	margin: 6px 0 18px;
+}
+.error {
+	color: #f44336;
+	font-size: 14px;
+}
+</style>

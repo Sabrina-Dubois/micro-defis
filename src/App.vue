@@ -38,10 +38,10 @@ const vuetifyTheme = useTheme();
 const showConsent = ref(false);
 
 const savedTheme = localStorage.getItem("theme") || "light";
-vuetifyTheme.global.name.value = savedTheme;
+vuetifyTheme.change = savedTheme;
 
 watch(
-	() => vuetifyTheme.global.name.value,
+	() => vuetifyTheme.current.value,
 	(newTheme) => {
 		document.documentElement.setAttribute("data-theme", newTheme);
 		localStorage.setItem("theme", newTheme);
@@ -50,16 +50,16 @@ watch(
 
 const toggleTheme = () => {
 	const newTheme =
-		vuetifyTheme.global.name.value === "light" ? "dark" : "light";
-	vuetifyTheme.global.name.value = newTheme;
+		vuetifyTheme.change === "light" ? "dark" : "light";
+	vuetifyTheme.change = newTheme;
 };
 
 // ------------------ AUTH ------------------
-const authChecked = ref(false); // On n'affiche RouterView qu'après avoir vérifié la session
+const authChecked = ref(false); //RouterView après avoir vérifié la session
 const session = ref(null);
 
 onMounted(async () => {
-	// Affiche le consent si besoin
+	// Affiche le consent
 	if (
 		!localStorage.getItem("microdefis-consent") &&
 		!hiddenRoutes.includes(route.path)

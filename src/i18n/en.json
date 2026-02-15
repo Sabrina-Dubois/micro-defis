@@ -11,21 +11,35 @@
     "access": "We are checking your access, please wait a moment."
   },
   "auth": {
-    "login_title": "Login",
-    "subtitle": "Keep your flames synced everywhere",
-    "email": "Email",
-    "password": "Password",
-    "continue": "Continue",
-    "login_google": "Google",
-    "login_apple": "Apple"
+    "title": "🔥 MicroChallenges",
+    "login": {
+      "login": "Login",
+      "email": "Email",
+      "password": "Password",
+      "forgot_password": "Forgot password?",
+      "switch_to_login": "I already have an account",
+      "enter_email": "Enter your email first 💌",
+      "reset_email_sent": "Reset email sent ✉️"
+    },
+    "signup": {
+      "title": "Sign Up",
+      "create_account": "Create Account",
+      "username": "Username",
+      "confirm_password": "Confirm Password",
+      "password_mismatch": "Passwords do not match",
+      "account_created": "Account created 🎉 Check your email!",
+      "switch_to_signup": "Create an account"
+    }
   },
-  "login": {
-    "title": "🔥 MicroDéfis",
-    "login": "Login",
-    "email": "Email",
-    "info": "We send you a login link by email.",
-    "link": "Send link",
-    "sent": "Link sent. Check your email."
+  "reset_password": {
+    "title": "Reset Password",
+    "new_password": "New Password",
+    "confirm_password": "Confirm Password",
+    "required": "This field is required",
+    "min_chars": "Password must be at least 8 characters",
+    "passwords_must_match": "Passwords must match",
+    "confirm": "Confirm",
+    "success_alert": "✅ Password changed! Logging out..."
   },
   "profil": {
     "member_since": "Member since ",
