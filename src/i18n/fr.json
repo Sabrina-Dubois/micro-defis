@@ -85,10 +85,11 @@
       "theme": "Thème"
     },
     "defis": {
-      "title": "Défis préférés",
+      "title": "❤️ Défis préférés",
       "category": "Catégorie préférée",
       "level": "Niveau préféré",
-      "save": "Enregistrer mes préférences défis"
+      "premium": "Le niveau Débutant 🌱 est gratuit. Passe Premium ✨ pour débloquer tous les niveaux et catégories!",
+      "save": "Enregistrer"
     },
     "about": {
       "title": "ℹ️ A propos",

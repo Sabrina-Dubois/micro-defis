@@ -1,14 +1,14 @@
 <template>
 	<div>
 		<div class="top">
-			<div class="page-title mt-4 mb-4text-h4">
+			<div class="page-title mt-4 mt-4 mb-4 text-h4">
 				{{ t("settings.title") }}
 			</div>
 		</div>
 
 		<!-- Profil -->
 		<v-card class="micro-card pa-4 mb-4">
-			<div class="page-subtitle">{{ t("settings.profil.title") }}</div>
+			<div class="page-subtitle mb-4">{{ t("settings.profil.title") }}</div>
 
 			<v-text-field v-model="userName" :label="t('settings.profil.username')" variant="outlined" density="compact"
 				hide-details class="mb-3" />
@@ -26,7 +26,7 @@
 
 				<!-- Catégorie -->
 				<div class="mb-3">
-					<div class="mb-2 card-subtitle">{{ t("settings.defis.category") }}</div>
+					<div class="mb-2 text-h6 ">{{ t("settings.defis.category") }}</div>
 					<v-chip-group v-model="preferredCategory" multiple column>
 						<v-chip v-for="cat in categories" :key="cat.id" :value="cat.name"
 							:class="cat.premium ? 'premium' : 'free'"
@@ -39,7 +39,7 @@
 
 				<!-- Niveau -->
 				<div class="mb-3">
-					<div class="mb-2 card-subtitle">{{ t("settings.defis.level") }}</div>
+					<div class="mb-2 text-h6 ">{{ t("settings.defis.level") }}</div>
 					<v-chip-group v-model="preferredLevel" multiple column>
 						<v-chip v-for="level in levels" :key="level.id" :value="level.name"
 							:class="level.premium ? 'premium' : 'free'"

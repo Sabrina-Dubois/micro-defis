@@ -165,15 +165,9 @@ body {
 /* Titre et sous-titre */
 .fixed-card .card-title {
   font-weight: 700;
-  margin-bottom: 8px;
-  color: var(--text-primary);
-}
-
-.fixed-card .card-subtitle {
-  font-weight: 500;
+  margin-bottom: px;
   font-size: 0.9rem;
   color: var(--text-secondary);
-  margin-bottom: 12px;
 }
 
 /* CHIP GRATUIT = vert, premium = gris + cadenas */

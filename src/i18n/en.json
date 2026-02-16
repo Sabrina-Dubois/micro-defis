@@ -49,7 +49,7 @@
       "best": "Record"
     },
     "level": {
-      "level": "Level",
+      "title": "Level",
       "xp_next": "XP for level"
     },
     "badges": {
@@ -85,10 +85,11 @@
       "theme": "Theme"
     },
     "defis": {
-      "title": "Challenge Preferences",
+      "title": "❤️ Challenge Preferences",
       "category": "Favorite Category",
       "level": "Favorite Level",
-      "save": "Save challenge preferences"
+      "premium": "The Beginner level 🌱 is free. Upgrade to Premium ✨ to unlock all levels and categories!",
+      "save": "Save"
     },
     "about": {
       "title": "ℹ️ About",
@@ -106,6 +107,7 @@
     "title": "Hi, ",
     "challenge": "Today's Challenge",
     "loading": "Loading…",
+    "level": "Level",
     "todo": "To do",
     "done": "Done!",
     "share": "Share"

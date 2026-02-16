@@ -2,7 +2,7 @@
 	<div>
 		<div class="top">
 			<div class="page-title">
-				{{ t("daily.title") }} {{ userStore.userName }}
+				{{ t("daily.title") }}<br /> {{ userStore.userName }}
 			</div>
 		</div>
 
@@ -91,7 +91,7 @@ import { useStatsStore } from "@/stores/statsStore";
 import { useChallengeStore } from "@/stores/challengeStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const userStore = useUserStore();
 const statsStore = useStatsStore();
 const challengeStore = useChallengeStore();
@@ -138,8 +138,9 @@ onMounted(async () => {
 // ✅ WATCH : Rafraîchir le challenge quand la langue change
 watch(
 	() => settingsStore.language,
-	async () => {
-		await challengeStore.refreshLanguage();
+	(newLang) => {
+		locale.value = newLang; // ← ça met à jour les labels
+		challengeStore.refreshLanguage(); // si tu veux recharger les contenus du challenge
 	}
 );
 </script>
