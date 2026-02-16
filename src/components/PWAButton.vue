@@ -49,38 +49,54 @@ const showDialog = ref(false);
 const showButton = ref(false);
 let deferredPrompt = null;
 
-// 🔹 On stocke l'event beforeinstallprompt
-window.addEventListener("beforeinstallprompt", (e) => {
-	e.preventDefault(); // empêche le banner auto
-	deferredPrompt = e;
+function checkPWAState() {
 	const isStandalone =
 		window.matchMedia("(display-mode: standalone)").matches ||
-		window.navigator.standalone === true; // iOS
-	const pwaAlreadyShown = localStorage.getItem("pwa-shown") === "true";
+		window.navigator.standalone === true;
+
+	const pwaAlreadyShown =
+		localStorage.getItem("pwa-shown") === "true";
+
+	if (!isStandalone && !pwaAlreadyShown) {
+		showButton.value = true;
+	}
+}
+
+onMounted(() => {
+	checkPWAState();
+});
+
+// 🔹 On stocke l'event beforeinstallprompt
+window.addEventListener("beforeinstallprompt", (e) => {
+	e.preventDefault();
+	deferredPrompt = e;
+
+	const isStandalone =
+		window.matchMedia("(display-mode: standalone)").matches ||
+		window.navigator.standalone === true;
+
+	const pwaAlreadyShown =
+		localStorage.getItem("pwa-shown") === "true";
+
 	showButton.value = !isStandalone && !pwaAlreadyShown;
 });
 
-// 🔹 Cliquer sur le bouton montre le prompt Chrome
+// 🔹 Cliquer sur le bouton
 function installPWA() {
 	if (deferredPrompt) {
 		deferredPrompt.prompt();
 		deferredPrompt.userChoice.then((choice) => {
-			if (choice.outcome === "accepted") {
-				console.log("✅ PWA installée par l'utilisateur !");
-			} else {
-				console.log("❌ L'utilisateur a refusé l'installation");
-			}
 			deferredPrompt = null;
 			localStorage.setItem("pwa-shown", "true");
 			showButton.value = false;
 		});
 	} else {
-		// iOS ou autres cas → afficher ton popup d'instructions
+		// iOS ou navigateur sans prompt
 		showDialog.value = true;
 	}
 }
 
-// 🔹 Popup instructions → bouton confirme
+// 🔹 Popup instructions
 function confirmInstall() {
 	showDialog.value = false;
 	localStorage.setItem("pwa-shown", "true");
