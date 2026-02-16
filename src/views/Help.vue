@@ -4,7 +4,7 @@
 			<div class="page-title">{{ t("help.title") }}</div>
 		</div>
 
-		<v-card class="micro-card mb-6">
+		<v-card class="micro-card fixed-card first-card mb-6">
 			<h2>{{ t("help.search.title") }}</h2>
 			<v-text-field v-model="searchQuery" :placeholder="t('help.search.placeholder')"
 				prepend-inner-icon="mdi-magnify" variant="outlined" density="comfortable" clearable hide-details
@@ -32,7 +32,7 @@
 			</div>
 		</v-card>
 
-		<v-card class="micro-card">
+		<v-card class="micro-card fixed-card last-card ">
 			<h2>{{ t("help.support.title") }}</h2>
 			<v-list density="comfortable">
 				<v-list-item :title="'support@microdefis.com'" :subtitle="t('help.support.subtitle')" three-line
@@ -85,6 +85,11 @@ const copyEmail = () => {
 	margin: 12px 0 20px;
 }
 
+.first-card,
+.last-card {
+	height: 130px;
+}
+
 .micro-card {
 	padding: 24px;
 	margin-bottom: 24px;
@@ -100,10 +105,6 @@ h2 {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-}
-
-.search-field {
-	max-width: 100%;
 }
 
 .faq-panel {
