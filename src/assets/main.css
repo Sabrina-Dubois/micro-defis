@@ -133,7 +133,7 @@ body {
 /* ===== CARTES FIXES POUR DÉFIS ===== */
 .fixed-card {
   width: 390px; /* largeur fixe de la carte */
-  height: 260px; /* hauteur fixe de la carte */
+  height: 280px; /* hauteur fixe de la carte */
   border-radius: 24px; /* même arrondi que micro-card */
   background: var(--surface); /* reprend la couleur du thème */
   border: 1px solid var(--border);

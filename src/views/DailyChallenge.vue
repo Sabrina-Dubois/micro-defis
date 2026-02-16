@@ -1,18 +1,10 @@
 <template>
 	<div>
+		<!-- Top -->
 		<div class="top">
 			<div class="page-title">
 				{{ t("daily.title") }}<br /> {{ userStore.userName }}
 			</div>
-		</div>
-
-		<!-- Catégories -->
-		<div class="mb-3">
-			<v-chip v-for="cat in categories" :key="cat.id"
-				:color="selectedCategories.includes(cat.id) ? 'primary' : 'grey lighten-2'" @click="toggleCategory(cat)"
-				:disabled="cat.premium && !userStore.isPremium" class="ma-1">
-				{{ cat.name }} <span v-if="cat.premium">🔒</span>
-			</v-chip>
 		</div>
 
 		<!-- Carte du défi -->
@@ -39,11 +31,7 @@
 			<!-- Contenu -->
 			<div v-else>
 				<div style="font-size: 30px; font-weight: 800; color: #0f172a; margin-bottom: 6px; text-align: center">
-					{{
-						challengeStore.loading
-							? t("daily.loading")
-							: challengeStore.challengeTitle
-					}}
+					{{ challengeStore.loading ? t("daily.loading") : challengeStore.challengeTitle }}
 				</div>
 
 				<div v-if="challengeStore.challengeDescription"
@@ -91,7 +79,8 @@ import { useStatsStore } from "@/stores/statsStore";
 import { useChallengeStore } from "@/stores/challengeStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
+
 const userStore = useUserStore();
 const statsStore = useStatsStore();
 const challengeStore = useChallengeStore();
@@ -99,7 +88,6 @@ const settingsStore = useSettingsStore();
 
 // ✅ COMPUTED
 const categories = computed(() => settingsStore.categories || []);
-const preferredCategories = computed(() => settingsStore.preferredCategories || []);
 
 // ⚡️ État local pour le multi-select des catégories
 const selectedCategories = ref([]);
@@ -120,6 +108,18 @@ async function markDone() {
 	}
 }
 
+// ===== WATCH PREFERENCES =====
+// On initialise selectedCategories uniquement après que les préférences soient chargées
+watch(
+	() => settingsStore.preferredCategories,
+	(newPref) => {
+		if (newPref && newPref.length > 0) {
+			selectedCategories.value = [...newPref];
+		}
+	},
+	{ immediate: true }
+);
+
 // ===== LIFECYCLE =====
 onMounted(async () => {
 	try {
@@ -127,26 +127,20 @@ onMounted(async () => {
 		await statsStore.loadCompletions();
 		await settingsStore.loadPreferences();
 		await challengeStore.loadTodayChallenge();
-
-		// ⚡️ Initialiser selectedCategories avec les préférences de l'utilisateur
-		selectedCategories.value = settingsStore.preferredCategories || [];
 	} catch (e) {
 		console.error("❌ Erreur chargement:", e);
 	}
 });
-
-// ✅ WATCH : Rafraîchir le challenge quand la langue change
-watch(
-	() => settingsStore.language,
-	(newLang) => {
-		locale.value = newLang; // ← ça met à jour les labels
-		challengeStore.refreshLanguage(); // si tu veux recharger les contenus du challenge
-	}
-);
 </script>
 
 <style scoped>
 .top {
 	margin: 6px 0 14px;
+}
+
+.micro-card {
+	border-radius: 24px;
+	overflow: visible;
+	z-index: 0;
 }
 </style>
