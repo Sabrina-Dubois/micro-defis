@@ -23,17 +23,13 @@
 
 			<!-- Navigation mois -->
 			<div class="d-flex justify-space-between align-center mb-3">
-				<v-btn icon size="small" variant="text" @click="previousMonth">
-					<v-icon>mdi-chevron-left</v-icon>
-				</v-btn>
+				<v-btn icon="mdi-chevron-left" size="small" variant="text" @click="previousMonth"></v-btn>
 
 				<div class="text-h7 font-weight-black text-capitalize">
 					{{ monthLabel }}
 				</div>
 
-				<v-btn icon size="small" variant="text" @click="nextMonth">
-					<v-icon>mdi-chevron-right</v-icon>
-				</v-btn>
+				<v-btn icon="mdi-chevron-right" size="small" variant="text" @click="nextMonth"></v-btn>
 			</div>
 
 			<!-- Jours de la semaine -->
@@ -78,8 +74,6 @@ import GoogleAd from "@/components/GoogleAd.vue";
 // ✅ IMPORT DU STORE
 import { useStatsStore } from "@/stores/statsStore";
 
-// ✅ IMPORT DU STORE
-import { useStatsStore } from "@/stores/statsStore";
 const route = useRoute();
 const { t, tm, locale } = useI18n();
 

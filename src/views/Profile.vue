@@ -26,14 +26,14 @@
 
 		<!-- Stats Rapides -->
 		<StatsCards :stats="[
-			{ icon: '🔥', value: statsStore.currentStreak, label: t('profil.stats.streak') },
-			{
-				icon: '✅',
-				value: statsStore.totalCompleted,
-				label: t('profil.stats.completed'),
-			},
-			{ icon: '🏆', value: statsStore.bestStreak, label: t('profil.stats.best') },
-		]" />
+				{ icon: '🔥', value: statsStore.currentStreak, label: t('profil.stats.streak') },
+				{
+					icon: '✅',
+					value: statsStore.totalCompleted,
+					label: t('profil.stats.completed'),
+				},
+				{ icon: '🏆', value: statsStore.bestStreak, label: t('profil.stats.best') },
+			]" />
 
 		<!-- Niveau & Progression -->
 		<v-card class="micro-card pa-4 mt-4">
@@ -79,9 +79,9 @@
 			<div class="activity-chart">
 				<div v-for="(day, index) in last7Days" :key="index" class="activity-bar">
 					<div class="bar" :style="{
-						height: day.completed ? '80px' : '8px',
-						background: day.completed ? '#ff6b35' : '#e2e8f0',
-					}"></div>
+				height: day.completed ? '80px' : '8px',
+				background: day.completed ? '#ff6b35' : '#e2e8f0',
+			}"></div>
 					<div class="day-label">{{ day.label }}</div>
 				</div>
 			</div>

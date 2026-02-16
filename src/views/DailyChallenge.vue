@@ -3,19 +3,6 @@
 		<div class="top">
 			<div class="page-title">{{ t("daily.title") }} {{ userStore.userName }}</div>
 		</div>
-		<!-- Niveaux -->
-		<div class="mb-3">
-			<v-chip
-				v-for="level in levels"
-				:key="level.value"
-				:color="selectedLevel === level.value ? 'primary' : 'grey lighten-2'"
-				@click="selectLevel(level)"
-				:disabled="level.isPremium && !user.isPremium"
-				class="ma-1"
-			>
-				{{ level.label }}
-			</v-chip>
-		</div>
 
 		<!-- Catégories -->
 		<div class="mb-3">
