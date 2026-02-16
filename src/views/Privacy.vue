@@ -48,7 +48,7 @@
 
 				<h2 class="page-subtitle">{{ t("privacy.security_title") }}</h2>
 				<p>
-					M{{ t("privacy.security_text") }}
+					{{ t("privacy.security_text") }}
 				</p>
 
 				<h2 class="page-subtitle">{{ t("privacy.cookies_title") }}</h2>
@@ -61,7 +61,7 @@
 					{{ t("privacy.rights_text") }}
 				</p>
 
-				<h2 class="page-subtitle">9{{ t("privacy.transfer_title") }}</h2>
+				<h2 class="page-subtitle">{{ t("privacy.transfer_title") }}</h2>
 				<p>
 					{{ t("privacy.transfer_text") }}
 				</p>
