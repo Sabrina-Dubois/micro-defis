@@ -4,7 +4,7 @@
 			<div class="page-title">{{ t("auth.title") }}</div>
 		</div>
 
-		<v-card class="micro-card pa-6 text-center">
+		<v-card class="micro-card pa-6 fixed-card text-center">
 			<div style="font-weight: 900; font-size: 18px; margin-bottom: 10px">
 				{{ isLogin ? t("auth.login.login") : t("auth.signup.create_account") }}
 			</div>

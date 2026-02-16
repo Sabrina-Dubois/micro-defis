@@ -1,9 +1,13 @@
 {
   "consent": {
-    "title": "🚀 Bienvenue sur MicroDéfis !",
-    "intro": "Avant de commencer, vous devez accepter :",
-    "cgu": "J'accepte les Conditions d'utilisation",
-    "privacy": "J'accepte la Politique de confidentialité (RGPD)",
+    "title": "Bienvenue sur MicroDéfis",
+    "intro": "Veuillez accepter les conditions suivantes pour continuer :",
+    "cgu": "Conditions d'utilisation",
+    "privacy": "Politique de confidentialité",
+    "accept_cgu": "J'accepte les Conditions d'utilisation",
+    "accept_privacy": "J'accepte la Politique de confidentialité",
+    "ads_intro": "Nous utilisons des publicités pour financer l'application.",
+    "accept_ads": "J'accepte les publicités personnalisées",
     "start": "Commencer"
   },
   "authCallBack": {
@@ -256,7 +260,7 @@
       "title": "🆘 Support",
       "subtitle": "Réponse < 24h (dites version app + bug)"
     }
-},
+  },
   "privacy": {
     "title": "🔒 Politique de Confidentialité de MicroDéfis",
     "intro_title": "1. Introduction",

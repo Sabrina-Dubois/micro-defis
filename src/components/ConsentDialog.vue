@@ -1,31 +1,42 @@
 <template>
 	<v-dialog v-model="show" persistent max-width="500">
 		<v-card class="pa-6">
-			<v-card-title class="text-h5 text-center">{{ t("consent.title") }}</v-card-title>
+			<v-card-title class="text-h5 text-center">
+				{{ t("consent.title") }}
+			</v-card-title>
 
 			<!-- Section CGU / Privacy -->
 			<v-card-text class="mb-4">
-				<p>{{ t("consent.intro") }}</p>
-				<ul>
-					<li><a href="/terms" target="_blank">{{ t("consent.cgu") }}</a></li>
-					<li><a href="/privacy" target="_blank">{{ t("consent.privacy") }}</a></li>
+				<p class="mb-2">{{ t("consent.intro") }}</p>
+
+				<ul class="mb-4">
+					<li>
+						<router-link to="/terms" target="_blank">
+							{{ t("consent.cgu") }}
+						</router-link>
+					</li>
+					<li>
+						<router-link to="/privacy" target="_blank">
+							{{ t("consent.privacy") }}
+						</router-link>
+					</li>
 				</ul>
 
-				<v-checkbox v-model="acceptCgu" label="J'accepte les Conditions d'utilisation" color="primary"
-					hide-details />
-				<v-checkbox v-model="acceptPrivacy" label="J'accepte la Politique de confidentialité" color="primary"
-					hide-details />
+				<v-checkbox v-model="acceptCgu" :label="t('consent.accept_cgu')" color="primary" hide-details />
+				<v-checkbox v-model="acceptPrivacy" :label="t('consent.accept_privacy')" color="primary" hide-details />
 			</v-card-text>
 
-			<!-- Section pubs / cookies -->
+			<!-- Section pubs -->
 			<v-card-text class="mb-4">
-				<p>{{ t("consent.ads_intro") }}</p>
-				<v-checkbox v-model="acceptAds" label="J'accepte de recevoir des pubs personnalisées" color="primary"
-					hide-details />
+				<p class="mb-2">
+					{{ t("consent.ads_intro") }}
+				</p>
+
+				<v-checkbox v-model="acceptAds" :label="t('consent.accept_ads')" color="primary" hide-details />
 			</v-card-text>
 
 			<v-card-actions>
-				<v-btn block class="btn-primary mt-4" :disabled="!acceptCgu || !acceptPrivacy" @click="acceptConsent">
+				<v-btn block class="btn-primary mt-4" :disabled="!(acceptCgu && acceptPrivacy)" @click="acceptConsent">
 					{{ t("consent.start") }}
 				</v-btn>
 			</v-card-actions>
@@ -38,31 +49,44 @@ import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
+
 const show = ref(false);
 const acceptCgu = ref(false);
 const acceptPrivacy = ref(false);
 const acceptAds = ref(false);
 
 onMounted(() => {
-	const alreadyShown = localStorage.getItem("microdefis-consent") === "true";
+	const alreadyShown =
+		localStorage.getItem("microdefis-consent") === "true";
 	show.value = !alreadyShown;
 });
 
 function acceptConsent() {
-	// ✅ Stockage des consentements
 	localStorage.setItem("microdefis-consent", "true");
-	localStorage.setItem("microdefis-consent-date", new Date().toISOString());
+	localStorage.setItem(
+		"microdefis-consent-date",
+		new Date().toISOString()
+	);
 
+	// Gestion pubs
 	if (acceptAds.value) {
 		localStorage.setItem("ads-consent", "true");
-		// ✅ Active Google Ads / Tag Manager
+
 		if (window.gtag) {
-			window.gtag('consent', 'update', {
-				ad_storage: 'granted',
-				analytics_storage: 'granted'
+			window.gtag("consent", "update", {
+				ad_storage: "granted",
+				analytics_storage: "granted",
 			});
 		}
-		(window.adsbygoogle = window.adsbygoogle || []).push({});
+	} else {
+		localStorage.setItem("ads-consent", "false");
+
+		if (window.gtag) {
+			window.gtag("consent", "update", {
+				ad_storage: "denied",
+				analytics_storage: "denied",
+			});
+		}
 	}
 
 	show.value = false;
@@ -90,7 +114,6 @@ ul {
 	padding-left: 18px;
 }
 
-/* Espacement entre sections */
 .v-card-text {
 	margin-bottom: 16px;
 }
