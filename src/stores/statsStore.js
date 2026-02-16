@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { supabase } from "@/lib/supabase";
 import { useUserStore } from "./userStore";
 
 export const useStatsStore = defineStore("stats", () => {
-  // State
+  // ===== STATE =====
   const completions = ref([]);
   const completedDaysSet = ref(new Set());
   const currentStreak = ref(0);
@@ -13,34 +13,30 @@ export const useStatsStore = defineStore("stats", () => {
   const loading = ref(false);
   const error = ref(null);
 
-  // Getters
-  const userLevel = computed(() => {
-    const xpTotal = totalCompleted.value * 15;
-    return Math.floor(xpTotal / 100) + 1;
-  });
-
-  const xpCurrentDisplay = computed(() => {
-    const xpTotal = totalCompleted.value * 15;
-    return xpTotal % 100;
-  });
-
+  // ===== GETTERS =====
+  const userLevel = computed(() => Math.floor((totalCompleted.value * 15) / 100) + 1);
+  const xpCurrentDisplay = computed(() => (totalCompleted.value * 15) % 100);
   const xpNext = computed(() => 100);
+  const xpProgress = computed(() => (xpCurrentDisplay.value / xpNext.value) * 100);
+  const xpRemaining = computed(() => xpNext.value - xpCurrentDisplay.value);
 
-  const xpProgress = computed(() => {
-    return (xpCurrentDisplay.value / xpNext.value) * 100;
-  });
-
-  const xpRemaining = computed(() => {
-    return xpNext.value - xpCurrentDisplay.value;
-  });
-
-  // Actions
+  // ===== ACTIONS =====
   async function loadCompletions() {
     const userStore = useUserStore();
 
+    // ⚡ Attendre que l'utilisateur soit chargé
     if (!userStore.userId) {
-      console.warn("Utilisateur non connecté");
-      return;
+      await new Promise((resolve) => {
+        const stop = watch(
+          () => userStore.userId,
+          (val) => {
+            if (val) {
+              stop();
+              resolve();
+            }
+          },
+        );
+      });
     }
 
     loading.value = true;
@@ -59,7 +55,6 @@ export const useStatsStore = defineStore("stats", () => {
       totalCompleted.value = completions.value.length;
       completedDaysSet.value = new Set(completions.value.map((c) => c.day));
 
-      // Calculer les streaks
       calculateStreaks();
 
       return data;
@@ -73,102 +68,44 @@ export const useStatsStore = defineStore("stats", () => {
   }
 
   function calculateStreaks() {
-    console.log("🔍 calculateStreaks - completions:", completions.value);
-
-    if (!completions.value || completions.value.length === 0) {
-      console.log("❌ Pas de completions");
+    if (!completions.value.length) {
       currentStreak.value = 0;
       bestStreak.value = 0;
       return;
     }
 
-    // ===== STREAK ACTUEL =====
+    const days = completions.value.map((c) => new Date(c.day));
+    days.sort((a, b) => b - a); // du plus récent au plus ancien
+
+    // ===== Calcul streak actuel =====
+    const todayStr = new Date().toISOString().slice(0, 10);
     let streak = 0;
-    const today = new Date().toISOString().slice(0, 10);
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().slice(0, 10);
+    let expectedDate = new Date(todayStr);
 
-    console.log("🔍 today:", today);
-    console.log("🔍 yesterday:", yesterdayStr);
-    console.log("🔍 first completion:", completions.value[0]?.day);
-
-    // Détermine le point de départ : aujourd'hui ou hier
-    let expectedDay;
-    if (completions.value[0]?.day === today) {
-      // Il y a une complétion aujourd'hui, on commence par aujourd'hui
-      expectedDay = today;
-      console.log("✅ Défi complété aujourd'hui, streak commence aujourd'hui");
-    } else if (completions.value[0]?.day === yesterdayStr) {
-      // Il y a une complétion hier mais pas aujourd'hui, on commence par hier
-      expectedDay = yesterdayStr;
-      console.log("✅ Défi complété hier, streak commence hier");
-    } else {
-      // Aucune complétion aujourd'hui ni hier = streak cassé
-      console.log("❌ Aucune complétion aujourd'hui ni hier = streak cassé");
-      currentStreak.value = 0;
-
-      // Continue pour calculer le best streak
-      let maxStreak = 0;
-      let tempStreak = 1;
-
-      for (let i = 0; i < completions.value.length - 1; i++) {
-        const current = new Date(completions.value[i].day);
-        const next = new Date(completions.value[i + 1].day);
-        const diffDays = Math.floor((current - next) / (1000 * 60 * 60 * 24));
-
-        if (diffDays === 1) {
-          tempStreak++;
-          maxStreak = Math.max(maxStreak, tempStreak);
-        } else {
-          tempStreak = 1;
-        }
-      }
-
-      bestStreak.value = Math.max(maxStreak, 1);
-      console.log("✅ Final bestStreak:", bestStreak.value);
-      return;
-    }
-
-    // Calcule le streak à partir du point de départ
-    for (const comp of completions.value) {
-      console.log("🔍 Comparing:", comp.day, "vs", expectedDay);
-
-      if (comp.day === expectedDay) {
+    for (const d of days) {
+      const dStr = d.toISOString().slice(0, 10);
+      if (dStr === expectedDate.toISOString().slice(0, 10)) {
         streak++;
-        console.log("✅ Match! Streak:", streak);
-        const d = new Date(expectedDay);
-        d.setDate(d.getDate() - 1);
-        expectedDay = d.toISOString().slice(0, 10);
-        console.log("🔍 Next expectedDay:", expectedDay);
+        expectedDate.setDate(expectedDate.getDate() - 1);
       } else {
-        console.log("❌ Break streak");
         break;
       }
     }
-
-    console.log("✅ Final currentStreak:", streak);
     currentStreak.value = streak;
 
-    // ===== BEST STREAK =====
-    let maxStreak = streak; // Le streak actuel peut être le meilleur
+    // ===== Calcul best streak =====
+    let maxStreak = 0;
     let tempStreak = 1;
-
-    for (let i = 0; i < completions.value.length - 1; i++) {
-      const current = new Date(completions.value[i].day);
-      const next = new Date(completions.value[i + 1].day);
-      const diffDays = Math.floor((current - next) / (1000 * 60 * 60 * 24));
-
+    for (let i = 0; i < days.length - 1; i++) {
+      const diffDays = Math.floor((days[i] - days[i + 1]) / (1000 * 60 * 60 * 24));
       if (diffDays === 1) {
         tempStreak++;
-        maxStreak = Math.max(maxStreak, tempStreak);
       } else {
         tempStreak = 1;
       }
+      maxStreak = Math.max(maxStreak, tempStreak);
     }
-
-    console.log("✅ Final bestStreak:", maxStreak);
-    bestStreak.value = maxStreak;
+    bestStreak.value = Math.max(maxStreak, currentStreak.value);
   }
 
   async function addCompletion(day, challengeId) {
@@ -187,10 +124,10 @@ export const useStatsStore = defineStore("stats", () => {
 
       if (insertError) throw insertError;
 
-      // Recharger les stats
+      // Recharge les stats
       await loadCompletions();
 
-      // Émettre un événement global
+      // Événement global
       window.dispatchEvent(new CustomEvent("challenge-completed"));
 
       return true;
@@ -207,24 +144,14 @@ export const useStatsStore = defineStore("stats", () => {
 
   function getLast7Days() {
     const last7Days = [];
-
-    function getLocalDateString(date) {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      return `${year}-${month}-${day}`;
-    }
+    const labelMap = ["D", "L", "M", "M", "J", "V", "S"];
 
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      const ds = getLocalDateString(d);
-
-      const dayNum = d.getDay();
-      const labelMap = ["D", "L", "M", "M", "J", "V", "S"];
-
+      const ds = d.toISOString().slice(0, 10);
       last7Days.push({
-        label: labelMap[dayNum],
+        label: labelMap[d.getDay()],
         completed: completedDaysSet.value.has(ds),
         date: ds,
       });

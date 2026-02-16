@@ -1,12 +1,6 @@
 <template>
 	<div class="pwa-hint">
-		<v-btn
-			fab
-			color="#FF6B35"
-			size="56"
-			elevation="12"
-			@click="showDialog = true"
-		>
+		<v-btn fab color="#FF6B35" size="56" elevation="12" @click="showDialog = true">
 			<v-icon color="white" size="28">mdi-cellphone</v-icon>
 		</v-btn>
 		<div class="hint-text">{{ t("pwa.button") }}</div>
@@ -20,8 +14,7 @@
 
 				<!-- Chrome Android -->
 				<v-card-text class="text-body-1 mb-6">
-					<strong>{{ t("pwa.dialog.android.title") }}</strong
-					><br />
+					<strong>{{ t("pwa.dialog.android.title") }}</strong><br />
 					{{ t("pwa.dialog.android.step1") }}<br />
 					{{ t("pwa.dialog.android.step2") }}<br />
 					{{ t("pwa.dialog.android.step3") }}
@@ -29,8 +22,7 @@
 
 				<!-- iOS Safari -->
 				<v-card-text class="text-body-1 mb-6">
-					<strong>{{ t("pwa.dialog.ios.title") }}</strong
-					><br />
+					<strong>{{ t("pwa.dialog.ios.title") }}</strong><br />
 					{{ t("pwa.dialog.ios.step1") }}<br />
 					{{ t("pwa.dialog.ios.step2") }}<br />
 					{{ t("pwa.dialog.ios.step3") }}<br />
@@ -39,15 +31,12 @@
 
 				<v-card-actions>
 					<v-spacer />
-					<v-btn
-						class="btn-primary mt-4"
-						rounded
+					<v-btn class="btn-primary mt-4" 
+						rounded 
 						@click="
-							showDialog = false;
-							trackInstall();
-						"
-						block
-					>
+						showDialog = false;
+					trackInstall();
+					" block>
 						{{ t("pwa.dialog.install_button") }}
 					</v-btn>
 				</v-card-actions>
@@ -57,11 +46,23 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 const showDialog = ref(false);
+const showButton = ref(false);
+
+onMounted(() => {
+	const isStandalone =
+		window.matchMedia("(display-mode: standalone)").matches ||
+		window.navigator.standalone === true; // iOS
+
+	const pwaAlreadyShown = localStorage.getItem("pwa-shown") === "true";
+
+	// Afficher le bouton uniquement si pas en PWA et pas déjà montré
+	showButton.value = !isStandalone && !pwaAlreadyShown;
+});
 
 const trackInstall = () => {
 	console.log("User clicked install");

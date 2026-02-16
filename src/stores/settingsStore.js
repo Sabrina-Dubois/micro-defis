@@ -20,7 +20,6 @@ export const useSettingsStore = defineStore("settings", () => {
   const loading = ref(false);
   const error = ref(null);
 
-  // Données BDD
   const categories = ref([]);
   const levels = ref([]);
 
@@ -36,17 +35,14 @@ export const useSettingsStore = defineStore("settings", () => {
   const isPremium = computed(() => preferences.value.premium_active ?? false);
 
   const languageLabel = computed(() => (preferences.value.language === "fr" ? "Français" : "English"));
-
   const themeLabel = computed(() => (preferences.value.theme === "dark" ? "Sombre" : "Clair"));
 
   // =========================
   // ACTIONS
   // =========================
 
-  // Charger les préférences utilisateur
   async function loadPreferences() {
     const userStore = useUserStore();
-
     if (!userStore.userId) {
       console.warn("Utilisateur non connecté");
       return;
@@ -56,7 +52,7 @@ export const useSettingsStore = defineStore("settings", () => {
     error.value = null;
 
     try {
-      // Préférences
+      // Charger préférences
       const { data, error: fetchError } = await supabase
         .from("user_preferences")
         .select("*")
@@ -77,16 +73,12 @@ export const useSettingsStore = defineStore("settings", () => {
         };
       }
 
-      // Statut premium depuis user_profiles
-      const { data: profileData, error: profileError } = await supabase
+      // Vérifier premium dans user_profiles
+      const { data: profileData } = await supabase
         .from("user_profiles")
         .select("premium")
         .eq("user_id", userStore.userId)
         .maybeSingle();
-
-      if (profileError && profileError.code !== "PGRST116") {
-        console.error("Erreur chargement premium:", profileError);
-      }
 
       if (profileData) {
         preferences.value.premium_active = profileData.premium ?? false;
@@ -102,13 +94,11 @@ export const useSettingsStore = defineStore("settings", () => {
     }
   }
 
-  // Charger les catégories
   async function loadCategories() {
     try {
       const { data, error: fetchError } = await supabase.from("categories").select("id, name, premium").order("name");
 
       if (fetchError) throw fetchError;
-
       categories.value = data || [];
     } catch (e) {
       console.error("Erreur loadCategories:", e);
@@ -116,7 +106,6 @@ export const useSettingsStore = defineStore("settings", () => {
     }
   }
 
-  // Charger les niveaux
   async function loadLevels() {
     try {
       const { data, error: fetchError } = await supabase
@@ -125,7 +114,6 @@ export const useSettingsStore = defineStore("settings", () => {
         .order("premium", { ascending: true });
 
       if (fetchError) throw fetchError;
-
       levels.value = data || [];
     } catch (e) {
       console.error("Erreur loadLevels:", e);
@@ -133,6 +121,9 @@ export const useSettingsStore = defineStore("settings", () => {
     }
   }
 
+  // =========================
+  // Mise à jour préférences
+  // =========================
   async function updatePreference(key, value) {
     const userStore = useUserStore();
     if (!userStore.userId) throw new Error("Utilisateur non connecté");
@@ -144,7 +135,9 @@ export const useSettingsStore = defineStore("settings", () => {
         updated_at: new Date().toISOString(),
       };
 
-      const { error: updateError } = await supabase.from("user_preferences").upsert(updates);
+      const { error: updateError } = await supabase
+        .from("user_preferences")
+        .upsert(updates, { onConflict: ["user_id"] });
 
       if (updateError) throw updateError;
 
@@ -168,7 +161,9 @@ export const useSettingsStore = defineStore("settings", () => {
         updated_at: new Date().toISOString(),
       };
 
-      const { error: updateError } = await supabase.from("user_preferences").upsert(payload);
+      const { error: updateError } = await supabase
+        .from("user_preferences")
+        .upsert(payload, { onConflict: ["user_id"] });
 
       if (updateError) throw updateError;
 
@@ -181,6 +176,9 @@ export const useSettingsStore = defineStore("settings", () => {
     }
   }
 
+  // =========================
+  // Helpers Thème / Langue / Notifications
+  // =========================
   async function toggleNotifications() {
     const newValue = !preferences.value.notifications_enabled;
     await updatePreference("notifications_enabled", newValue);
@@ -242,15 +240,16 @@ export const useSettingsStore = defineStore("settings", () => {
     error.value = null;
   }
 
+  // =========================
+  // RETURN
+  // =========================
   return {
-    // STATE
     preferences,
     categories,
     levels,
     loading,
     error,
 
-    // GETTERS
     notificationsEnabled,
     reminderTime,
     preferredCategories,
@@ -261,7 +260,6 @@ export const useSettingsStore = defineStore("settings", () => {
     languageLabel,
     themeLabel,
 
-    // ACTIONS
     loadPreferences,
     loadCategories,
     loadLevels,

@@ -220,8 +220,7 @@ defineExpose({ loadCalendar });
 .calendar-card {
 	border-radius: 24px;
 	overflow: visible;
-	position: relative;
-	z-index: 1;
+	z-index: 0;
 }
 
 .calendar-header {

@@ -45,7 +45,6 @@ body {
   position: relative;
 }
 
-
 /* Protège calendrier/profil/buttons */
 .v-calendar,
 .profil,
@@ -79,13 +78,22 @@ body {
   height: 100%;
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family:
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Arial,
+    sans-serif;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .v-application {
   min-height: 100vh;
-  background: radial-gradient(800px 520px at 18% 12%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 55%),
+  background:
+    radial-gradient(800px 520px at 18% 12%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 55%),
     radial-gradient(700px 500px at 82% 22%, rgba(87, 20, 20, 0.1) 0%, rgba(255, 255, 255, 0) 55%),
     radial-gradient(900px 600px at 55% 95%, rgba(113, 223, 240, 0.55) 0%, rgba(168, 85, 247, 0) 55%),
     linear-gradient(180deg, #9828d9 0%, #7251eb 32%, #3f1788 100%) !important;
@@ -121,6 +129,62 @@ body {
   color: var(--text-primary) !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+}
+/* ===== CARTES FIXES POUR DÉFIS ===== */
+.fixed-card {
+  width: 390px; /* largeur fixe de la carte */
+  height: 260px; /* hauteur fixe de la carte */
+  border-radius: 24px; /* même arrondi que micro-card */
+  background: var(--surface); /* reprend la couleur du thème */
+  border: 1px solid var(--border);
+  backdrop-filter: var(--backdrop-blur);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* empêche la carte de grandir */
+}
+
+/* Contenu interne avec scroll si trop long */
+.fixed-card .card-content {
+  flex: 1;
+  overflow-y: auto; /* scroll vertical si texte trop long */
+  padding-right: 4px; /* éviter que le scroll touche le bord */
+  margin-top: 4px;
+}
+/* Optionnel : scroll plus joli */
+.fixed-card .card-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.fixed-card .card-content::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.3);
+  border-radius: 3px;
+}
+/* Titre et sous-titre */
+.fixed-card .card-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.fixed-card .card-subtitle {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+/* CHIP GRATUIT = vert, premium = gris + cadenas */
+.v-chip.free {
+  background-color: #22c55e !important; /* vert */
+  color: white !important;
+}
+
+.v-chip.premium:not(.active) {
+  background-color: #e5e7eb !important; /* gris */
+  color: #64748b !important;
 }
 .v-list {
   background: transparent !important;
