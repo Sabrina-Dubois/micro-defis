@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
+    "@pinia/nuxt": "^0.11.3",
     "@supabase/supabase-js": "^2.93.2",
     "html-to-image": "^1.11.13",
     "pinia": "^3.0.4",

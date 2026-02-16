@@ -2,69 +2,59 @@
 	<div>
 		<!-- Header Profil -->
 		<div class="center">
-			<div class="avatar" @click="changeAvatar">{{ userAvatar }}</div>
+			<div class="avatar" @click="changeAvatar">{{ userStore.userAvatar }}</div>
 			<div class="page-title">
-				{{ userName }}
+				{{ userStore.userName }}
 			</div>
-			<div
-				style="
+			<div style="
 					color: rgba(255, 255, 255, 0.85);
 					font-weight: 700;
 					font-size: 13px;
-				"
-			>
-				{{ userEmail }}
+				">
+				{{ userStore.userEmail }}
 			</div>
-			<div
-				style="
+			<div style="
 					color: rgba(255, 255, 255, 0.7);
 					font-weight: 600;
 					font-size: 12px;
 					margin-top: 4px;
-				"
-			>
-				{{ t("profil.member_since") }} {{ memberSince }}
+					margin-bottom: 12px;
+				">
+				{{ t("profil.member_since") }} {{ userStore.memberSince }}
 			</div>
 		</div>
 
 		<!-- Stats Rapides -->
-		<StatsCards
-			:stats="[
-				{ icon: '🔥', value: currentStreak, label: t('profil.stats.streak') },
+		<StatsCards :stats="[
+				{ icon: '🔥', value: statsStore.currentStreak, label: t('profil.stats.streak') },
 				{
 					icon: '✅',
-					value: totalCompleted,
+					value: statsStore.totalCompleted,
 					label: t('profil.stats.completed'),
 				},
-				{ icon: '🏆', value: bestStreak, label: t('profil.stats.best') },
-			]"
-		/>
+				{ icon: '🏆', value: statsStore.bestStreak, label: t('profil.stats.best') },
+			]" />
 
 		<!-- Niveau & Progression -->
 		<v-card class="micro-card pa-4 mt-4">
 			<div class="d-flex justify-space-between align-center mb-2">
 				<div class="page-subtitle">
-					{{ t("profil.level.title") }} {{ userLevel }}
+					{{ t("profil.level.title") }} {{ statsStore.userLevel }}
 				</div>
 				<div style="font-weight: 700; font-size: 13px; color: #ff6b35">
-					{{ xpCurrentDisplay }} / {{ xpNext }} XP
+					{{ statsStore.xpCurrentDisplay }} / {{ statsStore.xpNext }} XP
 				</div>
 			</div>
-			<v-progress-linear
-				:model-value="xpProgress"
-				color="deep-orange"
-				height="12"
-				rounded
-			></v-progress-linear>
-			<div
-				style="
+			<v-progress-linear :model-value="statsStore.xpProgress" color="deep-orange" height="12"
+				rounded></v-progress-linear>
+			<div style="
 					font-size: 12px;
 					color: #64748b;
 					margin-top: 6px;
 					font-weight: 600;
-				"
-			>
-				{{ xpRemaining }} {{ t("profil.level.xp_next") }} {{ userLevel + 1 }}
+				">
+				{{ statsStore.xpRemaining }} {{ t("profil.level.xp_next") }}
+				{{ statsStore.userLevel + 1 }}
 			</div>
 		</v-card>
 
@@ -74,36 +64,24 @@
 				{{ t("profil.badges.title") }} ({{ unlockedBadges }}/{{ totalBadges }})
 			</div>
 			<div class="badges-grid">
-				<div
-					v-for="badge in badges"
-					:key="badge.id"
-					class="badge-item"
-					:class="{ locked: !badge.unlocked }"
-				>
+				<div v-for="badge in badges" :key="badge.id" class="badge-item" :class="{ locked: !badge.unlocked }">
 					<div class="badge-icon">{{ badge.icon }}</div>
 					<div class="badge-name">{{ t(badge.key) }}</div>
 				</div>
 			</div>
 		</v-card>
-		<!-- ProfilView.vue -->
+
 		<GoogleAd adSlot="2127045122" />
 
 		<!-- Graphique Activité -->
 		<v-card class="micro-card pa-4 mt-4">
 			<div class="page-subtitle">{{ t("profil.activity.title") }}</div>
 			<div class="activity-chart">
-				<div
-					v-for="(day, index) in last7Days"
-					:key="index"
-					class="activity-bar"
-				>
-					<div
-						class="bar"
-						:style="{
-							height: day.completed ? '80px' : '8px',
-							background: day.completed ? '#ff6b35' : '#e2e8f0',
-						}"
-					></div>
+				<div v-for="(day, index) in last7Days" :key="index" class="activity-bar">
+					<div class="bar" :style="{
+				height: day.completed ? '80px' : '8px',
+				background: day.completed ? '#ff6b35' : '#e2e8f0',
+			}"></div>
 					<div class="day-label">{{ day.label }}</div>
 				</div>
 			</div>
@@ -119,40 +97,20 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { supabase } from "@/lib/supabase";
 import StatsCards from "@/components/StatsCards.vue";
 import GoogleAd from "@/components/GoogleAd.vue";
 
-// USER STAT : authe -> Supabase
-const authUser = ref(null);
+// ✅ IMPORTS DES STORES
+import { useUserStore } from "@/stores/userStore";
+import { useStatsStore } from "@/stores/statsStore";
+
 const { t } = useI18n();
 
-// DONNÉES DE PROFIL
-const userName = ref("Username");
-const userEmail = ref("");
-const userAvatar = ref("👤");
-const memberSince = ref("...");
+// ✅ INITIALISATION DES STORES
+const userStore = useUserStore();
+const statsStore = useStatsStore();
 
-// AVATARS
-const avatars = ["🙂", "😎", "🦄", "🚀", "⭐", "🔥", "💪", "🌟", "⚡", "🎉"];
-
-//STATS PRINCIPALES
-const currentStreak = ref(0);
-const totalCompleted = ref(0);
-const bestStreak = ref(0);
-
-// XP & NIVEAU
-const userLevel = ref(1);
-const xpCurrentDisplay = ref(0);
-const xpNext = ref(100);
-
-const xpProgress = computed(
-	() => (xpCurrentDisplay.value / xpNext.value) * 100
-);
-
-const xpRemaining = computed(() => xpNext.value - xpCurrentDisplay.value);
-
-// BADGES
+// ===== BADGES (logique locale) =====
 const badges = ref([
 	{ id: 1, key: "profil.badges.badges_first", icon: "⭐️", unlocked: false },
 	{ id: 2, key: "profil.badges.badges_3days", icon: "🥉", unlocked: false },
@@ -169,158 +127,53 @@ const unlockedBadges = computed(
 
 const totalBadges = computed(() => badges.value.length);
 
-// ACTIVITÉ
-const last7Days = ref([]);
+// ===== ACTIVITÉ (utilise le store) =====
+const last7Days = computed(() => statsStore.getLast7Days());
 
-// LOAD PROFILE
-async function loadProfile() {
-	/* ----- RÉCUPÉRATION USER AUTH ----- */
-	const { data, error } = await supabase.auth.getUser();
-	if (error || !data?.user) return;
-
-	authUser.value = data.user;
-	userEmail.value = data.user.email;
-
-	const createdAt = new Date(data.user.created_at);
-	memberSince.value = createdAt.toLocaleDateString("fr-FR", {
-		month: "long",
-		year: "numeric",
-	});
-
-	/* ----- PROFIL PUBLIC ----- */
-	const { data: profile, error: profileError } = await supabase
-		.from("user_profiles")
-		.select("username, avatar_emoji")
-		.eq("user_id", authUser.value.id)
-		.single();
-
-	if (profileError) return;
-
-	userName.value = profile.username || "Username";
-	userAvatar.value = profile.avatar_emoji || "👤";
-
-	/* ----- COMPLETIONS ----- */
-	const { data: completions } = await supabase
-		.from("daily_completions")
-		.select("day")
-		.eq("user_id", authUser.value.id)
-		.order("day", { ascending: false });
-
-	if (!completions) return;
-
-	const completionsList = completions || [];
-	totalCompleted.value = completions.length;
-
-	/* ----- STREAK ACTUEL ----- */
-	let streak = 0;
-	let expectedDay = new Date().toISOString().slice(0, 10);
-
-	for (const c of completionsList) {
-		if (c.day === expectedDay) {
-			streak++;
-			const d = new Date(expectedDay);
-			d.setDate(d.getDate() - 1);
-			expectedDay = d.toISOString().slice(0, 10);
-		} else break;
-	}
-
-	currentStreak.value = streak;
-
-	/* ----- BEST STREAK ----- */
-	let maxStreak = 0;
-	let temp = 1;
-
-	for (let i = 0; i < completionsList.length - 1; i++) {
-		const a = new Date(completionsList[i].day);
-		const b = new Date(completionsList[i + 1].day);
-		const diff = (a - b) / 86400000;
-
-		if (diff === 1) {
-			temp++;
-			maxStreak = Math.max(maxStreak, temp);
-		} else temp = 1;
-	}
-
-	bestStreak.value = Math.max(maxStreak, streak);
-
-	/* ----- XP & NIVEAU ----- */
-	const xpTotal = totalCompleted.value * 15;
-	userLevel.value = Math.floor(xpTotal / 100) + 1;
-	xpCurrentDisplay.value = xpTotal % 100;
-
-	/* ----- BADGES ----- */
-	badges.value[0].unlocked = totalCompleted.value >= 1;
-	badges.value[1].unlocked = currentStreak.value >= 3;
-	badges.value[2].unlocked = currentStreak.value >= 7;
-	badges.value[3].unlocked = currentStreak.value >= 30;
-	badges.value[4].unlocked = totalCompleted.value >= 100;
-	badges.value[5].unlocked = bestStreak.value >= 14;
-	badges.value[6].unlocked = bestStreak.value >= 50;
-
-	/* ----- ACTIVITÉ : 7 DERNIERS JOURS ----- */
-	const completedDates = new Set(completionsList.map((c) => c.day));
-	last7Days.value = [];
-
-	// Fonction pour obtenir la date locale au format YYYY-MM-DD
-	function getLocalDateString(date) {
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, "0");
-		const day = String(date.getDate()).padStart(2, "0");
-		return `${year}-${month}-${day}`;
-	}
-
-	// Les 7 derniers jours glissants (aujourd'hui - 6 jours)
-	for (let i = 6; i >= 0; i--) {
-		const d = new Date();
-		d.setDate(d.getDate() - i);
-		const ds = getLocalDateString(d); // ✅ Utilise l'heure locale
-
-		const dayNum = d.getDay();
-		const labelMap = ["D", "L", "M", "M", "J", "V", "S"];
-
-		last7Days.value.push({
-			label: labelMap[dayNum],
-			completed: completedDates.has(ds),
-			date: ds,
-			dayName: [
-				"Dimanche",
-				"Lundi",
-				"Mardi",
-				"Mercredi",
-				"Jeudi",
-				"Vendredi",
-				"Samedi",
-			][dayNum], // Pour debug
-		});
-	}
+// ===== MISE À JOUR DES BADGES =====
+function updateBadges() {
+	// ✅ Utilise les données du store
+	badges.value[0].unlocked = statsStore.totalCompleted >= 1;
+	badges.value[1].unlocked = statsStore.currentStreak >= 3;
+	badges.value[2].unlocked = statsStore.currentStreak >= 7;
+	badges.value[3].unlocked = statsStore.currentStreak >= 30;
+	badges.value[4].unlocked = statsStore.totalCompleted >= 100;
+	badges.value[5].unlocked = statsStore.bestStreak >= 14;
+	badges.value[6].unlocked = statsStore.bestStreak >= 50;
 }
 
-// CHANGE AVATAR
+// ===== CHANGER AVATAR =====
 async function changeAvatar() {
-	if (!authUser.value) return;
-
-	const idx = avatars.indexOf(userAvatar.value);
-	const nextAvatar = avatars[(idx + 1) % avatars.length];
-
-	const { error } = await supabase
-		.from("user_profiles")
-		.update({
-			avatar_emoji: nextAvatar,
-			updated_at: new Date().toISOString(),
-		})
-		.eq("user_id", authUser.value.id);
-
-	if (!error) userAvatar.value = nextAvatar;
+	try {
+		// ✅ Le store gère tout
+		await userStore.changeAvatar();
+	} catch (error) {
+		console.error("❌ Erreur changeAvatar:", error);
+	}
 }
 
-// EVENTS
-function handleChallengeCompleted() {
-	loadProfile();
+// ===== EVENT HANDLER =====
+async function handleChallengeCompleted() {
+	// ✅ Recharger les stats quand un challenge est complété
+	await statsStore.loadCompletions();
+	updateBadges();
 }
 
-onMounted(() => {
-	loadProfile();
-	window.addEventListener("challenge-completed", handleChallengeCompleted);
+// ===== LIFECYCLE =====
+onMounted(async () => {
+	try {
+		// ✅ Charger les données depuis les stores
+		await userStore.loadUser();
+		await statsStore.loadCompletions();
+
+		// Mettre à jour les badges
+		updateBadges();
+
+		// Écouter les événements
+		window.addEventListener("challenge-completed", handleChallengeCompleted);
+	} catch (error) {
+		console.error("❌ Erreur chargement profil:", error);
+	}
 });
 
 onUnmounted(() => {

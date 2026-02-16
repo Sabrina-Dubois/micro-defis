@@ -1,36 +1,46 @@
+#Micro Défis 🚀
 
-# .
+Micro Défis est une application web de défis quotidiens basée sur Vue 3, Vite, et Pinia.
+Elle permet aux utilisateurs de compléter des challenges, suivre leur progression (🔥 flammes, ✅ complétions, 🏆 badges) et gérer leur profil.
 
-This template should help get you started developing with Vue 3 in Vite.
+🔹 Fonctionnalités principales
+	•	Défis quotidiens avec suivi de progression
+	•	Statistiques et streaks (flammes 🔥, niveau, XP)
+	•	Calendrier des complétions
+	•	Gestion de profil et badges
+	•	Paramètres : langue, thème, notifications
+	•	PWA installable sur mobile et desktop
 
-## Recommended IDE Setup
+🔹 Stack technique
+	•	Frontend : Vue 3 + Vite + Pinia
+	•	Backend / BDD : Supabase (auth, user_profiles, challenges, daily_assignments, daily_completions)
+	•	UI : Vuetify 3
+	•	PWA : bouton d’installation et offline support
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Recommended Browser Setup
-
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+🔹 Setup du projet
 
 ```sh
+# Installer les dépendances
 npm install
-```
 
-### Compile and Hot-Reload for Development
-
-```sh
+# Lancer le serveur de dev avec hot reload
 npm run dev
+
+# Compiler pour la production
+npm run build
 ```
+
+### 🔹 Structure des stores (Pinia)
+
+ | Store | Contenu / usage| Actions principales|
+
+| --------- | --------- | --------- | 
+| userStore| Infos utilisateur, login, username | loadUser(), updateProfile(), changeAvatar() |
+
+| statsStore | Stats : streaks, total complétés, XP, niveau |
+| challengeStore | Liste des challenges et détail des défis |
+| dailyStore | Stats : streaks, total complétés, XP, niveau |
+
 
 ### Compile and Minify for Production
 

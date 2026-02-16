@@ -38,18 +38,18 @@ onMounted(() => {
 		showConsent.value = true;
 	}
 	const savedTheme = localStorage.getItem("theme") || "light";
-	vuetifyTheme.global.name.value = savedTheme;
+	vuetifyTheme.change = savedTheme;
 });
 
 const toggleTheme = () => {
 	const newTheme =
-		vuetifyTheme.global.name.value === "light" ? "dark" : "light";
-	vuetifyTheme.global.name.value = newTheme;
+		vuetifyTheme.change === "light" ? "dark" : "light";
+	vuetifyTheme.change = newTheme;
 	localStorage.setItem("theme", newTheme);
 };
 
 watch(
-	() => vuetifyTheme.global.name.value,
+	() => vuetifyTheme.change,
 	(newTheme) => {
 		document.documentElement.setAttribute("data-theme", newTheme);
 		localStorage.setItem("theme", newTheme);
