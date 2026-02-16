@@ -9,7 +9,7 @@
 
 		<!-- Carte du défi -->
 		<v-card class="micro-card pa-5 fixed-card mb-4">
-			<div class="page-subtitle text-center" style="font-size: 28px; font-weight: 700; margin-bottom: 12px;">
+			<div class="page-subtitle text-center" style="font-size: 30px !important;font-weight: 600; margin-bottom: 12px;">
 				{{ t("daily.challenge") }}
 			</div>
 
