@@ -264,33 +264,6 @@ const levels = computed(() => settingsStore.levels);
 </script>
 
 <style scoped>
-.fixed-card {
-	width: 390px;
-	height: 300px;
-	border-radius: 24px;
-	background: var(--surface);
-	border: 1px solid var(--border);
-	backdrop-filter: var(--backdrop-blur);
-	padding: 16px;
-	display: flex;
-	flex-direction: column;
-}
-
-.fixed-card .card-content {
-	flex: 1;
-	overflow-y: auto;
-	padding-right: 4px;
-	margin-top: 4px;
-}
-
-.fixed-card .card-content::-webkit-scrollbar {
-	width: 6px;
-}
-
-.fixed-card .card-content::-webkit-scrollbar-thumb {
-	background-color: rgba(100, 100, 100, 0.3);
-	border-radius: 3px;
-}
 
 .v-chip.free {
 	background-color: #3bce71 !important;
