@@ -217,7 +217,7 @@
       },
       {
         "question": "J'ai pas reçu le lien signup ?",
-        "answer": "Vérifiez spam/promos. Demandez nouveau via bouton \"Recommencer\" ou support\\@microdefis.com."
+        "answer": "answer": "Vérifiez spam/promos. Demandez nouveau via bouton 'Recommencer' ou support@microdefis.com."
       },
       {
         "question": "Partager mes stats ?",
@@ -233,7 +233,7 @@
       },
       {
         "question": "Problème technique ?",
-        "answer": "1. Refresh page. 2. Videz cache (Paramètres navigateur). 3. Support support\\@microdefis.com + : App version ? Navigateur ? Screenshot ? Étape exacte ?"
+        "answer": "answer": "1. Refresh page. 2. Videz cache (paramètres navigateur). 3. Contact support@microdefis.com avec version app, navigateur, screenshot et étape exacte."
       },
       {
         "question": "Données personnelles ?",
