@@ -1,6 +1,6 @@
 <template>
-	<div class="pwa-hint">
-		<v-btn fab color="#FF6B35" size="56" elevation="12" @click="showDialog = true">
+	<div v-if="showButton" class="pwa-hint">
+		<v-btn fab color="#FF6B35" size="56" elevation="12" @click="installPWA">
 			<v-icon color="white" size="28">mdi-cellphone</v-icon>
 		</v-btn>
 		<div class="hint-text">{{ t("pwa.button") }}</div>
@@ -31,12 +31,7 @@
 
 				<v-card-actions>
 					<v-spacer />
-					<v-btn class="btn-primary mt-4" 
-						rounded 
-						@click="
-						showDialog = false;
-					trackInstall();
-					" block>
+					<v-btn class="btn-primary mt-4" rounded @click="confirmInstall" block>
 						{{ t("pwa.dialog.install_button") }}
 					</v-btn>
 				</v-card-actions>
@@ -52,22 +47,45 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const showDialog = ref(false);
 const showButton = ref(false);
+let deferredPrompt = null;
 
-onMounted(() => {
+// 🔹 On stocke l'event beforeinstallprompt
+window.addEventListener("beforeinstallprompt", (e) => {
+	e.preventDefault(); // empêche le banner auto
+	deferredPrompt = e;
 	const isStandalone =
 		window.matchMedia("(display-mode: standalone)").matches ||
 		window.navigator.standalone === true; // iOS
-
 	const pwaAlreadyShown = localStorage.getItem("pwa-shown") === "true";
-
-	// Afficher le bouton uniquement si pas en PWA et pas déjà montré
 	showButton.value = !isStandalone && !pwaAlreadyShown;
 });
 
-const trackInstall = () => {
-	console.log("User clicked install");
+// 🔹 Cliquer sur le bouton montre le prompt Chrome
+function installPWA() {
+	if (deferredPrompt) {
+		deferredPrompt.prompt();
+		deferredPrompt.userChoice.then((choice) => {
+			if (choice.outcome === "accepted") {
+				console.log("✅ PWA installée par l'utilisateur !");
+			} else {
+				console.log("❌ L'utilisateur a refusé l'installation");
+			}
+			deferredPrompt = null;
+			localStorage.setItem("pwa-shown", "true");
+			showButton.value = false;
+		});
+	} else {
+		// iOS ou autres cas → afficher ton popup d'instructions
+		showDialog.value = true;
+	}
+}
+
+// 🔹 Popup instructions → bouton confirme
+function confirmInstall() {
+	showDialog.value = false;
 	localStorage.setItem("pwa-shown", "true");
-};
+	showButton.value = false;
+}
 </script>
 
 <style scoped>
