@@ -84,6 +84,12 @@
       "language": "Langue",
       "theme": "Thème"
     },
+    "defis": {
+      "title": "Défis préférés",
+      "category": "Catégorie préférée",
+      "level": "Niveau préféré",
+      "save": "Enregistrer mes préférences défis"
+    },
     "about": {
       "title": "ℹ️ A propos",
       "help_center": "Centre d'aide",
@@ -100,6 +106,7 @@
     "title": "Bonjour, ",
     "challenge": "Défi du jour",
     "loading": "Chargement…",
+    "level": "Niveau",
     "todo": "À faire",
     "done": "Fait !",
     "share": "Partager"

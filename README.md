@@ -1,4 +1,4 @@
-# Micro Défis 🚀
+#Micro Défis 🚀
 
 Micro Défis est une application web de défis quotidiens basée sur Vue 3, Vite, et Pinia.
 Elle permet aux utilisateurs de compléter des challenges, suivre leur progression (🔥 flammes, ✅ complétions, 🏆 badges) et gérer leur profil.
@@ -22,11 +22,11 @@ Elle permet aux utilisateurs de compléter des challenges, suivre leur progressi
 ```sh
 # Installer les dépendances
 npm install
-```
-```
-```sh
 # Lancer le serveur de dev avec hot reload
 npm run dev
+
+# Compiler pour la production
+npm run build
 ```
 ```sh
 # Compiler pour la production

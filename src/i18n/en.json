@@ -84,6 +84,12 @@
       "language": "Language",
       "theme": "Theme"
     },
+    "defis": {
+      "title": "Challenge Preferences",
+      "category": "Favorite Category",
+      "level": "Favorite Level",
+      "save": "Save challenge preferences"
+    },
     "about": {
       "title": "ℹ️ About",
       "help_center": "Help Center",

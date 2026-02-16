@@ -5,16 +5,11 @@
 		</div>
 
 		<!-- Stats -->
-		<StatsCards
-			class="pa-4 mb-4"
-			:stats="[
-				{ icon: '🔥', value: currentStreak, label: t('calendar.actual_serie') },
-				{ icon: '✅', value: totalDays, label: t('calendar.days_completed') },
-				{ icon: '🏆', value: bestStreak, label: t('calendar.best_serie') },
-			]"
-		/>
-
-		<!-- Pub Google -->
+		<StatsCards class="pa-4 mb-4" :stats="[
+				{ icon: '🔥', value: statsStore.currentStreak, label: t('calendar.actual_serie') },
+				{ icon: '✅', value: statsStore.totalCompleted, label: t('calendar.days_completed') },
+				{ icon: '🏆', value: statsStore.bestStreak, label: t('calendar.best_serie') },
+			]" />
 		<GoogleAd adSlot="3324576724" />
 
 		<!-- Calendrier -->
@@ -42,38 +37,28 @@
 			</div>
 
 			<!-- Jours de la semaine -->
-			<v-row dense no-gutters class="weekdays-row mb-2">
-				<v-col
-					v-for="day in tm('calendar.weekdays')"
-					:key="day"
-					class="text-center"
-				>
+			<v-row dense no-gutters class="mb-2">
+				<v-col v-for="day in tm('calendar.weekdays')" :key="day" class="text-center">
 					<div class="text-h7 font-weight-bold text-grey">{{ day }}</div>
 				</v-col>
 			</v-row>
 
 			<!-- Grille des jours -->
-			<v-row dense no-gutters class="days-grid">
-				<v-col
-					v-for="(day, idx) in calendarDays"
-					:key="idx"
-					class="day-col d-flex justify-center mb-2"
-				>
-					<div v-if="!day.inMonth" class="empty-day"></div>
+			<v-row dense no-gutters>
+				<v-col v-for="(day, dayIndex) in calendarDays" :key="dayIndex" cols="auto" style="width: 14.285%"
+					class="d-flex justify-center mb-2">
+					<!-- Jour vide -->
+					<div v-if="!day.inMonth" style="width: 40px; height: 40px"></div>
 
-					<v-sheet
-						v-else
-						:color="getDayColor(day)"
-						class="day-cell d-flex align-center justify-center"
-						rounded="circle"
-						:elevation="day.done ? 2 : 0"
-					>
-						<v-icon v-if="day.done" color="green" size="24">mdi-check</v-icon>
-						<span
-							v-else
-							class="text-body-2 font-weight-medium"
-							:class="getDayTextClass(day)"
-						>
+					<!-- Jour avec contenu -->
+					<v-sheet v-else :color="getDayColor(day)"
+						class="d-flex align-center justify-center position-relative" rounded="circle" :height="40"
+						:width="40" :elevation="day.done ? 2 : 0">
+						<!-- V VERT pour jour validé -->
+						<v-icon v-if="day.done" color="green" size="24"> mdi-check </v-icon>
+
+						<!-- Numéro pour les autres jours -->
+						<span v-else class="text-body-2 font-weight-medium" :class="getDayTextClass(day)">
 							{{ day.label }}
 						</span>
 					</v-sheet>
@@ -84,20 +69,27 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
-import { supabase } from "@/lib/supabase";
 import StatsCards from "@/components/StatsCards.vue";
 import GoogleAd from "@/components/GoogleAd.vue";
 
+// ✅ IMPORT DU STORE
+import { useStatsStore } from "@/stores/statsStore";
+
+// ✅ IMPORT DU STORE
+import { useStatsStore } from "@/stores/statsStore";
+const route = useRoute();
 const { t, tm, locale } = useI18n();
 
-const completedDaysSet = ref(new Set());
-const currentStreak = ref(0);
-const bestStreak = ref(0);
-const currentMonth = ref(new Date());
-const totalDays = computed(() => completedDaysSet.value.size);
+// ✅ INITIALISATION DU STORE
+const statsStore = useStatsStore();
 
+// ===== ÉTAT LOCAL (logique UI seulement) =====
+const currentMonth = ref(new Date());
+
+// ===== COMPUTED =====
 const monthLabel = computed(() => {
 	return currentMonth.value.toLocaleDateString(locale.value, {
 		month: "long",
@@ -114,14 +106,23 @@ const calendarDays = computed(() => {
 	const today = new Date().toISOString().slice(0, 10);
 
 	const days = [];
-	for (let i = 0; i < startDay; i++) days.push({ inMonth: false });
+
+	// Jours vides au début
+	for (let i = 0; i < startDay; i++) {
+		days.push({ inMonth: false });
+	}
+
+	// Jours du mois
 	for (let d = 1; d <= daysInMonth; d++) {
 		const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(
 			d
 		).padStart(2, "0")}`;
 		const isPast = iso < today;
 		const isFuture = iso > today;
-		const isDone = completedDaysSet.value.has(iso);
+
+		// ✅ Utilise le store pour savoir si le jour est complété
+		const isDone = statsStore.isCompletedDay(iso);
+
 		days.push({
 			label: d,
 			date: iso,
@@ -135,6 +136,7 @@ const calendarDays = computed(() => {
 	return days;
 });
 
+// ===== FONCTIONS UI =====
 function getDayColor(day) {
 	if (day.done) return "green-lighten-3";
 	if (day.missed) return "grey";
@@ -162,65 +164,50 @@ function nextMonth() {
 		currentMonth.value.getMonth() + 1,
 		1
 	);
-	if (next <= now) currentMonth.value = next;
+
+	if (next <= now) {
+		currentMonth.value = next;
+	}
 }
 
-// ✅ Fix navigation blocking: utiliser onMounted + onUnmounted
-let challengeListener;
-
+// ===== CHARGEMENT =====
 async function loadCalendar() {
-	const { data, error } = await supabase.auth.getUser();
-	if (!data?.user || error) return;
-	const user = data.user;
-
-	const { data: completions } = await supabase
-		.from("daily_completions")
-		.select("day")
-		.eq("user_id", user.id)
-		.order("day", { ascending: false });
-
-	if (!completions) return;
-	completedDaysSet.value = new Set(completions.map((c) => c.day));
-
-	// Calcul des streaks
-	let streak = 0,
-		maxStreak = 0,
-		temp = 1;
-	const today = new Date().toISOString().slice(0, 10);
-	let expected = today;
-
-	completions.forEach((c, i) => {
-		if (c.day === expected) {
-			streak++;
-			const d = new Date(expected);
-			d.setDate(d.getDate() - 1);
-			expected = d.toISOString().slice(0, 10);
-		}
-		if (i < completions.length - 1) {
-			const diff =
-				(new Date(c.day) - new Date(completions[i + 1].day)) / 86400000;
-			temp = diff === 1 ? temp + 1 : 1;
-			maxStreak = Math.max(maxStreak, temp);
-		}
-	});
-
-	currentStreak.value = streak;
-	bestStreak.value = Math.max(maxStreak, streak);
+	try {
+		// ✅ Le store gère tout le chargement
+		await statsStore.loadCompletions();
+	} catch (error) {
+		console.error("💥 Erreur loadCalendar:", error);
+	}
 }
 
-onMounted(() => {
+// ===== EVENT HANDLER =====
+function handleChallengeCompleted() {
+	// ✅ Recharger les stats quand un challenge est complété
 	loadCalendar();
+}
 
-	// Listener pour mise à jour automatique
-	challengeListener = () => loadCalendar();
-	window.addEventListener("challenge-completed", challengeListener);
+// ===== LIFECYCLE =====
+onMounted(async () => {
+	await loadCalendar();
+	window.addEventListener("challenge-completed", handleChallengeCompleted);
 });
 
 onUnmounted(() => {
-	// On retire le listener pour libérer la navigation
-	if (challengeListener)
-		window.removeEventListener("challenge-completed", challengeListener);
+	window.removeEventListener("challenge-completed", handleChallengeCompleted);
 });
+
+// ===== WATCH ROUTE =====
+watch(
+	() => route.path,
+	(newPath) => {
+		if (newPath === "/calendar" || newPath.includes("calendar")) {
+			loadCalendar();
+		}
+	}
+);
+
+// ===== EXPOSE (pour usage externe) =====
+defineExpose({ loadCalendar });
 </script>
 
 <style scoped>
