@@ -256,10 +256,9 @@
       "title": "🆘 Support",
       "subtitle": "Réponse < 24h (dites version app + bug)"
     }
-  },
+},
   "privacy": {
     "title": "🔒 Politique de Confidentialité de MicroDéfis",
-
     "intro_title": "1. Introduction",
     "intro_tex1": "L'Équipe de développement de MicroDéfis (Sabrina Dubois, France ; contact : contact@microdefis.fr) s'engage à protéger vos données personnelles conformément au RGPD (Règlement UE 2016/679).",
     "intro_text2": "Cette politique explique comment nous collectons, utilisons et protégeons vos données dans l'app MicroDéfis. Date : 1er février 2026.",

@@ -3,7 +3,7 @@
 		<!-- Hero Section -->
 		<div class="hero-section">
 			<div class="crown-icon">👑</div>
-			<h1 class="hero-title">Passe Premium</h1>
+			<h1 class="hero-title">Pass Premium</h1>
 			<p class="hero-subtitle">
 				Débloque tous les défis et accélère ta progression
 			</p>
@@ -58,21 +58,35 @@
 			</div>
 
 			<div class="pricing-cards">
-				<!-- Plan Mensuel -->
-				<div class="pricing-card" @click="selectPlan('monthly')">
+				<!-- Plan Hebdo -->
+				<div class="pricing-card" @click="selectPlan('weekly')">
 					<div class="plan-header">
-						<div class="plan-name">Mensuel</div>
+						<div class="plan-name">Hebdomadaire</div>
 					</div>
 					<div class="plan-price">
-						<span class="price-amount">4,99€</span>
-						<span class="price-period">/mois</span>
+						<span class="price-amount">0,99€</span>
+						<span class="price-period">/semaine</span>
 					</div>
 					<div class="plan-desc">Annule quand tu veux</div>
 				</div>
 
-				<!-- Plan Annuel (POPULAIRE) -->
-				<div class="pricing-card popular" @click="selectPlan('yearly')">
+
+				<!-- Plan Mensuel (POPULAIRE) -->
+				<div class="pricing-card popular" @click="selectPlan('monthly')">
 					<div class="popular-badge">⭐ POPULAIRE</div>
+					<div class="plan-header">
+						<div class="plan-name">Mois</div>
+						<div class="plan-save">Économise 20€</div>
+					</div>
+					<div class="plan-price">
+						<span class="price-amount">4,99€</span>
+						<span class="price-period">/an</span>
+					</div>
+					<div class="plan-desc">Soit 3,33€/mois</div>
+				</div>
+
+				<!-- Plan Annuel -->
+				<div class="pricing-card" @click="selectPlan('yearly')">
 					<div class="plan-header">
 						<div class="plan-name">Annuel</div>
 						<div class="plan-save">Économise 20€</div>
@@ -84,7 +98,7 @@
 					<div class="plan-desc">Soit 3,33€/mois</div>
 				</div>
 
-				<!-- Plan Lifetime -->
+				<!-- Plan Lifetime 
 				<div class="pricing-card" @click="selectPlan('lifetime')">
 					<div class="plan-header">
 						<div class="plan-name">À vie</div>
@@ -94,7 +108,7 @@
 						<span class="price-period">unique</span>
 					</div>
 					<div class="plan-desc">Accès illimité à vie</div>
-				</div>
+				</div>-->
 			</div>
 
 			<div class="trial-notice">
@@ -177,9 +191,8 @@ const comparisonItems = [
 	{ feature: "Défis Débutant 🌱", free: true },
 	{ feature: "Tous les niveaux (800+ défis)", free: false },
 	{ feature: "Toutes les catégories", free: false },
-	{ feature: "Stats avancées", free: false },
+	//{ feature: "Stats avancées", free: false },
 	{ feature: "Sans publicité", free: false },
-	{ feature: "Défis personnalisés", free: false },
 	{ feature: "Badges exclusifs", free: false },
 	{ feature: "Mode sombre", free: true },
 ];
@@ -196,11 +209,11 @@ const benefits = [
 		title: "Progresse vraiment",
 		desc: "Challenges adaptés à ton niveau, du débutant à l'expert"
 	},
-	{
+	/*{
 		icon: "📊",
 		title: "Suis tes progrès",
 		desc: "Statistiques détaillées et analyse de tes habitudes"
-	},
+	},*/
 	{
 		icon: "🎨",
 		title: "Personnalise",
@@ -297,7 +310,7 @@ function closeDialog() {
 /* Hero */
 .hero-section {
 	text-align: center;
-	padding: 20px 17px;
+	padding: 15px 15px;
 	background: linear-gradient(125deg, #ff6b35 0%, #f7931e 100%);
 	border-radius: 24px;
 	margin-bottom: 24px;
@@ -306,17 +319,14 @@ function closeDialog() {
 
 .crown-icon {
 	font-size: 64px;
-	margin-bottom: 10px;
 	animation: bounce 2s infinite;
 }
 
 @keyframes bounce {
-
 	0%,
 	100% {
 		transform: translateY(0);
 	}
-
 	50% {
 		transform: translateY(-10px);
 	}
@@ -378,9 +388,9 @@ function closeDialog() {
 
 .benefit-item {
 	text-align: center;
-	padding: 16px;
-	background: #fef3ef;
-	border-radius: 12px;
+	padding: 5px 5px ;
+	background: #f7e9e4;
+	border-radius: 20px;
 }
 
 .benefit-icon {
@@ -411,7 +421,7 @@ function closeDialog() {
 
 .pricing-card {
 	position: relative;
-	padding: 20px;
+	padding: 10px;
 	border: 2px solid #e2e8f0;
 	border-radius: 16px;
 	cursor: pointer;
@@ -488,7 +498,7 @@ function closeDialog() {
 .trial-notice {
 	text-align: center;
 	padding: 12px;
-	background: #fef3ef;
+	background: #f7e9e4;
 	border-radius: 8px;
 	font-size: 14px;
 	color: #0f172a;
