@@ -14,6 +14,7 @@
     "@supabase/supabase-js": "^2.93.2",
     "html-to-image": "^1.11.13",
     "pinia": "^3.0.4",
+    "qrcode": "^1.5.4",
     "vue": "^3.5.26",
     "vue-i18n": "^9.14.5",
     "vue-router": "^4.6.4",
