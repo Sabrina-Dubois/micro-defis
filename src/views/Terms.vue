@@ -6,53 +6,60 @@
 
 		<v-card class="micro-card">
 			<div class="section">
+
+				<!-- Intro -->
 				<h2>{{ t("terms.intro.title") }}</h2>
-				<p>
-					{{ t("terms.intro.content") }}
-				</p>
+				<p>{{ t("terms.intro.content") }}</p>
 
+				<!-- Account -->
 				<h2>{{ t("terms.account.title") }}</h2>
-				<p>
-					{{ t("terms.account.content") }}
-				</p>
+				<p>{{ t("terms.account.content") }}</p>
 
+				<!-- Usage -->
 				<h2>{{ t("terms.usage.title") }}</h2>
-				<p>
-					{{ t("terms.usage.content") }}
-				</p>
+				<p>{{ t("terms.usage.content") }}</p>
 
+				<!-- Forbidden -->
 				<h2>{{ t("terms.forbidden.title") }}</h2>
-				<p>
-					{{ t("terms.forbidden.content") }}
-				</p>
+				<p>{{ t("terms.forbidden.content") }}</p>
 
+				<!-- Intellectual property -->
 				<h2>{{ t("terms.ip.title") }}</h2>
-				<p>
-					{{ t("terms.ip.content") }}
-				</p>
+				<p>{{ t("terms.ip.content") }}</p>
 
+				<!-- Data / GDPR -->
 				<h2>{{ t("terms.data.title") }}</h2>
 				<p>
-					{{ t("terms.data.content") }} <br />
+					{{ t("terms.data.content") }}
+					<a :href="'mailto:contact@microdefis.fr'">contact@microdefis.fr</a>.<br />
 					{{ t("terms.data.content1") }}
 					<a href="/privacy">{{ t("terms.data.content2") }}</a> {{ t("terms.data.content3") }}<br />
 					{{ t("terms.data.content4") }}
 				</p>
 
+				<!-- Liability -->
 				<h2>{{ t("terms.liability.title") }}</h2>
 				<p>{{ t("terms.liability.content") }}</p>
 
+				<!-- Termination -->
 				<h2>{{ t("terms.termination.title") }}</h2>
 				<p>{{ t("terms.termination.content") }}</p>
 
+				<!-- Changes -->
 				<h2>{{ t("terms.changes.title") }}</h2>
 				<p>{{ t("terms.changes.content") }}</p>
 
+				<!-- Law -->
 				<h2>{{ t("terms.law.title") }}</h2>
 				<p>{{ t("terms.law.content") }}</p>
 
+				<!-- Contact -->
 				<h2>{{ t("terms.contact.title") }}</h2>
-				<p>{{ t("terms.contact.content") }}</p>
+				<p>
+					{{ t("terms.contact.content") }}
+					<a :href="'mailto:contact@microdefis.fr'">contact@microdefis.fr</a>.
+				</p>
+
 			</div>
 		</v-card>
 	</div>
@@ -60,7 +67,6 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
-
 const { t } = useI18n();
 </script>
 

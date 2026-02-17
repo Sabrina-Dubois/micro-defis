@@ -164,7 +164,8 @@
     },
     "data": {
       "title": "6. Données Personnelles et RGPD",
-      "content": "Vos données personnelles (email, progression, statistiques) sont traitées uniquement pour le fonctionnement de l'application. Responsable du traitement : Sabrina Dubois (contact@microdefis).",
+      "contact_email": "contact@microdefis.fr",
+      "content": "Vos données personnelles (email, progression, statistiques) sont traitées uniquement pour le fonctionnement de l'application. Responsable du traitement : {contact_email}.",
       "content1": "Consultez notre",
       "content2": "Politique de Confidentialité",
       "content3": "pour plus de détails sur la collecte et l'utilisation de vos données.",
@@ -188,7 +189,7 @@
     },
     "contact": {
       "title": "11. Contact",
-      "content": "Pour toute question concernant ces conditions, vous pouvez nous contacter à l'adresse suivante : contact@microdefis.fr."
+      "content": "Pour toute question concernant ces conditions, vous pouvez nous contacter à l'adresse suivante : {contact_email}."
     }
   },
   "help": {
