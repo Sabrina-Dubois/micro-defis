@@ -147,7 +147,7 @@ body {
 }
 
 /* Contenu interne avec scroll si trop long */
-.fixed-card .card-content {
+.fixed-card .cardæ-content {
   flex: 1;
   overflow-y: auto; /* scroll vertical si texte trop long */
   padding-right: 4px; /* éviter que le scroll touche le bord */

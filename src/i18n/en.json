@@ -1,17 +1,21 @@
 {
   "consent": {
-    "title": "🚀 Welcome to MicroDéfis!",
-    "intro": "Before getting started, you must accept:",
-    "cgu": "I accept the Terms of Use",
-    "privacy": "I accept the Privacy Policy (GDPR)",
+    "title": "Welcome to MicroDéfis",
+    "intro": "Please accept the following terms to continue:",
+    "cgu": "Terms of Use",
+    "privacy": "Privacy Policy",
+    "accept_cgu": "I accept the Terms of Use",
+    "accept_privacy": "I accept the Privacy Policy",
+    "ads_intro": "We use ads to fund the app.",
+    "accept_ads": "I accept personalized ads",
     "start": "Start"
   },
   "authCallBack": {
-    "connexion": "Connection ...",
-    "access": "We are checking your access, please wait a moment."
+    "connexion": "Connecting...",
+    "access": "Finalizing your access."
   },
   "auth": {
-    "title": "🔥 MicroChallenges",
+    "title": "🔥 MicroDéfis",
     "login": {
       "login": "Login",
       "email": "Email",
@@ -42,70 +46,70 @@
     "success_alert": "✅ Password changed! Logging out..."
   },
   "profil": {
-    "member_since": "Member since ",
+    "member_since": "Member since",
     "stats": {
-      "streak": "Streaks",
+      "streak": "Challenges",
       "completed": "Completed",
-      "best": "Record"
+      "best": "Best"
     },
     "level": {
       "title": "Level",
-      "xp_next": "XP for level"
+      "xp_next": "XP for next level"
     },
     "badges": {
-      "title": "🏅 Unlock Badges",
-      "badges_first": "First streak",
-      "badges_3days": "3 days",
-      "badges_7days": "7 days",
-      "badges_30days": "30 days",
-      "badges_100": "100 streaks",
-      "badges_regular": "Regularity",
+      "title": "🏅 Unlocked Badges",
+      "badges_first": "First Challenge",
+      "badges_3days": "3 Days",
+      "badges_7days": "7 Days",
+      "badges_30days": "30 Days",
+      "badges_100": "100 Challenges",
+      "badges_regular": "Regular",
       "badges_champion": "Champion"
     },
     "activity": {
-      "title": "📊 Activité 7 jours"
+      "title": "📊 7-Day Activity"
     },
     "premium": {
-      "title": "✨ Passer Premium"
+      "title": "✨ Upgrade to Premium"
     }
   },
   "settings": {
     "title": "Settings",
     "profil": {
-      "title": "👤 Profil",
+      "title": "👤 Profile",
       "username": "Username",
       "email": "Email",
       "save": "Save"
     },
     "preferences": {
-      "title": "⚙️ Préférences",
+      "title": "⚙️ Preferences",
       "notifications": "Notifications",
       "reminder": "Reminder",
       "language": "Language",
       "theme": "Theme"
     },
     "defis": {
-      "title": "❤️ Challenge Preferences",
+      "title": "❤️ Favorite Challenges",
       "category": "Favorite Category",
       "level": "Favorite Level",
-      "premium": "The Beginner level 🌱 is free. Upgrade to Premium ✨ to unlock all levels and categories!",
+      "premium": "Beginner level 🌱 is free. Upgrade to Premium ✨ to unlock all levels and categories!",
       "save": "Save"
     },
     "about": {
       "title": "ℹ️ About",
       "help_center": "Help Center",
-      "terms": "Terms",
-      "privacy_policy": "Privacy",
+      "terms": "Terms of Use",
+      "privacy_policy": "Privacy Policy",
       "version": "Version"
     },
     "account": {
-      "logout": " Logout",
-      "delete": "Delete my account"
+      "logout": "Logout",
+      "delete": "Delete Account"
     }
   },
   "daily": {
-    "title": "Hi, ",
-    "challenge": "Today's Challenge",
+    "title": "Hello, ",
+    "challenge": "Daily Challenge",
     "loading": "Loading…",
     "level": "Level",
     "todo": "To do",
@@ -114,197 +118,127 @@
   },
   "calendar": {
     "title": "Calendar",
-    "actual_serie": "Actual serie",
-    "days_completed": "Completed days",
-    "best_serie": "Best serie",
-    "completed_streak": "My completed streaks",
+    "actual_serie": "Current Series",
+    "days_completed": "Days Completed",
+    "best_serie": "Best Series",
+    "completed_streak": "My Completed Challenges",
     "weekdays": ["M", "T", "W", "T", "F", "S", "S"]
   },
   "share": {
-    "download": "Download image",
+    "download": "Download Image",
     "share": "Share",
     "login_required": "Log in to share your stats.",
     "default_user": "Champion",
-    "default_challenge": "Take on your challenge today",
-    "day_challenge": "Day challenge",
+    "default_challenge": "Take today’s challenge",
+    "day_challenge": "Daily Challenge",
     "image_downloaded": "Image downloaded",
     "shared": "Shared",
-    "share_title": "My MicroChallenges stats",
+    "share_title": "My MicroDéfis Stats",
     "streak_label": "day streak 🔥",
     "record": "🏆 Record",
     "completed": "✅ Completed",
-    "cta": "Join Micro Defis ",
+    "cta": "Join MicroDéfis",
     "microdefis": "microdefis.app"
   },
   "terms": {
-    "title": "📄 Terms of Service of MicroDéfis",
-    "sections": {
-      "intro": {
-        "title": "1. Introduction and Acceptance",
-        "content": "MicroDéfis is a free personal challenge application developed by Sabrina Dubois' team (hereinafter referred to as \"we\", \"us\" or \"the Team\"). By creating an account or using the application, you fully agree to these Terms of Service. If you do not agree, please do not use the application. Last updated: February 1, 2026."
-      },
-      "account": {
-        "title": "2. Account Creation and Management",
-        "content": "You must be at least 18 years old or have parental consent to create an account. You are solely responsible for maintaining the confidentiality of your login credentials (email and password). Please notify us immediately of any unauthorized use. We may suspend or delete an account in case of violation of these terms."
-      },
-      "usage": {
-        "title": "3. Use of the Application and Challenges",
-        "content": "The application is intended for personal and non-commercial use. You may participate in the challenges provided, but any cheating or circumvention of the rules (for example use of bots or fraudulent sharing) will result in immediate suspension. You must respect other users and refrain from posting illegal or harassing content."
-      },
-      "forbidden": {
-        "title": "4. Prohibited Uses",
-        "content": "Reverse engineering, decompilation, unauthorized mass distribution, use of malware, or any action that may harm the proper functioning of the application is strictly prohibited. The application is free of charge; any attempt to monetize it without written authorization is forbidden."
-      },
-      "ip": {
-        "title": "5. Intellectual Property",
-        "content": "The application, logos, challenges, icons, and all content are our exclusive property and are protected by copyright and trademark laws. Personal use is permitted. Any reproduction, modification, or distribution without prior written permission is strictly prohibited."
-      },
-      "data": {
-        "title": "6. Personal Data and GDPR",
-        "content": "Your personal data (email, progress, statistics) are processed solely for the operation of the application. Data controller: Sabrina Dubois : <a href='mailto:contact@microdefis.fr'>contact@microdefis.fr</a>.",
-        "content1": "Please consult our",
-        "content2": "Privacy Policy",
-        "content3": "for more details about the collection and use of your data.",
-        "content4": "You have the right to access, rectify, and delete your data by contacting us at this address. We comply with GDPR regulations and never sell your data."
-      },
-      "liability": {
-        "title": "7. Limitation of Liability",
-        "content": "The application is provided \"as is\". We do not guarantee the absence of errors or bugs nor that it will meet your specific needs. We are not liable for indirect losses, data loss, or damages resulting from the use of the application, except in cases of gross negligence or willful misconduct. Force majeure events are excluded."
-      },
-      "termination": {
-        "title": "8. Termination",
-        "content": "You may delete your account at any time via the application settings. We may suspend or terminate an account in case of violation of these terms without prior notice. Certain obligations, including confidentiality obligations, survive termination."
-      },
-      "changes": {
-        "title": "9. Changes to Terms",
-        "content": "We may modify these Terms of Service at any time. Any changes will be notified via the application or by email. Continued use of the application constitutes acceptance of the updated terms. We encourage you to review this page regularly."
-      },
-      "law": {
-        "title": "10. Governing Law and Disputes",
-        "content": "These terms are governed exclusively by French law. In case of dispute, mediation may be initiated via the CNCM mediator (https://www.mediation-conso.fr). Failing amicable resolution, exclusive jurisdiction is granted to the Paris Court."
-      },
-      "contact": {
-        "title": "11. Contact",
-        "content": "For any questions regarding these terms, please contact us at: contact@microdefis.fr."
-      }
-    }
-  },
-  "help": {
-    "title": "💡 Help Center",
-    "search": {
-      "title": "🔍 Quick Search",
-      "placeholder": "streak, validate, progress..."
+    "title": "Terms of Use",
+    "intro": {
+      "title": "1. Introduction",
+      "content": "MicroDéfis is an application offering daily challenges for well-being and personal growth. By using the app, you agree to these terms."
     },
-    "faq_title": "❓ MicroChallenges FAQ",
-    "faqs": [
-      {
-        "question": "How to start challenges?",
-        "answer": "Open the challenge → Complete it → \"Validate\" (option: photo proof). Streak updates instantly!"
-      },
-      {
-        "question": "How to validate a challenge?",
-        "answer": "Open the challenge → Do it → \"✓ Validated\" button at the bottom. Progress + streak updates instantly."
-      },
-      {
-        "question": "What is my streak?",
-        "answer": "Series of consecutive completed challenges. Ex: 7d = streak 7. Lost if 1 day missed."
-      },
-      {
-        "question": "Where to see my progress?",
-        "answer": "Bottom menu → Profile/Stats: list of completed challenges, current streak, total completed, simple graph."
-      },
-      {
-        "question": "Didn't receive signup link?",
-        "answer": "Check spam/promotions. Request new one via \"Restart\" button or support@microdefis.com."
-      },
-      {
-        "question": "Share my stats?",
-        "answer": "Profile → \"Share\" button → Streak image ready (copy/Whatsapp). Anonymous."
-      },
-      {
-        "question": "Notifications/reminders?",
-        "answer": "Enable push notifications (first launch). Daily streak reminders."
-      },
-      {
-        "question": "Change language?",
-        "answer": "Settings → \"Language\" → Choose French/English. Restart app to apply."
-      },
-      {
-        "question": "Technical issue?",
-        "answer": "1. Refresh page. 2. Clear cache (browser settings). 3. Contact support@microdefis.com +: App version? Browser? Screenshot? Exact step?"
-      },
-      {
-        "question": "Personal data?",
-        "answer": "Email + progress stored (GDPR). See /privacy. Request deletion."
-      },
-      {
-        "question": "Notifications not working?",
-        "answer": "Settings → \"Notifications\" → Enable push. Check app permissions (iOS/Android)."
-      },
-      {
-        "question": "Delete my account?",
-        "answer": "Settings → \"Delete account\" → Confirm email. Data erased in 30d (GDPR)."
-      },
-      {
-        "question": "Share my streak?",
-        "answer": "Profile → \"Share\" → Image ready (Twitter/Insta/WhatsApp). Anonymous by default."
-      },
-      {
-        "question": "Enable dark mode?",
-        "answer": "Settings → Appearance → \"Dark mode\" (auto/system/manual)."
-      }
-    ],
-    "support": {
-      "title": "🆘 Support",
-      "subtitle": "Response < 24h (mention app version + bug)"
+    "account": {
+      "title": "2. User account",
+      "content": "Some features require an account. You are responsible for the information provided and the security of your account."
+    },
+    "usage": {
+      "title": "3. Service usage",
+      "content": "The app must be used for personal and non-commercial purposes. Challenges are provided for informational purposes only."
+    },
+    "forbidden": {
+      "title": "4. Prohibited behavior",
+      "content": "It is forbidden to use the app for illegal purposes, disrupt its operation, or attempt to access other users’ data."
+    },
+    "ip": {
+      "title": "5. Intellectual property",
+      "content": "All app content, including text, visuals, and features, is protected by copyright."
+    },
+    "data": {
+      "title": "6. Personal data",
+      "content": "Your data is processed in accordance with applicable regulations.",
+      "content1": "For more information, see the",
+      "content2": "privacy policy",
+      "content3": ".",
+      "content4": "You can exercise your rights at any time."
+    },
+    "liability": {
+      "title": "7. Liability",
+      "content": "The app is provided “as is”. The publisher is not liable for indirect damages."
+    },
+    "termination": {
+      "title": "8. Termination",
+      "content": "You may delete your account at any time. The seevice may suspend accounts that violate these terms."
+    },
+    "changes": {
+      "title": "9. Changes",
+      "content": "These terms may be updated at any time."
+    },
+    "law": {
+      "title": "10. Governing law",
+      "content": "These terms are governed by French law."
+    },
+    "contact": {
+      "title": "11. Contact",
+      "content": "For any questions, contact us at:"
     }
   },
+
   "privacy": {
-    "title": "🔒 MicroChallenges Privacy Policy",
+    "title": "Privacy Policy",
 
     "intro_title": "1. Introduction",
-    "intro_text1": "The MicroChallenges development team (Sabrina Dubois, France; contact: contact@microdefis.fr) is committed to protecting your personal data in accordance with GDPR (EU Regulation 2016/679).",
-    "intro_text2": "This policy explains how we collect, use, and protect your data in the MicroChallenges app. Date: February 1, 2026.",
+    "intro_text1": "This policy explains how your personal data is collected and used.",
+    "intro_text2": "We comply with the General Data Protection Regulation (GDPR).",
+
     "data_title": "2. Data collected",
-    "data_intro": "We only collect necessary data:",
-    "data_identity": "Identity: name (optional), email (required for account).",
-    "data_technical": "Technical: challenge progress, streaks, device ID, anonymized IP.",
-    "data_usage": "Usage: read notifications, preferences (opt-in).",
-    "data_sensitive": "No sensitive data (health, etc.).",
+    "data_intro": "We only collect data necessary for the service:",
+    "data_identity": "Email address and account data.",
+    "data_technical": "Technical connection data.",
+    "data_usage": "Challenge usage statistics.",
+    "data_sensitive": "No sensitive data is collected.",
 
-    "legal_title": "3. Legal bases and uses",
-    "legal_intro": "GDPR bases:",
-    "legal_consent": "Consent (notifications, cookies).",
-    "legal_contract": "Contract execution (account, challenges).",
-    "legal_interest": "Legitimate interest (app improvement, security).",
-    "legal_usage": "Uses: account management, challenge tracking, notifications, anonymous analytics, support.",
+    "legal_title": "3. Legal basis",
+    "legal_intro": "Data is processed based on:",
+    "legal_consent": "Your consent.",
+    "legal_contract": "Service execution.",
+    "legal_interest": "Legitimate operational interest.",
+    "legal_usage": "Data is used only to provide and improve the service.",
 
-    "share_title": "4. Sharing and recipients",
-    "share_intro": "No sale or commercial sharing. Limited recipients:",
-    "share_host": "Hosting providers (EU, DPA contract).",
-    "share_analytics": "Anonymous analytics.",
-    "share_legal": "Legal authorities when required.",
+    "share_title": "4. Data sharing",
+    "share_intro": "Some data may be processed by technical providers:",
+    "share_host": "Secure hosting and database.",
+    "share_analytics": "Anonymous analytics tools.",
+    "share_legal": "Legal authorities if required.",
 
-    "retention_title": "5. Data retention",
-    "retention_text": "Active account: duration of use + 1 year. Deleted account: 30 days (except legal obligations: 5 years). Security logs: 6 months.",
+    "retention_title": "5. Retention",
+    "retention_text": "Data is kept as long as your account is active.",
 
-    "security_title": "6. Data security",
-    "security_text": "Measures: HTTPS encryption, secure storage, restricted access. Breach notification within 72 hours if high risk.",
+    "security_title": "6. Security",
+    "security_text": "Technical and organizational measures protect your data.",
 
-    "cookies_title": "7. Cookies and similar technologies",
-    "cookies_text": "Essential cookies for session and security. Anonymous analytics with consent. No advertising trackers.",
+    "cookies_title": "7. Cookies",
+    "cookies_text": "Technical cookies may be used for app functionality.",
 
-    "rights_title": "8. Your GDPR rights",
-    "rights_text": "Access, rectification, objection, portability, right to erasure, and restriction. Via app settings or email contact@microdefis.fr (response within 1 month). Complaint possible with your data protection authority.",
+    "rights_title": "8. Your rights",
+    "rights_text": "You may request access, correction, or deletion of your data.",
 
-    "transfer_title": "9. Transfers outside the EU",
-    "transfer_text": "No transfers outside the EU except certified tools with contractual safeguards. Servers located in the EU.",
+    "transfer_title": "9. International transfers",
+    "transfer_text": "Some data may be processed outside the EU with safeguards.",
 
     "changes_title": "10. Changes",
-    "changes_text": "Updates will be notified via app or email. Continued use implies acceptance.",
+    "changes_text": "This policy may be updated at any time.",
 
     "contact_title": "11. Contact",
-    "contact_text": "Contact: contact@microdefis.fr"
+    "contact_text": "For any data-related request:"
   },
   "pwa": {
     "button": "Mobile App",
@@ -312,16 +246,16 @@
       "title": "📱 Install the App",
       "android": {
         "title": "📱 Android (Chrome)",
-        "step1": "1. Tap ⋮ (3 dots)",
-        "step2": "2. \"Add to Home screen\"",
-        "step3": "3. Open as app!"
+        "step1": "1. Click ⋮ (3 dots)",
+        "step2": "2. 'Add to Home Screen'",
+        "step3": "3. Open as an app!"
       },
       "ios": {
         "title": "🍎 iPhone (Safari)",
-        "step1": "1. Top of screen → icon ⏵️ (square + arrow) ⏵️",
-        "step2": "2. \"Add to Home screen\"",
-        "step3": "3. App name → \"Add\"",
-        "step4": "4. ✅ Icon on Home screen!"
+        "step1": "1. Top screen → icon ⏵️ (square + arrow) ⏵️",
+        "step2": "2. 'Add to Home Screen'",
+        "step3": "3. App name → 'Add'",
+        "step4": "4. ✅ Icon on home screen!"
       },
       "install_button": "Install 👍"
     }
@@ -329,7 +263,7 @@
   "errors": {
     "404": "404",
     "not_found_title": "Oops! Page not found",
-    "not_found_message": "This page does not exist .",
-    "back_home": "Bad"
+    "not_found_message": "This page does not exist.",
+    "back_home": "Back home"
   }
 }

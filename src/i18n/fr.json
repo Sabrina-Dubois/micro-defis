@@ -141,172 +141,104 @@
     "microdefis": "microdefis.app"
   },
   "terms": {
-    "title": "📄 Conditions d'utilisation de Micro Défis",
+    "title": "Conditions d’utilisation",
     "intro": {
-      "title": "1. Introduction et Acceptation",
-      "content": "MicroDéfis est une application gratuite de défis personnels développée par l'équipe de Sabrina Dubois (ci-après \"nous\", \"nos\" ou \"l'Équipe\"). En créant un compte ou en utilisant l'application, vous acceptez pleinement ces Conditions Générales d'Utilisation (CGU). Si vous n'êtes pas d'accord, ne l'utilisez pas. Date de dernière mise à jour : 1er février 2026."
+      "title": "1. Introduction",
+      "content": "MicroDéfis est une application proposant des défis quotidiens destinés au bien-être et au développement personnel. En utilisant l’application, vous acceptez les présentes conditions."
     },
     "account": {
-      "title": "2. Création et Gestion du Compte",
-      "content": "Vous devez avoir au moins 18 ans ou l'accord parental pour créer un compte. Vous êtes seul responsable de la confidentialité de vos identifiants (email et mot de passe). Informez-nous immédiatement de toute utilisation non autorisée. Nous pouvons suspendre ou supprimer un compte en cas de violation des présentes conditions."
+      "title": "2. Compte utilisateur",
+      "content": "Certaines fonctionnalités nécessitent la création d’un compte. Vous êtes responsable des informations fournies et de la sécurité de votre compte."
     },
     "usage": {
-      "title": "3. Utilisation de l'Application et des Défis",
-      "content": "L'application est destinée à un usage personnel et non commercial. Vous pouvez relever les défis proposés, mais toute triche ou contournement des règles (par exemple utilisation de bots ou partage frauduleux) entraînera une suspension immédiate. Vous devez respecter les autres utilisateurs et ne publier aucun contenu illégal ou harcelant."
+      "title": "3. Utilisation du service",
+      "content": "L’application doit être utilisée dans un cadre personnel et non commercial. Les défis proposés sont fournis à titre informatif et ne remplacent pas un avis professionnel."
     },
     "forbidden": {
-      "title": "4. Utilisations Interdites",
-      "content": "Il est interdit de procéder à du reverse engineering, de la décompilation, de la diffusion massive non autorisée, d'utiliser des logiciels malveillants ou toute action nuisant au bon fonctionnement de l'application. L'application est gratuite ; toute tentative de monétisation sans autorisation écrite est interdite."
+      "title": "4. Comportements interdits",
+      "content": "Il est interdit d’utiliser l’application à des fins illégales, de perturber son fonctionnement ou de tenter d’accéder aux données d’autres utilisateurs."
     },
     "ip": {
-      "title": "5. Propriété Intellectuelle",
-      "content": "L'application, les logos, les défis, les icônes et tous les contenus sont notre propriété exclusive et protégés par les droits d'auteur et le droit des marques. Un usage personnel est autorisé. Toute reproduction, modification ou distribution sans autorisation écrite est strictement interdite."
+      "title": "5. Propriété intellectuelle",
+      "content": "Tous les contenus de l’application, y compris les textes, visuels et fonctionnalités, sont protégés par le droit d’auteur."
     },
     "data": {
-      "title": "6. Données Personnelles et RGPD",
-      "contact_email": "contact@microdefis.fr",
-      "content": "Vos données personnelles (email, progression, statistiques) sont traitées uniquement pour le fonctionnement de l'application. Responsable du traitement : {contact_email}.",
-      "content1": "Consultez notre",
-      "content2": "Politique de Confidentialité",
-      "content3": "pour plus de détails sur la collecte et l'utilisation de vos données.",
-      "content4": "Vous disposez d'un droit d'accès, de rectification et de suppression de vos données en nous contactant à cette adresse. Nous sommes conformes au RGPD et ne vendons jamais vos données."
+      "title": "6. Données personnelles",
+      "content": "Vos données sont traitées conformément à la réglementation en vigueur.",
+      "content1": "Pour plus d’informations, consultez la",
+      "content2": "politique de confidentialité",
+      "content3": ".",
+      "content4": "Vous pouvez exercer vos droits à tout moment."
     },
     "liability": {
-      "title": "7. Limitation de Responsabilité",
-      "content": "L'application est fournie \"telle quelle\". Nous ne garantissons pas l'absence d'erreurs ou de bugs ni l'adéquation à vos besoins spécifiques. Nous ne sommes pas responsables des pertes indirectes, pertes de données ou dommages résultant de l'utilisation de l'application, sauf en cas de faute grave ou dol. Les cas de force majeure sont exclus."
+      "title": "7. Responsabilité",
+      "content": "L’application est fournie “en l’état”. L’éditeur ne peut être tenu responsable des dommages indirects liés à son utilisation."
     },
     "termination": {
       "title": "8. Résiliation",
-      "content": "Vous pouvez supprimer votre compte à tout moment via les paramètres de l'application. Nous pouvons résilier ou suspendre un compte en cas de violation des présentes conditions, sans préavis. Certaines obligations, notamment liées à la confidentialité, survivent à la résiliation."
+      "content": "Vous pouvez supprimer votre compte à tout moment. L’éditeur se réserve le droit de suspendre un compte en cas de non-respect des conditions."
     },
     "changes": {
-      "title": "9. Modifications des CGU",
-      "content": "Nous pouvons modifier les présentes Conditions Générales d'Utilisation à tout moment. Toute modification sera notifiée via l'application ou par email. La poursuite de l'utilisation de l'application vaut acceptation des nouvelles conditions. Nous vous invitons à consulter régulièrement cette page."
+      "title": "9. Modifications",
+      "content": "Les présentes conditions peuvent être modifiées à tout moment. La date de mise à jour sera indiquée dans l’application."
     },
     "law": {
-      "title": "10. Loi Applicable et Litiges",
-      "content": "Les présentes conditions sont régies exclusivement par le droit français. En cas de litige, une tentative de médiation pourra être engagée via le médiateur CNCM (https://www.mediation-conso.fr). À défaut d'accord amiable, compétence exclusive est attribuée au Tribunal de Paris."
+      "title": "10. Loi applicable",
+      "content": "Les présentes conditions sont régies par le droit français."
     },
     "contact": {
       "title": "11. Contact",
-      "content": "Pour toute question concernant ces conditions, vous pouvez nous contacter à l'adresse suivante : {contact_email}."
+      "content": "Pour toute question, vous pouvez nous contacter à l’adresse suivante :"
     }
   },
-  "help": {
-    "title": "💡 Centre d'aide",
-    "search": {
-      "title": "🔍 Recherche rapide",
-      "placeholder": "streak, valider, progression..."
-    },
-    "faq_title": "❓ FAQ MicroDéfis",
-    "faqs": [
-      {
-        "question": "Comment commencer les défis ?",
-        "answer": "Ouvrez le défi → Complétez → \"Valider\" (option : photo preuve). Streak mis à jour instant !"
-      },
-      {
-        "question": "Comment valider un défi ?",
-        "answer": "Défi ouvert → Faites-le → Bouton \"✓ Validé\" en bas. Progression + streak mis à jour instantanément."
-      },
-      {
-        "question": "C'est quoi mon streak ?",
-        "answer": "Série défis validés consécutivement. Ex: 7j = streak 7. Perdu si 1 jour manqué."
-      },
-      {
-        "question": "Où voir ma progression ?",
-        "answer": "Menu bas → Profil/Stats : liste défis faits, streak actuel, total validés, graph simple."
-      },
-      {
-        "question": "J'ai pas reçu le lien signup ?",
-        "answer": "Vérifiez spam/promos. Demandez nouveau via bouton 'Recommencer' ou support@microdefis.com."
-      },
-      {
-        "question": "Partager mes stats ?",
-        "answer": "Profil → Bouton \"Partager\" → Image streak prête (copie/Whatsapp). Anonyme."
-      },
-      {
-        "question": "Notifications/rappels ?",
-        "answer": "Activez push notifications (premier lancement). Rappels quotidiens streak."
-      },
-      {
-        "question": "Changer langue ?",
-        "answer": "Paramètres → \"Langue\" → Choix Français/English. Reboot app pour appliquer."
-      },
-      {
-        "question": "Problème technique ?",
-        "answer": "1. Refresh page. 2. Videz cache (paramètres navigateur). 3. Contact support@microdefis.com avec version app, navigateur, screenshot et étape exacte."
-      },
-      {
-        "question": "Données personnelles ?",
-        "answer": "Email + progression stockés (RGPD). Voir /privacy. Demandez suppression."
-      },
-      {
-        "question": "Notifications ne marchent pas ?",
-        "answer": "Paramètres → \"Notifications\" → Activez push. Vérifiez permissions app (iOS/Android)."
-      },
-      {
-        "question": "Supprimer mon compte ?",
-        "answer": "Paramètres → \"Supprimer compte\" → Confirmez email. Données effacées 30j (RGPD)."
-      },
-      {
-        "question": "Partager mon streak ?",
-        "answer": "Profil → \"Partager\" → Image prête (Twitter/Insta/WhatsApp). Anonyme par défaut."
-      },
-      {
-        "question": "Activer mode sombre ?",
-        "answer": "Paramètres → Apparence → \"Mode sombre\" (auto/système/manuel)."
-      }
-    ],
-    "support": {
-      "title": "🆘 Support",
-      "subtitle": "Réponse < 24h (dites version app + bug)"
-    }
-  },
+
   "privacy": {
-    "title": "🔒 Politique de Confidentialité de MicroDéfis",
+    "title": "Politique de confidentialité",
+
     "intro_title": "1. Introduction",
-    "intro_text1": "L'Équipe de développement de MicroDéfis (Sabrina Dubois, France ; contact : contact@microdefis.fr) s'engage à protéger vos données personnelles conformément au RGPD (Règlement UE 2016/679).",
-    "intro_text2": "Cette politique explique comment nous collectons, utilisons et protégeons vos données dans l'app MicroDéfis. Date : 1er février 2026.",
+    "intro_text1": "Cette politique explique comment vos données personnelles sont collectées et utilisées.",
+    "intro_text2": "Nous nous engageons à respecter le Règlement Général sur la Protection des Données (RGPD).",
+
     "data_title": "2. Données collectées",
-    "data_intro": "Nous collectons uniquement les données nécessaires :",
-    "data_identity": "Identité : nom/prénom (optionnel), email (requis pour le compte).",
-    "data_technical": "Technique : progression des défis, streaks, ID appareil, IP anonymisée.",
-    "data_usage": "Usage : notifications lues, préférences (opt-in).",
-    "data_sensitive": "Aucune donnée sensible (santé, etc.).",
+    "data_intro": "Nous collectons uniquement les données nécessaires au fonctionnement du service :",
+    "data_identity": "Adresse email et informations de compte.",
+    "data_technical": "Données techniques de connexion.",
+    "data_usage": "Statistiques d’utilisation des défis.",
+    "data_sensitive": "Aucune donnée sensible n’est collectée.",
 
-    "legal_title": "3. Bases légales et utilisations",
-    "legal_intro": "Bases RGPD :",
-    "legal_consent": "Consentement (notifications, cookies).",
-    "legal_contract": "Exécution du contrat (gestion du compte, défis).",
-    "legal_interest": "Intérêt légitime (amélioration de l’app, sécurité).",
-    "legal_usage": "Utilisations : gestion du compte, suivi des défis et streaks, notifications, analytics anonymes, support.",
+    "legal_title": "3. Bases légales",
+    "legal_intro": "Le traitement des données repose sur :",
+    "legal_consent": "Votre consentement.",
+    "legal_contract": "L’exécution du service.",
+    "legal_interest": "L’intérêt légitime de fonctionnement.",
+    "legal_usage": "Ces données sont utilisées uniquement pour fournir et améliorer le service.",
 
-    "share_title": "4. Partage et destinataires",
-    "share_intro": "Pas de vente ni partage commercial. Destinataires limités :",
-    "share_host": "Hébergeurs (UE, contrat DPA).",
-    "share_analytics": "Analytics anonymisés.",
-    "share_legal": "Autorités légales sur réquisition.",
+    "share_title": "4. Partage des données",
+    "share_intro": "Certaines données peuvent être traitées par des prestataires techniques :",
+    "share_host": "Hébergement et base de données sécurisés.",
+    "share_analytics": "Outils d’analyse anonymisés.",
+    "share_legal": "Autorités légales si nécessaire.",
 
-    "retention_title": "5. Conservation des données",
-    "retention_text": "Compte actif : durée d’utilisation + 1 an. Compte supprimé : 30 jours (sauf obligations légales : 5 ans fiscal). Logs de sécurité : 6 mois.",
+    "retention_title": "5. Durée de conservation",
+    "retention_text": "Les données sont conservées tant que votre compte est actif.",
 
-    "security_title": "6. Sécurité des données",
-    "security_text": "Mesures : chiffrement HTTPS, stockage sécurisé, accès restreint. Notification de violation sous 72h en cas de risque élevé.",
+    "security_title": "6. Sécurité",
+    "security_text": "Des mesures techniques et organisationnelles sont mises en place pour protéger vos données.",
 
-    "cookies_title": "7. Cookies et technologies similaires",
-    "cookies_text": "Cookies essentiels pour session et sécurité. Analytics anonymes avec consentement. Pas de trackers publicitaires.",
+    "cookies_title": "7. Cookies",
+    "cookies_text": "Des cookies techniques peuvent être utilisés pour le fonctionnement de l’application.",
 
-    "rights_title": "8. Vos droits RGPD",
-    "rights_text": "Accès, rectification, opposition, portabilité, droit à l’oubli et limitation. Via paramètres de l’app ou email contact@microdefis.fr (réponse sous 1 mois). Réclamation possible auprès de la CNIL.",
+    "rights_title": "8. Vos droits",
+    "rights_text": "Vous pouvez demander l’accès, la modification ou la suppression de vos données.",
 
-    "transfer_title": "9. Transferts hors UE",
-    "transfer_text": "Aucun transfert hors UE sauf outils certifiés avec garanties contractuelles. Serveurs situés en UE.",
+    "transfer_title": "9. Transferts internationaux",
+    "transfer_text": "Certaines données peuvent être traitées hors de l’Union européenne avec des garanties appropriées.",
 
     "changes_title": "10. Modifications",
-    "changes_text": "Les mises à jour seront notifiées dans l’app ou par email. La poursuite de l’utilisation vaut acceptation.",
+    "changes_text": "Cette politique peut être mise à jour à tout moment.",
 
     "contact_title": "11. Contact",
-    "contact_text": "Contact : contact@microdefis.fr"
+    "contact_text": "Pour toute question relative à vos données :"
   },
   "pwa": {
     "button": "App mobile",

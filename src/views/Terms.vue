@@ -1,76 +1,181 @@
 <template>
 	<div class="terms-page">
-		<div class="top">
+
+		<!-- Header -->
+		<div class="page-header">
 			<div class="page-title">{{ t("terms.title") }}</div>
+			<div class="last-updated">Mis à jour le 1er février 2026</div>
 		</div>
 
-		<!-- Wrapper centré avec scroll -->
+		<!-- Navigation rapide -->
+		<div class="quick-nav">
+			<div class="nav-pills">
+				<a v-for="(section, i) in sections" :key="i" :href="'#section-' + i" class="nav-pill">
+					{{ section.short }}
+				</a>
+			</div>
+		</div>
+
+		<!-- Contenu -->
 		<div class="card-wrapper">
-			<v-card class="micro-card">
+			<v-card class="micro-card content-card">
 				<div class="card-content">
-					<div class="section">
-						<!-- Intro -->
-						<h2>{{ t("terms.intro.title") }}</h2>
-						<p>{{ t("terms.intro.content") }}</p>
 
-						<!-- Account -->
-						<h2>{{ t("terms.account.title") }}</h2>
-						<p>{{ t("terms.account.content") }}</p>
-
-						<!-- Usage -->
-						<h2>{{ t("terms.usage.title") }}</h2>
-						<p>{{ t("terms.usage.content") }}</p>
-
-						<!-- Forbidden -->
-						<h2>{{ t("terms.forbidden.title") }}</h2>
-						<p>{{ t("terms.forbidden.content") }}</p>
-
-						<!-- IP -->
-						<h2>{{ t("terms.ip.title") }}</h2>
-						<p>{{ t("terms.ip.content") }}</p>
-
-						<!-- Data / GDPR -->
-						<h2>{{ t("terms.data.title") }}</h2>
-						<p>
-							{{ t("terms.data.content") }}
-							<a :href="'mailto:contact@microdefis.fr'">contact@microdefis.fr</a>.<br />
-							{{ t("terms.data.content1") }}
-							<a href="/privacy">{{ t("terms.data.content2") }}</a> {{ t("terms.data.content3") }}<br />
-							{{ t("terms.data.content4") }}
-						</p>
-
-						<!-- Liability -->
-						<h2>{{ t("terms.liability.title") }}</h2>
-						<p>{{ t("terms.liability.content") }}</p>
-
-						<!-- Termination -->
-						<h2>{{ t("terms.termination.title") }}</h2>
-						<p>{{ t("terms.termination.content") }}</p>
-
-						<!-- Changes -->
-						<h2>{{ t("terms.changes.title") }}</h2>
-						<p>{{ t("terms.changes.content") }}</p>
-
-						<!-- Law -->
-						<h2>{{ t("terms.law.title") }}</h2>
-						<p>{{ t("terms.law.content") }}</p>
-
-						<!-- Contact -->
-						<h2>{{ t("terms.contact.title") }}</h2>
-						<p>
-							{{ t("terms.contact.content") }}
-							<a :href="'mailto:contact@microdefis.fr'">contact@microdefis.fr</a>.
-						</p>
+					<div :id="'section-0'" class="section-block">
+						<div class="section-header">
+							<span class="section-number">01</span>
+							<h2 class="section-title">{{ t("terms.intro.title") }}</h2>
+						</div>
+						<p class="section-text">{{ t("terms.intro.content") }}</p>
 					</div>
+
+					<div class="divider"></div>
+
+					<div :id="'section-1'" class="section-block">
+						<div class="section-header">
+							<span class="section-number">02</span>
+							<h2 class="section-title">{{ t("terms.account.title") }}</h2>
+						</div>
+						<p class="section-text">{{ t("terms.account.content") }}</p>
+					</div>
+
+					<div class="divider"></div>
+
+					<div :id="'section-2'" class="section-block">
+						<div class="section-header">
+							<span class="section-number">03</span>
+							<h2 class="section-title">{{ t("terms.usage.title") }}</h2>
+						</div>
+						<p class="section-text">{{ t("terms.usage.content") }}</p>
+					</div>
+
+					<div class="divider"></div>
+
+					<div :id="'section-3'" class="section-block">
+						<div class="section-header">
+							<span class="section-number">04</span>
+							<h2 class="section-title">{{ t("terms.forbidden.title") }}</h2>
+						</div>
+						<p class="section-text">{{ t("terms.forbidden.content") }}</p>
+					</div>
+
+					<div class="divider"></div>
+
+					<div :id="'section-4'" class="section-block">
+						<div class="section-header">
+							<span class="section-number">05</span>
+							<h2 class="section-title">{{ t("terms.ip.title") }}</h2>
+						</div>
+						<p class="section-text">{{ t("terms.ip.content") }}</p>
+					</div>
+
+					<div class="divider"></div>
+
+					<!-- Section RGPD -->
+					<div :id="'section-5'" class="section-block highlight-block">
+						<div class="section-header">
+							<span class="section-number">06</span>
+							<h2 class="section-title">{{ t("terms.data.title") }}</h2>
+						</div>
+						<p class="section-text">{{ t("terms.data.content", { contact_email: 'contact@microdefis.fr' })
+							}}</p>
+						<div class="info-box">
+							<v-icon color="purple" size="18">mdi-shield-lock</v-icon>
+							<span>
+								{{ t("terms.data.content1") }}
+								<router-link to="/privacy" class="link-inline">{{ t("terms.data.content2")
+									}}</router-link>
+								{{ t("terms.data.content3") }}
+							</span>
+						</div>
+						<p class="section-text">{{ t("terms.data.content4") }}</p>
+						<a href="mailto:contact@microdefis.fr" class="email-link">
+							<v-icon size="14">mdi-email</v-icon>
+							contact@microdefis.fr
+						</a>
+					</div>
+
+					<div class="divider"></div>
+
+					<div :id="'section-6'" class="section-block">
+						<div class="section-header">
+							<span class="section-number">07</span>
+							<h2 class="section-title">{{ t("terms.liability.title") }}</h2>
+						</div>
+						<p class="section-text">{{ t("terms.liability.content") }}</p>
+					</div>
+
+					<div class="divider"></div>
+
+					<div :id="'section-7'" class="section-block">
+						<div class="section-header">
+							<span class="section-number">08</span>
+							<h2 class="section-title">{{ t("terms.termination.title") }}</h2>
+						</div>
+						<p class="section-text">{{ t("terms.termination.content") }}</p>
+					</div>
+
+					<div class="divider"></div>
+
+					<div :id="'section-8'" class="section-block">
+						<div class="section-header">
+							<span class="section-number">09</span>
+							<h2 class="section-title">{{ t("terms.changes.title") }}</h2>
+						</div>
+						<p class="section-text">{{ t("terms.changes.content") }}</p>
+					</div>
+
+					<div class="divider"></div>
+
+					<div :id="'section-9'" class="section-block">
+						<div class="section-header">
+							<span class="section-number">10</span>
+							<h2 class="section-title">{{ t("terms.law.title") }}</h2>
+						</div>
+						<p class="section-text">{{ t("terms.law.content") }}</p>
+					</div>
+
+					<div class="divider"></div>
+
+					<!-- Contact -->
+					<div :id="'section-10'" class="section-block contact-block">
+						<div class="section-header">
+							<span class="section-number">11</span>
+							<h2 class="section-title">{{ t("terms.contact.title") }}</h2>
+						</div>
+						<p class="section-text">{{ t("terms.contact.content", {
+							contact_email: 'contact@microdefis.fr'
+							}) }}</p>
+						<a href="mailto:contact@microdefis.fr" class="email-link">
+							<v-icon size="14">mdi-email</v-icon>
+							contact@microdefis.fr
+						</a>
+					</div>
+
 				</div>
 			</v-card>
 		</div>
+
 	</div>
 </template>
 
 <script setup>
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
+
+const sections = [
+	{ short: "Introduction" },
+	{ short: "Compte" },
+	{ short: "Utilisation" },
+	{ short: "Interdictions" },
+	{ short: "Propriété" },
+	{ short: "RGPD" },
+	{ short: "Responsabilité" },
+	{ short: "Résiliation" },
+	{ short: "Modifications" },
+	{ short: "Loi" },
+	{ short: "Contact" },
+];
 </script>
 
 <style scoped>
@@ -80,98 +185,166 @@ const { t } = useI18n();
 	align-items: center;
 	padding: 12px;
 	min-height: 100vh;
-	overflow: hidden;
+	padding-bottom: 80px;
+}
+
+.page-header {
+	text-align: center;
+	padding: 16px 0 8px;
+	width: 100%;
+	max-width: 520px;
+}
+
+.last-updated {
+	font-size: 12px;
+	color: #94a3b8;
+	margin-top: 4px;
+}
+
+.quick-nav {
+	width: 100%;
+	max-width: 520px;
+	margin-bottom: 16px;
+}
+
+.nav-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.nav-pill {
+	font-size: 11px;
+	font-weight: 600;
+	color: #7c3aed;
+	background: #f3e8ff;
+	padding: 4px 10px;
+	border-radius: 20px;
+	text-decoration: none;
+	transition: all 0.2s;
+	white-space: nowrap;
+}
+
+.nav-pill:hover {
+	background: #7c3aed;
+	color: white;
 }
 
 .card-wrapper {
-	flex: 1;
-	display: flex;
-	justify-content: center;
 	width: 100%;
 	max-width: 520px;
-	overflow-y: auto;
-	padding-bottom: 24px;
 }
 
-/* Carte principale */
-.micro-card {
-	width: 100%;
-	max-width: 100%;
-	border-radius: 24px;
-	background: var(--surface);
-	border: 1px solid var(--border);
-	backdrop-filter: var(--backdrop-blur);
-	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-	display: flex;
-	flex-direction: column;
+.content-card {
+	border-radius: 20px !important;
+	overflow: hidden;
 }
 
-/* Scrollable content */
 .card-content {
-	max-height: 80vh;
-	/* garde un peu d'espace au top/bottom */
-	overflow-y: auto;
-	padding: 24px;
+	padding: 8px 4px;
 }
 
-/* Scroll custom */
-.card-content::-webkit-scrollbar {
-	width: 6px;
+.section-block {
+	padding: 20px;
+	scroll-margin-top: 80px;
+	transition: background 0.2s;
 }
 
-.card-content::-webkit-scrollbar-thumb {
-	background-color: rgba(100, 100, 100, 0.3);
-	border-radius: 3px;
+.section-block:hover {
+	background: #fafafa;
+	border-radius: 12px;
 }
 
-/* Section et titres */
-.section {
-	max-width: 100%;
+.highlight-block {
+	background: #fdf8ff;
+	border-radius: 12px;
+	border-left: 3px solid #7c3aed;
 }
 
-h2 {
-	font-size: 20px;
+.highlight-block:hover {
+	background: #f9f0ff;
+}
+
+.contact-block {
+	background: #fdf8ff;
+	border-radius: 12px;
+}
+
+.section-header {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.section-number {
+	font-size: 11px;
+	font-weight: 800;
+	color: #ff6b35;
+	background: #fff5f2;
+	padding: 3px 8px;
+	border-radius: 6px;
+	flex-shrink: 0;
+	letter-spacing: 0.5px;
+}
+
+.section-title {
+	font-size: 15px;
+	font-weight: 700;
+	color: #1e293b;
+	margin: 0;
+	line-height: 1.3;
+}
+
+.section-text {
+	font-size: 13.5px;
+	color: #475569;
+	line-height: 1.7;
+	margin: 0 0 10px 0;
+}
+
+.info-box {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	background: #f0e6ff;
+	padding: 12px 14px;
+	border-radius: 10px;
+	font-size: 13px;
+	color: #6d28d9;
+	margin: 10px 0;
+	line-height: 1.5;
+}
+
+.link-inline {
+	color: #7c3aed;
 	font-weight: 600;
-	color: #374151;
-	margin: 28px 0 16px;
-	border-bottom: 2px solid #e5e7eb;
-	padding-bottom: 8px;
-}
-
-p {
-	font-size: 16px;
-	line-height: 1.6;
-	color: #4b5563;
-	margin-bottom: 20px;
-}
-
-a {
-	color: #1e40af;
-	text-decoration: none;
-}
-
-a:hover {
 	text-decoration: underline;
 }
 
-.page-title {
-	font-size: 36px;
-	text-align: center;
+.email-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: #ff6b35;
 	font-weight: 600;
-	color: var(--text-primary);
+	font-size: 13px;
+	text-decoration: none;
+	background: #fff5f2;
+	padding: 8px 14px;
+	border-radius: 20px;
+	margin-top: 6px;
+	transition: all 0.2s;
 }
 
-@media (max-width: 600px) {
-	h2 {
-		font-size: 18px;
-	}
+.email-link:hover {
+	background: #ff6b35;
+	color: white;
+}
 
-	p {
-		font-size: 15px;
-	}
-
-	.card-content {
-		padding: 16px;
-	}
+.divider {
+	height: 1px;
+	background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+	margin: 0 20px;
 }
 </style>
