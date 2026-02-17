@@ -1,364 +1,567 @@
 <template>
-	<div class="share-page">
-		<!-- Aperçu image -->
-		<div class="preview-container">
-			<canvas
-				ref="canvas"
-				width="1080"
-				height="1350"
-				class="preview-canvas"
-			></canvas>
+	<div class="premium-page">
+		<!-- Hero Section -->
+		<div class="hero-section">
+			<div class="crown-icon">👑</div>
+			<h1 class="hero-title">Pass Premium</h1>
+			<p class="hero-subtitle">
+				Débloque tous les défis et accélère ta progression
+			</p>
 		</div>
 
-		<!-- Boutons -->
-		<div class="share-buttons">
-			<v-btn block color="primary" @click="downloadImage">
-				{{ t("share.download") }}
-			</v-btn>
+		<!-- Comparaison Table -->
+		<v-card class="micro-card pa-5 mb-4">
+			<div class="page-subtitle mb-4 text-center">
+				Gratuit vs Premium
+			</div>
 
-			<v-btn block color="secondary" @click="shareNow">
-				{{ t("share.share") }}</v-btn
-			>
+			<div class="comparison-table">
+				<div class="comparison-row header">
+					<div class="feature-name"></div>
+					<div class="plan-col">Gratuit</div>
+					<div class="plan-col premium">Premium</div>
+				</div>
+
+				<div class="comparison-row" v-for="item in comparisonItems" :key="item.feature">
+					<div class="feature-name">{{ item.feature }}</div>
+					<div class="plan-col">
+						<v-icon :color="item.free ? 'green' : 'grey'">
+							{{ item.free ? 'mdi-check-circle' : 'mdi-close-circle' }}
+						</v-icon>
+					</div>
+					<div class="plan-col premium">
+						<v-icon color="deep-orange">mdi-check-circle</v-icon>
+					</div>
+				</div>
+			</div>
+		</v-card>
+
+		<!-- Bénéfices -->
+		<v-card class="micro-card pa-5 mb-4">
+			<div class="page-subtitle mb-4 text-center">
+				Pourquoi passer Premium ?
+			</div>
+
+			<div class="benefits-grid">
+				<div class="benefit-item" v-for="benefit in benefits" :key="benefit.title">
+					<div class="benefit-icon">{{ benefit.icon }}</div>
+					<div class="benefit-title">{{ benefit.title }}</div>
+					<div class="benefit-desc">{{ benefit.desc }}</div>
+				</div>
+			</div>
+		</v-card>
+
+		<!-- Pricing Cards -->
+		<v-card class="micro-card pa-5 mb-4">
+			<div class="page-subtitle mb-4 text-center">
+				Choisis ton plan
+			</div>
+
+			<div class="pricing-cards">
+				<!-- Plan Hebdo -->
+				<div class="pricing-card" @click="selectPlan('weekly')">
+					<div class="plan-header">
+						<div class="plan-name">Hebdomadaire</div>
+					</div>
+					<div class="plan-price">
+						<span class="price-amount">0,99€</span>
+						<span class="price-period">/semaine</span>
+					</div>
+					<div class="plan-desc">Annule quand tu veux</div>
+				</div>
+
+
+				<!-- Plan Mensuel (POPULAIRE) -->
+				<div class="pricing-card popular" @click="selectPlan('monthly')">
+					<div class="popular-badge">⭐ POPULAIRE</div>
+					<div class="plan-header">
+						<div class="plan-name">Mois</div>
+						<div class="plan-save">Économise 20€</div>
+					</div>
+					<div class="plan-price">
+						<span class="price-amount">4,99€</span>
+						<span class="price-period">/an</span>
+					</div>
+					<div class="plan-desc">Soit 3,33€/mois</div>
+				</div>
+
+				<!-- Plan Annuel -->
+				<div class="pricing-card" @click="selectPlan('yearly')">
+					<div class="plan-header">
+						<div class="plan-name">Annuel</div>
+						<div class="plan-save">Économise 20€</div>
+					</div>
+					<div class="plan-price">
+						<span class="price-amount">39,99€</span>
+						<span class="price-period">/an</span>
+					</div>
+					<div class="plan-desc">Soit 3,33€/mois</div>
+				</div>
+
+				<!-- Plan Lifetime 
+				<div class="pricing-card" @click="selectPlan('lifetime')">
+					<div class="plan-header">
+						<div class="plan-name">À vie</div>
+					</div>
+					<div class="plan-price">
+						<span class="price-amount">99,99€</span>
+						<span class="price-period">unique</span>
+					</div>
+					<div class="plan-desc">Accès illimité à vie</div>
+				</div>-->
+			</div>
+
+			<div class="trial-notice">
+				🎉 <strong>7 jours d'essai gratuit</strong> sur tous les plans
+			</div>
+		</v-card>
+
+		<!-- Social Proof -->
+		<v-card class="micro-card pa-5 mb-4">
+			<div class="page-subtitle mb-4 text-center">
+				Ils sont déjà Premium
+			</div>
+
+			<div class="testimonials">
+				<div class="testimonial" v-for="(test, i) in testimonials" :key="i">
+					<div class="stars">⭐⭐⭐⭐⭐</div>
+					<div class="testimonial-text">"{{ test.text }}"</div>
+					<div class="testimonial-author">— {{ test.author }}</div>
+				</div>
+			</div>
+		</v-card>
+
+		<!-- FAQ -->
+		<v-card class="micro-card pa-5 mb-4">
+			<div class="page-subtitle mb-4 text-center">
+				Questions fréquentes
+			</div>
+
+			<v-expansion-panels variant="accordion">
+				<v-expansion-panel v-for="(faq, i) in faqs" :key="i">
+					<v-expansion-panel-title>
+						<strong>{{ faq.q }}</strong>
+					</v-expansion-panel-title>
+					<v-expansion-panel-text>
+						{{ faq.a }}
+					</v-expansion-panel-text>
+				</v-expansion-panel>
+			</v-expansion-panels>
+		</v-card>
+
+		<!-- CTA Final -->
+		<v-btn class="btn-primary mb-4" block size="large" @click="startTrial">
+			🚀 Commencer l'essai gratuit
+		</v-btn>
+
+		<div class="guarantee">
+			🔒 Paiement sécurisé · Annulation en 1 clic · Garantie 30 jours
 		</div>
 
-		<div v-if="infoMsg" class="info-msg">
-			{{ infoMsg }}
-		</div>
+		<!-- Dialog Confirmation -->
+		<v-dialog v-model="showDialog" max-width="400">
+			<v-card class="pa-6 text-center">
+				<v-icon color="green" size="64" class="mb-4">mdi-check-circle</v-icon>
+				<div class="text-h5 font-weight-bold mb-2">🎉 Bienvenue Premium !</div>
+				<p class="mb-4">
+					Ton essai gratuit de 7 jours commence maintenant.
+					Profite de tous les défis !
+				</p>
+				<v-btn color="deep-orange" block @click="closeDialog">
+					C'est parti !
+				</v-btn>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { supabase } from "@/lib/supabase";
-import { useI18n } from "vue-i18n";
+import { useUserStore } from "@/stores/userStore";
 
-const { t, locale } = useI18n();
-const canvas = ref(null);
-const infoMsg = ref("");
+const router = useRouter();
+const userStore = useUserStore();
+const showDialog = ref(false);
+const selectedPlan = ref("yearly");
 
-// Stats
-const userName = ref(t("share.default_user"));
-const todayChallenge = ref(t("share.default_challenge"));
-const currentStreak = ref(0);
-const bestStreak = ref(0);
-const totalCompleted = ref(0);
+// Données de comparaison
+const comparisonItems = [
+	{ feature: "Défis Débutant 🌱", free: true },
+	{ feature: "Tous les niveaux (800+ défis)", free: false },
+	{ feature: "Toutes les catégories", free: false },
+	//{ feature: "Stats avancées", free: false },
+	{ feature: "Sans publicité", free: false },
+	{ feature: "Badges exclusifs", free: false },
+	{ feature: "Mode sombre", free: true },
+];
 
-onMounted(async () => {
-	document.body.classList.add("share-mode");
-	await loadStats();
-	generateImage();
-});
-
-onUnmounted(() => {
-	document.body.classList.remove("share-mode");
-});
-
-async function loadStats() {
-	const { data: userData } = await supabase.auth.getUser();
-	if (!userData?.user) {
-		infoMsg.value = t("share.login_required");
-		return;
+// Bénéfices
+const benefits = [
+	{
+		icon: "🔥",
+		title: "Reste motivé",
+		desc: "Accède à 800+ défis variés pour ne jamais t'ennuyer"
+	},
+	{
+		icon: "💪",
+		title: "Progresse vraiment",
+		desc: "Challenges adaptés à ton niveau, du débutant à l'expert"
+	},
+	/*{
+		icon: "📊",
+		title: "Suis tes progrès",
+		desc: "Statistiques détaillées et analyse de tes habitudes"
+	},*/
+	{
+		icon: "🎨",
+		title: "Personnalise",
+		desc: "Choisis exactement les catégories qui t'intéressent"
 	}
+];
 
-	const user = userData.user;
+// Témoignages
+const testimonials = [
+	{
+		text: "Meilleure app de défis que j'ai testée. Les défis Expert sont top !",
+		author: "Thomas, Premium depuis 1 an"
+	},
+	{
+		text: "J'adore la variété des catégories. Toujours quelque chose de nouveau.",
+		author: "Marie, Premium depuis 6 mois"
+	},
+	{
+		text: "Ça m'a vraiment aidé à créer de nouvelles habitudes positives.",
+		author: "Lucas, Premium depuis 3 mois"
+	}
+];
 
-	const { data: profile } = await supabase
-		.from("user_profiles")
-		.select("username")
-		.eq("user_id", user.id)
-		.single();
+// FAQ
+const faqs = [
+	{
+		q: "❓ Puis-je annuler quand je veux ?",
+		a: "Oui, annulation en 1 clic depuis les paramètres. Aucun engagement."
+	},
+	{
+		q: "❓ Que se passe-t-il après l'essai gratuit ?",
+		a: "Tu seras débité uniquement si tu ne résilie pas. Tu recevras un rappel par email avant."
+	},
+	{
+		q: "❓ Mes données sont-elles conservées si j'annule ?",
+		a: "Oui, toutes tes stats et progrès restent sauvegardés. Tu peux réactiver Premium à tout moment."
+	},
+	{
+		q: "❓ Y a-t-il des frais cachés ?",
+		a: "Non, le prix affiché est le prix final. Aucun frais caché."
+	}
+];
 
-	userName.value = profile?.username || t("share.default_user");
+// Actions
+function selectPlan(plan) {
+	selectedPlan.value = plan;
+	console.log("Plan sélectionné:", plan);
+}
 
-	// Completions
-	const { data: completions } = await supabase
-		.from("daily_completions")
-		.select("day")
-		.eq("user_id", user.id)
-		.order("day", { ascending: false });
+async function startTrial() {
+	try {
+		// ✅ TODO: Appeler ton backend/Stripe pour créer la subscription
 
-	if (completions) {
-		totalCompleted.value = completions.length;
-
-		let streak = 0;
-		let expectedDay = new Date().toISOString().slice(0, 10);
-
-		for (const c of completions) {
-			if (c.day === expectedDay) {
-				streak++;
-				const d = new Date(expectedDay);
-				d.setDate(d.getDate() - 1);
-				expectedDay = d.toISOString().slice(0, 10);
-			} else break;
+		// Pour l'instant, on active juste le premium dans la BDD
+		if (!userStore.userId) {
+			alert("Veuillez vous connecter");
+			router.push("/login");
+			return;
 		}
 
-		currentStreak.value = streak;
-		bestStreak.value = streak;
+		// Activer premium dans user_profiles
+		const { error } = await supabase
+			.from("user_profiles")
+			.update({ premium: true })
+			.eq("user_id", userStore.userId);
+
+		if (error) throw error;
+
+		// Recharger le user
+		await userStore.loadUser();
+
+		showDialog.value = true;
+
+		console.log("✅ Premium activé pour:", selectedPlan.value);
+	} catch (error) {
+		console.error("❌ Erreur activation premium:", error);
+		alert("Erreur lors de l'activation. Réessayez.");
 	}
-
-	// Défi du jour (via daily_assignments → challenges)
-	const today = new Date().toISOString().slice(0, 10);
-
-	const { data: assignment } = await supabase
-		.from("daily_assignments")
-		.select(
-			`
-			challenges (
-				title_fr,
-				title_en
-			)
-		`
-		)
-		.eq("user_id", user.id)
-		.eq("day", today)
-		.single();
-
-	todayChallenge.value =
-		assignment?.challenges?.[`title_${locale.value}`] ||
-		t("share.default_challenge");
 }
 
-/* ================= IMAGE ================= */
-
-function generateImage() {
-	if (!canvas.value) return;
-
-	const ctx = canvas.value.getContext("2d");
-	const w = 1080;
-	const h = 1350;
-
-	ctx.textAlign = "center";
-
-	/* ========== FOND VIOLET ========== */
-	const gradient = ctx.createLinearGradient(0, 0, 0, h);
-	gradient.addColorStop(0, "#7c3aed");
-	gradient.addColorStop(1, "#5b21b6");
-
-	ctx.fillStyle = gradient;
-	ctx.fillRect(0, 0, w, h);
-
-	/* ========== PSEUDO ========== */
-	ctx.fillStyle = "#ffffff";
-	ctx.font = "bold 56px Arial";
-	ctx.fillText("@" + userName.value, w / 2, 120);
-
-	/* ========== CARTE DÉFI ========== */
-	const challengeX = 80;
-	const challengeY = 170;
-	const challengeW = w - 160;
-	const challengeH = 220;
-
-	ctx.fillStyle = "#ffffff";
-	ctx.beginPath();
-	ctx.roundRect(challengeX, challengeY, challengeW, challengeH, 40);
-	ctx.fill();
-
-	ctx.fillStyle = "#6d28d9";
-	ctx.font = "bold 60px Arial";
-	ctx.fillText(t("share.day_challenge"), w / 2, challengeY + 60);
-
-	ctx.fillStyle = "#64748b";
-	ctx.font = "bold 70px Arial";
-	wrapText(
-		ctx,
-		todayChallenge.value,
-		w / 2,
-		challengeY + 160,
-		challengeW - 120,
-		60
-	);
-
-	/* ========== GROSSE CARTE STREAK (PRINCIPALE) ========== */
-	const streakX = 80;
-	const streakY = 430;
-	const streakW = w - 160;
-	const streakH = 340;
-
-	ctx.fillStyle = "#ffffff";
-	ctx.beginPath();
-	ctx.roundRect(streakX, streakY, streakW, streakH, 50);
-	ctx.fill();
-
-	ctx.fillStyle = "#6d28d9";
-	ctx.font = "bold 180px Arial";
-	ctx.fillText(currentStreak.value, w / 2, streakY + 210);
-
-	ctx.fillStyle = "#64748b";
-	ctx.font = "bold 46px Arial";
-	ctx.fillText(t("share.streak_label"), w / 2, streakY + 280);
-
-	/* ========== PETITES CARTES ========== */
-	const smallW = (w - 200) / 2;
-	const smallH = 200;
-	const smallY = 810;
-
-	// record
-	ctx.fillStyle = "#ffffff";
-	ctx.beginPath();
-	ctx.roundRect(80, smallY, smallW, smallH, 40);
-	ctx.fill();
-
-	ctx.fillStyle = "#6d28d9";
-	ctx.font = "bold 80px Arial";
-	ctx.fillText(bestStreak.value, 80 + smallW / 2, smallY + 110);
-
-	ctx.fillStyle = "#64748b";
-	ctx.font = "bold 40px Arial";
-	ctx.fillText(t("share.record"), 80 + smallW / 2, smallY + 160);
-
-	// total validés
-	ctx.fillStyle = "#ffffff";
-	ctx.beginPath();
-	ctx.roundRect(120 + smallW, smallY, smallW, smallH, 40);
-	ctx.fill();
-
-	ctx.fillStyle = "#6d28d9";
-	ctx.font = "bold 80px Arial";
-	ctx.fillText(totalCompleted.value, 120 + smallW + smallW / 2, smallY + 110);
-
-	ctx.fillStyle = "#64748b";
-	ctx.font = "bold 40px Arial";
-	ctx.fillText(t("share.completed"), 120 + smallW + smallW / 2, smallY + 160);
-
-	/* ========== 💡 IDÉE 1 : BOUTON CTA VIRAL ========== */
-	const btnX = w / 2 - 260;
-	const btnY = 1060;
-	const btnW = 520;
-	const btnH = 100;
-
-	ctx.fillStyle = "#ffffff";
-	ctx.beginPath();
-	ctx.roundRect(btnX, btnY, btnW, btnH, 50);
-	ctx.fill();
-
-	ctx.fillStyle = "#6d28d9";
-	ctx.font = "bold 46px Arial";
-	ctx.fillText("🔥 Relève le défi", w / 2, btnY + 65);
-
-	/* ========== 💡 IDÉE 2 : URL BIEN VISIBLE ========== */
-	ctx.fillStyle = "#ffffff";
-	ctx.font = "bold 52px Arial";
-	ctx.fillText("microdefis.app", w / 2, 1240);
-}
-
-/* ================= HELPERS ================= */
-
-function drawCard(ctx, x, y, width, height) {
-	ctx.fillStyle = "rgba(255,255,255,0.95)";
-	ctx.beginPath();
-	ctx.roundRect(x, y, width, height, 30);
-	ctx.fill();
-}
-
-function drawStat(ctx, emoji, value, label, x, y) {
-	ctx.font = "50px Arial";
-	ctx.fillStyle = "#ffffff";
-	ctx.fillText(emoji, x, y);
-
-	ctx.font = "bold 70px Arial";
-	ctx.fillText(value, x, y + 90);
-
-	ctx.font = "bold 26px Arial";
-	ctx.fillText(label, x, y + 130);
-}
-
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-	const words = text.split(" ");
-	let line = "";
-	let currentY = y;
-
-	for (let n = 0; n < words.length; n++) {
-		const testLine = line + words[n] + " ";
-		const metrics = ctx.measureText(testLine);
-		if (metrics.width > maxWidth && n > 0) {
-			ctx.fillText(line, x, currentY);
-			line = words[n] + " ";
-			currentY += lineHeight;
-		} else {
-			line = testLine;
-		}
-	}
-	ctx.fillText(line, x, currentY);
-}
-
-/* ================= SHARE ================= */
-
-function downloadImage() {
-	if (!canvas.value) return;
-
-	canvas.value.toBlob((blob) => {
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement("a");
-		a.href = url;
-		a.download = "microdefis-stats.png";
-		a.click();
-		URL.revokeObjectURL(url);
-		infoMsg.value = t("share.image_downloaded");
-	});
-}
-
-/* ========== 💡 IDÉE 3 : TEXTE DE PARTAGE AVEC LIEN ========== */
-async function shareNow() {
-	if (!canvas.value) return;
-
-	canvas.value.toBlob(async (blob) => {
-		const file = new File([blob], "mes-stats.png", {
-			type: "image/png",
-		});
-
-		// 🔥 Texte accrocheur avec lien cliquable
-		const shareText = `🔥 ${currentStreak.value} jours de streak sur MicroDéfis !
-💪 ${totalCompleted.value} défis validés au total
-
-✨ Rejoins l'aventure 👇
-https://microdefis.app`;
-
-		if (navigator.share && navigator.canShare({ files: [file] })) {
-			try {
-				await navigator.share({
-					files: [file],
-					title: t("share.share_title"),
-					text: shareText, // ← Lien cliquable inclus
-				});
-				infoMsg.value = t("share.shared");
-				return;
-			} catch {}
-		}
-
-		// Fallback : téléchargement
-		downloadImage();
-	});
+function closeDialog() {
+	showDialog.value = false;
+	router.push("/");
 }
 </script>
 
 <style scoped>
-.share-page {
-	background: white;
-	min-height: 100vh;
-	padding: 20px;
+.premium-page {
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 16px;
 }
 
-.preview-container {
-	border-radius: 20px;
-	overflow: hidden;
-	margin-bottom: 20px;
+/* Hero */
+.hero-section {
+	text-align: center;
+	padding: 15px 15px;
+	background: linear-gradient(125deg, #ff6b35 0%, #f7931e 100%);
+	border-radius: 24px;
+	margin-bottom: 24px;
+	color: white;
 }
 
-.preview-canvas {
+.crown-icon {
+	font-size: 64px;
+	animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+
+	50% {
+		transform: translateY(-10px);
+	}
+}
+
+.hero-title {
+	font-size: 32px;
+	font-weight: 800;
+	margin-bottom: 8px;
+}
+
+.hero-subtitle {
+	font-size: 16px;
+	opacity: 0.95;
+}
+
+/* Comparison Table */
+.comparison-table {
 	width: 100%;
-	height: auto;
-	display: block;
 }
 
-.share-buttons {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+.comparison-row {
+	display: grid;
+	grid-template-columns: 2fr 1fr 1fr;
+	gap: 12px;
+	padding: 12px 8px;
+	border-bottom: 1px solid #e2e8f0;
+	align-items: center;
 }
 
-.info-msg {
-	margin-top: 30%;
+.comparison-row.header {
+	font-weight: 700;
+	background: #f8fafc;
+	border-radius: 8px;
+	border: none;
+}
+
+.feature-name {
+	font-size: 14px;
+	color: #334155;
+}
+
+.plan-col {
 	text-align: center;
 	font-weight: 600;
+	font-size: 13px;
+}
+
+.plan-col.premium {
+	color: #ff6b35;
+}
+
+/* Benefits Grid */
+.benefits-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 16px;
+}
+
+.benefit-item {
+	text-align: center;
+	padding: 5px 5px;
+	background: #f7e9e4;
+	border-radius: 20px;
+}
+
+.benefit-icon {
+	font-size: 40px;
+	margin-bottom: 8px;
+}
+
+.benefit-title {
+	font-size: 16px;
+	font-weight: 700;
+	color: #0f172a;
+	margin-bottom: 4px;
+}
+
+.benefit-desc {
+	font-size: 12px;
+	color: #64748b;
+	line-height: 1.4;
+}
+
+/* Pricing Cards */
+.pricing-cards {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.pricing-card {
+	position: relative;
+	padding: 10px;
+	border: 2px solid #e2e8f0;
+	border-radius: 16px;
+	cursor: pointer;
+	transition: all 0.3s;
+	background: white;
+}
+
+.pricing-card:hover {
+	border-color: #ff6b35;
+	transform: translateY(-2px);
+	box-shadow: 0 8px 16px rgba(255, 107, 53, 0.1);
+}
+
+.pricing-card.popular {
+	border-color: #ff6b35;
+	background: linear-gradient(135deg, #fff5f2 0%, #ffffff 100%);
+}
+
+.popular-badge {
+	position: absolute;
+	top: -12px;
+	right: 16px;
+	background: #ff6b35;
+	color: white;
+	padding: 4px 12px;
+	border-radius: 12px;
+	font-size: 11px;
+	font-weight: 700;
+}
+
+.plan-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 12px;
+}
+
+.plan-name {
+	font-size: 18px;
+	font-weight: 700;
+	color: #0f172a;
+}
+
+.plan-save {
+	font-size: 12px;
+	color: #22c55e;
+	font-weight: 600;
+	background: #f0fdf4;
+	padding: 4px 8px;
+	border-radius: 6px;
+}
+
+.plan-price {
+	margin-bottom: 8px;
+}
+
+.price-amount {
+	font-size: 32px;
+	font-weight: 800;
+	color: #ff6b35;
+}
+
+.price-period {
+	font-size: 16px;
+	color: #64748b;
+	font-weight: 600;
+}
+
+.plan-desc {
+	font-size: 14px;
+	color: #64748b;
+}
+
+.trial-notice {
+	text-align: center;
+	padding: 12px;
+	background: #f7e9e4;
+	border-radius: 8px;
+	font-size: 14px;
+	color: #0f172a;
+}
+
+/* Testimonials */
+.testimonials {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.testimonial {
+	padding: 16px;
+	background: #f8fafc;
+	border-radius: 12px;
+	border-left: 4px solid #ff6b35;
+}
+
+.stars {
+	font-size: 14px;
+	margin-bottom: 8px;
+}
+
+.testimonial-text {
+	font-size: 14px;
+	color: #334155;
+	margin-bottom: 8px;
+	font-style: italic;
+}
+
+.testimonial-author {
+	font-size: 12px;
+	color: #64748b;
+	font-weight: 600;
+}
+
+/* Guarantee */
+.guarantee {
+	text-align: center;
+	font-size: 12px;
+	color: #64748b;
+	margin-top: 16px;
+}
+
+.guarantee {
+	color: white;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+	.benefits-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.comparison-row {
+		font-size: 13px;
+	}
+
+	.hero-title {
+		font-size: 28px;
+	}
 }
 </style>

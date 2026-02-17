@@ -4,7 +4,7 @@
         <!-- Hero -->
         <div class="hero">
             <div class="hero-emoji">🔥</div>
-            <h1 class="hero-title">MicroDéfis</h1>
+            <h1 class="hero-title"> MicroDéfis</h1>
             <p class="hero-subtitle">{{ t('landing.hero.subtitle') }}</p>
             <v-btn class="btn-primary mt-4" size="large" block @click="$router.push('/login')">
                 {{ t('landing.hero.cta') }}
@@ -13,14 +13,14 @@
 
         <!-- About -->
         <v-card class="micro-card pa-5 mb-4">
-            <h2 class="section-title">💡 {{ t('landing.about.title') }}</h2>
+            <h2 class="section-title">{{ t('landing.about.title') }}</h2>
             <p class="section-text">{{ t('landing.about.text1') }}</p>
             <p class="section-text">{{ t('landing.about.text2') }}</p>
         </v-card>
 
         <!-- How it works -->
         <v-card class="micro-card pa-5 mb-4">
-            <h2 class="section-title">⚡ {{ t('landing.how.title') }}</h2>
+            <h2 class="section-title">{{ t('landing.how.title') }}</h2>
 
             <div class="step" v-for="n in 4" :key="n">
                 <span class="step-number">0{{ n }}</span>
@@ -32,8 +32,8 @@
         </v-card>
 
         <!-- Examples -->
-        <v-card class="micro-card pa-5 mb-4">
-            <h2 class="section-title">🎯 {{ t('landing.examples.title') }}</h2>
+        <v-card class="micro-card card-content pa-5 mb-4">
+            <h2 class="section-title">{{ t('landing.examples.title') }}</h2>
             <p class="section-text">{{ t('landing.examples.intro') }}</p>
 
             <div class="challenge-list">
@@ -49,23 +49,16 @@
 
         <!-- Categories -->
         <v-card class="micro-card pa-5 mb-4">
-            <h2 class="section-title">📚 {{ t('landing.categories.title') }}</h2>
+            <h2 class="section-title">{{ t('landing.categories.title') }}</h2>
             <p class="section-text">{{ t('landing.categories.intro') }}</p>
             <div class="categories">
                 <div class="cat-chip" v-for="cat in categories" :key="cat">{{ cat }}</div>
             </div>
         </v-card>
 
-        <!-- Science -->
-        <v-card class="micro-card pa-5 mb-4">
-            <h2 class="section-title">🧠 {{ t('landing.science.title') }}</h2>
-            <p class="section-text">{{ t('landing.science.text1') }}</p>
-            <p class="section-text">{{ t('landing.science.text2') }}</p>
-        </v-card>
-
         <!-- CTA -->
         <v-card class="micro-card pa-5 mb-4" style="background: #fdf8ff; border-left: 3px solid #7c3aed;">
-            <h2 class="section-title">🚀 {{ t('landing.cta.title') }}</h2>
+            <h2 class="section-title"> {{ t('landing.cta.title') }}</h2>
             <p class="section-text">{{ t('landing.cta.text') }}</p>
             <v-btn class="btn-primary mt-2" block @click="$router.push('/login')">
                 {{ t('landing.cta.button') }}
@@ -92,19 +85,17 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const examples = [
-    { emoji: '🏃', title: 'Walk 20 minutes without your phone', cat: 'Sport & Well-being' },
-    { emoji: '📖', title: 'Read 5 pages of a book', cat: 'Personal Development' },
-    { emoji: '💧', title: 'Drink 2 liters of water today', cat: 'Health' },
-    { emoji: '🙏', title: 'Write 3 things you are grateful for', cat: 'Mental' },
-    { emoji: '📵', title: 'No social media before noon', cat: 'Productivity' },
-    { emoji: '🎨', title: 'Draw or doodle for 10 minutes', cat: 'Creativity' },
-    { emoji: '📞', title: 'Call a friend you haven’t contacted for a long time', cat: 'Social' },
-    { emoji: '🧹', title: 'Tidy a cluttered space at home', cat: 'Organization' }
+    { emoji: '💪', title: 'Marche 20 minutes', cat: 'Sport' },
+    { emoji: '🧠', title: 'Lis 5 pages d’un livre', cat: 'Mentale' },
+    { emoji: '🧘', title: 'Bois 2 verres d’eau', cat: 'Bien-être' },
+    { emoji: '🎨', title: 'Dessine pendant 10 minutes', cat: 'Créativité' },
+    { emoji: '👥', title: 'Appelle un(e) ami(e)', cat: 'Social' },
+    { emoji: '⚡️', title: 'Nettoie un coin de ta maison', cat: 'Boost' }
 ];
 
 const categories = [
-    '🏃 Sport', '🧘 Well-being', '📚 Reading', '💪 Productivity',
-    '🎨 Creativity', '🥗 Health', '🧠 Mental', '👥 Social'
+    '💪 Sport', '🧘 Bien-être', '🤪 Insolite', '⚡️ Boost','💻 Digitale',
+    '🎨 Créativité', '🌿 Nature', '🧠 Mentale', '👥 Social'
 ];
 </script>
 
