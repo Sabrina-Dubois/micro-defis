@@ -49,6 +49,8 @@ export const useStatsStore = defineStore("stats", () => {
         .eq("user_id", userStore.userId)
         .order("day", { ascending: false });
 
+      console.log("📊 Completions récupérées :", data);
+
       if (fetchError) throw fetchError;
 
       completions.value = data || [];
@@ -74,40 +76,46 @@ export const useStatsStore = defineStore("stats", () => {
       return;
     }
 
-    const days = completions.value.map((c) => new Date(c.day));
-    days.sort((a, b) => b - a); // du plus récent au plus ancien
+    // Convertir les jours en Date
+    const days = completions.value.map((c) => new Date(c.day)).sort((a, b) => b - a); // du plus récent au plus ancien
 
     // ===== Calcul streak actuel =====
-    const todayStr = new Date().toISOString().slice(0, 10);
     let streak = 0;
-    let expectedDate = new Date(todayStr);
+    let previousDate = null;
 
     for (const d of days) {
       const dStr = d.toISOString().slice(0, 10);
-      if (dStr === expectedDate.toISOString().slice(0, 10)) {
-        streak++;
-        expectedDate.setDate(expectedDate.getDate() - 1);
+
+      if (!previousDate) {
+        previousDate = d;
+        streak = 1;
       } else {
-        break;
+        const diff = (previousDate - d) / (1000 * 60 * 60 * 24);
+        if (diff === 1) {
+          streak++;
+          previousDate = d;
+        } else {
+          break;
+        }
       }
     }
+
     currentStreak.value = streak;
 
     // ===== Calcul best streak =====
     let maxStreak = 0;
     let tempStreak = 1;
+
     for (let i = 0; i < days.length - 1; i++) {
-      const diffDays = Math.floor((days[i] - days[i + 1]) / (1000 * 60 * 60 * 24));
-      if (diffDays === 1) {
-        tempStreak++;
-      } else {
-        tempStreak = 1;
-      }
+      const diff = (days[i] - days[i + 1]) / (1000 * 60 * 60 * 24);
+      if (diff === 1) tempStreak++;
+      else tempStreak = 1;
+
       maxStreak = Math.max(maxStreak, tempStreak);
     }
-    bestStreak.value = Math.max(maxStreak, currentStreak.value);
-  }
 
+    bestStreak.value = Math.max(maxStreak, currentStreak.value);
+  }g
   async function addCompletion(day, challengeId) {
     const userStore = useUserStore();
 
