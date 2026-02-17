@@ -1,14 +1,22 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { supabase } from "@/lib/supabase";
 import { useUserStore } from "./userStore";
+import {
+  fetchPreferences,
+  upsertPreferences,
+  fetchCategories,
+  fetchLevels,
+  savePushSubscription,
+  deletePushSubscription,
+} from "@/services/settingsService";
+import { fetchPremiumStatus } from "@/services/profileService";
 
 export const useSettingsStore = defineStore("settings", () => {
-  // =========================
+  // ─────────────────────────────────────────
   // STATE
-  // =========================
+  // ─────────────────────────────────────────
   const preferences = ref({
-    notifications_enabled: true,
+    notifications_enabled: false,
     reminder_time: "20:00",
     pref_category: [],
     pref_level: [],
@@ -17,15 +25,14 @@ export const useSettingsStore = defineStore("settings", () => {
     premium_active: false,
   });
 
+  const categories = ref([]);
+  const levels = ref([]);
   const loading = ref(false);
   const error = ref(null);
 
-  const categories = ref([]);
-  const levels = ref([]);
-
-  // =========================
+  // ─────────────────────────────────────────
   // GETTERS
-  // =========================
+  // ─────────────────────────────────────────
   const notificationsEnabled = computed(() => preferences.value.notifications_enabled);
   const reminderTime = computed(() => preferences.value.reminder_time);
   const preferredCategories = computed(() => preferences.value.pref_category);
@@ -33,37 +40,24 @@ export const useSettingsStore = defineStore("settings", () => {
   const language = computed(() => preferences.value.language);
   const theme = computed(() => preferences.value.theme);
   const isPremium = computed(() => preferences.value.premium_active ?? false);
-
   const languageLabel = computed(() => (preferences.value.language === "fr" ? "Français" : "English"));
   const themeLabel = computed(() => (preferences.value.theme === "dark" ? "Sombre" : "Clair"));
 
-  // =========================
-  // ACTIONS
-  // =========================
-
+  // ─────────────────────────────────────────
+  // ACTIONS — CHARGEMENT
+  // ─────────────────────────────────────────
   async function loadPreferences() {
     const userStore = useUserStore();
-    if (!userStore.userId) {
-      console.warn("Utilisateur non connecté");
-      return;
-    }
+    if (!userStore.userId) return;
 
     loading.value = true;
     error.value = null;
 
     try {
-      // Charger préférences
-      const { data, error: fetchError } = await supabase
-        .from("user_preferences")
-        .select("*")
-        .eq("user_id", userStore.userId)
-        .maybeSingle();
-
-      if (fetchError && fetchError.code !== "PGRST116") throw fetchError;
-
+      const data = await fetchPreferences(userStore.userId);
       if (data) {
         preferences.value = {
-          notifications_enabled: data.notifications_enabled ?? true,
+          notifications_enabled: data.notifications_enabled ?? false,
           reminder_time: data.reminder_time ?? "20:00",
           pref_category: data.pref_category ?? [],
           pref_level: data.pref_level ?? [],
@@ -73,21 +67,13 @@ export const useSettingsStore = defineStore("settings", () => {
         };
       }
 
-      // Vérifier premium dans user_profiles
-      const { data: profileData } = await supabase
-        .from("user_profiles")
-        .select("premium")
-        .eq("user_id", userStore.userId)
-        .maybeSingle();
-
-      if (profileData) {
-        preferences.value.premium_active = profileData.premium ?? false;
-      }
+      // Vérifier le statut premium depuis user_profiles
+      const premium = await fetchPremiumStatus(userStore.userId);
+      preferences.value.premium_active = premium;
 
       return preferences.value;
     } catch (e) {
       error.value = e.message;
-      console.error("Erreur loadPreferences:", e);
       throw e;
     } finally {
       loading.value = false;
@@ -96,10 +82,7 @@ export const useSettingsStore = defineStore("settings", () => {
 
   async function loadCategories() {
     try {
-      const { data, error: fetchError } = await supabase.from("categories").select("id, name, premium").order("name");
-
-      if (fetchError) throw fetchError;
-      categories.value = data || [];
+      categories.value = await fetchCategories();
     } catch (e) {
       console.error("Erreur loadCategories:", e);
       categories.value = [];
@@ -108,44 +91,26 @@ export const useSettingsStore = defineStore("settings", () => {
 
   async function loadLevels() {
     try {
-      const { data, error: fetchError } = await supabase
-        .from("levels")
-        .select("id, name, premium")
-        .order("premium", { ascending: true });
-
-      if (fetchError) throw fetchError;
-      levels.value = data || [];
+      levels.value = await fetchLevels();
     } catch (e) {
       console.error("Erreur loadLevels:", e);
       levels.value = [];
     }
   }
 
-  // =========================
-  // Mise à jour préférences
-  // =========================
+  // ─────────────────────────────────────────
+  // ACTIONS — MISE À JOUR
+  // ─────────────────────────────────────────
   async function updatePreference(key, value) {
     const userStore = useUserStore();
     if (!userStore.userId) throw new Error("Utilisateur non connecté");
 
     try {
-      const updates = {
-        user_id: userStore.userId,
-        [key]: value,
-        updated_at: new Date().toISOString(),
-      };
-
-      const { error: updateError } = await supabase
-        .from("user_preferences")
-        .upsert(updates, { onConflict: ["user_id"] });
-
-      if (updateError) throw updateError;
-
+      await upsertPreferences(userStore.userId, { [key]: value });
       preferences.value[key] = value;
       return true;
     } catch (e) {
       error.value = e.message;
-      console.error("Erreur updatePreference:", e);
       throw e;
     }
   }
@@ -155,41 +120,18 @@ export const useSettingsStore = defineStore("settings", () => {
     if (!userStore.userId) throw new Error("Utilisateur non connecté");
 
     try {
-      const payload = {
-        user_id: userStore.userId,
-        ...updates,
-        updated_at: new Date().toISOString(),
-      };
-
-      const { error: updateError } = await supabase
-        .from("user_preferences")
-        .upsert(payload, { onConflict: ["user_id"] });
-
-      if (updateError) throw updateError;
-
+      await upsertPreferences(userStore.userId, updates);
       Object.assign(preferences.value, updates);
       return true;
     } catch (e) {
       error.value = e.message;
-      console.error("Erreur updateMultiplePreferences:", e);
       throw e;
     }
   }
 
-  // =========================
-  // Helpers Thème / Langue / Notifications
-  // =========================
-  async function toggleNotifications() {
-    const newValue = !preferences.value.notifications_enabled;
-    await updatePreference("notifications_enabled", newValue);
-    return newValue;
-  }
-
-  async function setReminderTime(time) {
-    await updatePreference("reminder_time", time);
-    return time;
-  }
-
+  // ─────────────────────────────────────────
+  // ACTIONS — HELPERS
+  // ─────────────────────────────────────────
   async function setLanguage(lang) {
     await updatePreference("language", lang);
     return lang;
@@ -204,18 +146,72 @@ export const useSettingsStore = defineStore("settings", () => {
 
   async function toggleTheme() {
     const newTheme = preferences.value.theme === "light" ? "dark" : "light";
-    await setTheme(newTheme);
-    return newTheme;
+    return await setTheme(newTheme);
+  }
+
+  async function setReminderTime(time) {
+    await updatePreference("reminder_time", time);
+    return time;
   }
 
   async function setChallengePreferences(cats, levs) {
-    await updateMultiplePreferences({
-      pref_category: cats,
-      pref_level: levs,
-    });
+    await updateMultiplePreferences({ pref_category: cats, pref_level: levs });
     return { cats, levs };
   }
 
+  // ─────────────────────────────────────────
+  // ACTIONS — PUSH NOTIFICATIONS
+  // ─────────────────────────────────────────
+  async function subscribeToPush() {
+    const userStore = useUserStore();
+
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") return null;
+
+    const registration = await navigator.serviceWorker.register("/sw.js");
+
+    const subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY,
+    });
+
+    await savePushSubscription(userStore.userId, subscription, preferences.value.reminder_time);
+
+    return subscription;
+  }
+
+  async function unsubscribeFromPush() {
+    const userStore = useUserStore();
+
+    const registration = await navigator.serviceWorker.getRegistration("/sw.js");
+    if (registration) {
+      const sub = await registration.pushManager.getSubscription();
+      if (sub) await sub.unsubscribe();
+    }
+
+    await deletePushSubscription(userStore.userId);
+  }
+
+  async function toggleNotifications(value) {
+    await updatePreference("notifications_enabled", value);
+
+    if (value) {
+      const sub = await subscribeToPush();
+      if (!sub) {
+        // Refus navigateur → on annule
+        await updatePreference("notifications_enabled", false);
+        return false;
+      }
+    } else {
+      await unsubscribeFromPush();
+    }
+
+    return value;
+  }
+
+  // ─────────────────────────────────────────
+  // THEME LOCAL STORAGE
+  // ─────────────────────────────────────────
   function initThemeFromLocalStorage() {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
@@ -226,7 +222,7 @@ export const useSettingsStore = defineStore("settings", () => {
 
   function reset() {
     preferences.value = {
-      notifications_enabled: true,
+      notifications_enabled: false,
       reminder_time: "20:00",
       pref_category: [],
       pref_level: [],
@@ -240,16 +236,15 @@ export const useSettingsStore = defineStore("settings", () => {
     error.value = null;
   }
 
-  // =========================
+  // ─────────────────────────────────────────
   // RETURN
-  // =========================
+  // ─────────────────────────────────────────
   return {
     preferences,
     categories,
     levels,
     loading,
     error,
-
     notificationsEnabled,
     reminderTime,
     preferredCategories,
@@ -259,18 +254,19 @@ export const useSettingsStore = defineStore("settings", () => {
     isPremium,
     languageLabel,
     themeLabel,
-
     loadPreferences,
     loadCategories,
     loadLevels,
     updatePreference,
     updateMultiplePreferences,
-    toggleNotifications,
-    setReminderTime,
     setLanguage,
     setTheme,
     toggleTheme,
+    setReminderTime,
     setChallengePreferences,
+    toggleNotifications,
+    subscribeToPush,
+    unsubscribeFromPush,
     initThemeFromLocalStorage,
     reset,
   };

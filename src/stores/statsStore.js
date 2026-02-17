@@ -1,10 +1,12 @@
 import { defineStore } from "pinia";
 import { ref, computed, watch } from "vue";
-import { supabase } from "@/lib/supabase";
 import { useUserStore } from "./userStore";
+import { fetchAllCompletions, insertCompletion } from "@/services/statsService";
 
 export const useStatsStore = defineStore("stats", () => {
-  // ===== STATE =====
+  // ─────────────────────────────────────────
+  // STATE
+  // ─────────────────────────────────────────
   const completions = ref([]);
   const completedDaysSet = ref(new Set());
   const currentStreak = ref(0);
@@ -13,18 +15,22 @@ export const useStatsStore = defineStore("stats", () => {
   const loading = ref(false);
   const error = ref(null);
 
-  // ===== GETTERS =====
+  // ─────────────────────────────────────────
+  // GETTERS
+  // ─────────────────────────────────────────
   const userLevel = computed(() => Math.floor((totalCompleted.value * 15) / 100) + 1);
   const xpCurrentDisplay = computed(() => (totalCompleted.value * 15) % 100);
   const xpNext = computed(() => 100);
   const xpProgress = computed(() => (xpCurrentDisplay.value / xpNext.value) * 100);
   const xpRemaining = computed(() => xpNext.value - xpCurrentDisplay.value);
 
-  // ===== ACTIONS =====
+  // ─────────────────────────────────────────
+  // ACTIONS
+  // ─────────────────────────────────────────
   async function loadCompletions() {
     const userStore = useUserStore();
 
-    // ⚡ Attendre que l'utilisateur soit chargé
+    // Attendre que l'utilisateur soit chargé si besoin
     if (!userStore.userId) {
       await new Promise((resolve) => {
         const stop = watch(
@@ -43,26 +49,16 @@ export const useStatsStore = defineStore("stats", () => {
     error.value = null;
 
     try {
-      const { data, error: fetchError } = await supabase
-        .from("daily_completions")
-        .select("day, challenge_id")
-        .eq("user_id", userStore.userId)
-        .order("day", { ascending: false });
+      const data = await fetchAllCompletions(userStore.userId);
 
-      console.log("📊 Completions récupérées :", data);
-
-      if (fetchError) throw fetchError;
-
-      completions.value = data || [];
-      totalCompleted.value = completions.value.length;
-      completedDaysSet.value = new Set(completions.value.map((c) => c.day));
+      completions.value = data;
+      totalCompleted.value = data.length;
+      completedDaysSet.value = new Set(data.map((c) => c.day));
 
       calculateStreaks();
-
       return data;
     } catch (e) {
       error.value = e.message;
-      console.error("Erreur loadCompletions:", e);
       throw e;
     } finally {
       loading.value = false;
@@ -76,16 +72,12 @@ export const useStatsStore = defineStore("stats", () => {
       return;
     }
 
-    // Convertir les jours en Date
-    const days = completions.value.map((c) => new Date(c.day)).sort((a, b) => b - a); // du plus récent au plus ancien
+    const days = completions.value.map((c) => new Date(c.day)).sort((a, b) => b - a);
 
-    // ===== Calcul streak actuel =====
+    // Streak actuel
     let streak = 0;
     let previousDate = null;
-
     for (const d of days) {
-      const dStr = d.toISOString().slice(0, 10);
-
       if (!previousDate) {
         previousDate = d;
         streak = 1;
@@ -94,54 +86,34 @@ export const useStatsStore = defineStore("stats", () => {
         if (diff === 1) {
           streak++;
           previousDate = d;
-        } else {
-          break;
-        }
+        } else break;
       }
     }
-
     currentStreak.value = streak;
 
-    // ===== Calcul best streak =====
+    // Meilleur streak
     let maxStreak = 0;
     let tempStreak = 1;
-
     for (let i = 0; i < days.length - 1; i++) {
       const diff = (days[i] - days[i + 1]) / (1000 * 60 * 60 * 24);
       if (diff === 1) tempStreak++;
       else tempStreak = 1;
-
       maxStreak = Math.max(maxStreak, tempStreak);
     }
-
     bestStreak.value = Math.max(maxStreak, currentStreak.value);
   }
+
   async function addCompletion(day, challengeId) {
     const userStore = useUserStore();
-
-    if (!userStore.userId) {
-      throw new Error("Utilisateur non connecté");
-    }
+    if (!userStore.userId) throw new Error("Utilisateur non connecté");
 
     try {
-      const { error: insertError } = await supabase.from("daily_completions").insert({
-        user_id: userStore.userId,
-        day,
-        challenge_id: challengeId,
-      });
-
-      if (insertError) throw insertError;
-
-      // Recharge les stats
+      await insertCompletion(userStore.userId, day, challengeId);
       await loadCompletions();
-
-      // Événement global
       window.dispatchEvent(new CustomEvent("challenge-completed"));
-
       return true;
     } catch (e) {
       error.value = e.message;
-      console.error("Erreur addCompletion:", e);
       throw e;
     }
   }
@@ -151,21 +123,13 @@ export const useStatsStore = defineStore("stats", () => {
   }
 
   function getLast7Days() {
-    const last7Days = [];
     const labelMap = ["D", "L", "M", "M", "J", "V", "S"];
-
-    for (let i = 6; i >= 0; i--) {
+    return Array.from({ length: 7 }, (_, i) => {
       const d = new Date();
-      d.setDate(d.getDate() - i);
+      d.setDate(d.getDate() - (6 - i));
       const ds = d.toISOString().slice(0, 10);
-      last7Days.push({
-        label: labelMap[d.getDay()],
-        completed: completedDaysSet.value.has(ds),
-        date: ds,
-      });
-    }
-
-    return last7Days;
+      return { label: labelMap[d.getDay()], completed: completedDaysSet.value.has(ds), date: ds };
+    });
   }
 
   function reset() {
@@ -178,8 +142,10 @@ export const useStatsStore = defineStore("stats", () => {
     error.value = null;
   }
 
+  // ─────────────────────────────────────────
+  // RETURN
+  // ─────────────────────────────────────────
   return {
-    // State
     completions,
     completedDaysSet,
     currentStreak,
@@ -187,15 +153,11 @@ export const useStatsStore = defineStore("stats", () => {
     totalCompleted,
     loading,
     error,
-
-    // Getters
     userLevel,
     xpCurrentDisplay,
     xpNext,
     xpProgress,
     xpRemaining,
-
-    // Actions
     loadCompletions,
     calculateStreaks,
     addCompletion,
