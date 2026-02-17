@@ -115,7 +115,7 @@ export const useStatsStore = defineStore("stats", () => {
     }
 
     bestStreak.value = Math.max(maxStreak, currentStreak.value);
-  }g
+  }
   async function addCompletion(day, challengeId) {
     const userStore = useUserStore();
 
