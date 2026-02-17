@@ -31,7 +31,7 @@
 
 				<v-card-actions>
 					<v-spacer />
-					<v-btn class="btn-primary mt-4" rounded @click="confirmInstall" block>
+					<v-btn class="btn-primary mt-4" variant="flat" rounded @click="confirmInstall" block>
 						{{ t("pwa.dialog.install_button") }}
 					</v-btn>
 				</v-card-actions>
@@ -44,6 +44,7 @@
 import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 
+
 const { t } = useI18n();
 const showDialog = ref(false);
 const showButton = ref(false);
@@ -54,8 +55,7 @@ function checkPWAState() {
 		window.matchMedia("(display-mode: standalone)").matches ||
 		window.navigator.standalone === true;
 
-	const pwaAlreadyShown =
-		localStorage.getItem("pwa-shown") === "true";
+	const pwaAlreadyShown = localStorage.getItem("pwa-shown") === "true";
 
 	if (!isStandalone && !pwaAlreadyShown) {
 		showButton.value = true;
@@ -66,7 +66,6 @@ onMounted(() => {
 	checkPWAState();
 });
 
-// 🔹 On stocke l'event beforeinstallprompt
 window.addEventListener("beforeinstallprompt", (e) => {
 	e.preventDefault();
 	deferredPrompt = e;
@@ -75,28 +74,24 @@ window.addEventListener("beforeinstallprompt", (e) => {
 		window.matchMedia("(display-mode: standalone)").matches ||
 		window.navigator.standalone === true;
 
-	const pwaAlreadyShown =
-		localStorage.getItem("pwa-shown") === "true";
+	const pwaAlreadyShown = localStorage.getItem("pwa-shown") === "true";
 
 	showButton.value = !isStandalone && !pwaAlreadyShown;
 });
 
-// 🔹 Cliquer sur le bouton
 function installPWA() {
 	if (deferredPrompt) {
 		deferredPrompt.prompt();
-		deferredPrompt.userChoice.then((choice) => {
+		deferredPrompt.userChoice.then(() => {
 			deferredPrompt = null;
 			localStorage.setItem("pwa-shown", "true");
 			showButton.value = false;
 		});
 	} else {
-		// iOS ou navigateur sans prompt
 		showDialog.value = true;
 	}
 }
 
-// 🔹 Popup instructions
 function confirmInstall() {
 	showDialog.value = false;
 	localStorage.setItem("pwa-shown", "true");
@@ -106,14 +101,15 @@ function confirmInstall() {
 
 <style scoped>
 .pwa-hint {
-	position: fixed;
-	bottom: 130px;
-	right: 20px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 6px;
-	z-index: 1002;
+	margin-top: 16px;
+	margin-bottom: 100px;
+	width: fit-content;
+	margin-left: auto;
+	margin-right: 4px;
 }
 
 .hint-text {
@@ -124,6 +120,8 @@ function confirmInstall() {
 	padding: 6px 12px;
 	border-radius: 20px;
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+	text-align: center;
+	white-space: nowrap;
 }
 
 .install-card {

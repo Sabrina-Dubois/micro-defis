@@ -147,7 +147,7 @@ body {
 }
 
 /* Contenu interne avec scroll si trop long */
-.fixed-card .cardæ-content {
+.fixed-card .card-content {
   flex: 1;
   overflow-y: auto; /* scroll vertical si texte trop long */
   padding-right: 4px; /* éviter que le scroll touche le bord */
@@ -203,6 +203,7 @@ body {
 .v-switch__thumb {
   color: var(--text-secondary) !important;
 }
+
 .btn-primary {
   height: 48px;
   font-weight: 800;

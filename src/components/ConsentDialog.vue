@@ -36,7 +36,7 @@
 			</v-card-text>
 
 			<v-card-actions>
-				<v-btn block class="btn-primary mt-4" :disabled="!(acceptCgu && acceptPrivacy)" @click="acceptConsent">
+				<v-btn block class="btn-primary variant=flat mt-4" :disabled="!(acceptCgu && acceptPrivacy)" @click="acceptConsent">
 					{{ t("consent.start") }}
 				</v-btn>
 			</v-card-actions>

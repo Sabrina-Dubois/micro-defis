@@ -9,7 +9,8 @@
 
 		<!-- Carte du défi -->
 		<v-card class="micro-card pa-5 fixed-card mb-4">
-			<div class="page-subtitle text-center" style="font-size: 30px !important;font-weight: 600; margin-bottom: 12px;">
+			<div class="page-subtitle text-center"
+				style="font-size: 30px !important;font-weight: 600; margin-bottom: 12px;">
 				{{ t("daily.challenge") }}
 			</div>
 
@@ -142,5 +143,9 @@ onMounted(async () => {
 	border-radius: 24px;
 	overflow: visible;
 	z-index: 0;
+	position: relative;
+	/* ✅ ajouter */
+	z-index: 100;
+
 }
 </style>

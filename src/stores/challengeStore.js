@@ -22,7 +22,6 @@ export const useChallengeStore = defineStore("challenge", () => {
      GETTERS
   ========================= */
   const todayISO = computed(() => new Date().toISOString().slice(0, 10));
-
   const hasChallenge = computed(() => !!assignment.value);
 
   /* =========================
@@ -38,8 +37,8 @@ export const useChallengeStore = defineStore("challenge", () => {
   /* =========================
      DATABASE HELPERS
   ========================= */
-  async function getOrCreateDailyAssignment(userId, day) {
-    // Vérifier si déjà assigné
+  async function getOrCreateDailyAssignment(userId, day, isPremium) {
+    // Vérifier si déjà assigné aujourd'hui
     const { data: existing } = await supabase
       .from("daily_assignments")
       .select("day, challenge_id")
@@ -52,8 +51,8 @@ export const useChallengeStore = defineStore("challenge", () => {
       return { ...existing, _picked: challengeData };
     }
 
-    // Récupérer challenges actifs
-    const { data: list, error } = await supabase
+    // ✅ Récupérer les challenges avec filtre premium
+    let query = supabase
       .from("challenges")
       .select(
         `
@@ -64,10 +63,24 @@ export const useChallengeStore = defineStore("challenge", () => {
       )
       .eq("active", true);
 
-    if (error) throw error;
-    if (!list?.length) throw new Error("Aucun défi disponible");
+    // ✅ Si pas premium → uniquement les défis de niveau non-premium
+    if (!isPremium) {
+      query = query.eq("level.premium", false);
+    }
 
-    const pick = list[Math.floor(Math.random() * list.length)];
+    const { data: list, error: fetchError } = await query;
+
+    if (fetchError) throw fetchError;
+
+    // ✅ Filtre JS en backup (au cas où le filtre Supabase sur relation ne fonctionne pas)
+    let filtered = list || [];
+    if (!isPremium) {
+      filtered = filtered.filter((c) => c.level?.premium === false);
+    }
+
+    if (!filtered.length) throw new Error("Aucun défi disponible pour ce niveau");
+
+    const pick = filtered[Math.floor(Math.random() * filtered.length)];
 
     const { data: created } = await supabase
       .from("daily_assignments")
@@ -96,37 +109,36 @@ export const useChallengeStore = defineStore("challenge", () => {
   }
 
   /* ============================================================
-     1️⃣ LOAD STANDARD (Daily Assignment)
+     1️⃣ LOAD STANDARD (Daily Assignment) — avec filtre premium
   ============================================================ */
   async function loadTodayChallenge() {
     const userStore = useUserStore();
     const settingsStore = useSettingsStore();
 
-    if (!userStore.userId) {
-      throw new Error("Utilisateur non connecté");
-    }
+    if (!userStore.userId) throw new Error("Utilisateur non connecté");
 
     loading.value = true;
     error.value = null;
 
     try {
+      // ✅ Charger les préférences pour avoir isPremium à jour
+      await settingsStore.loadPreferences();
+
       const day = todayISO.value;
       const lang = settingsStore.language || "fr";
+      const isPremium = settingsStore.isPremium; // ✅ récupéré ici
 
-      const a = await getOrCreateDailyAssignment(userStore.userId, day);
+      const a = await getOrCreateDailyAssignment(userStore.userId, day, isPremium);
       assignment.value = a;
 
       const challengeData = a._picked;
 
       challengeTitle.value = challengeData?.[`title_${lang}`] || challengeData?.title_fr || "";
-
       challengeDescription.value = challengeData?.[`description_${lang}`] || challengeData?.description_fr || "";
-
       challengeCategory.value = extractRelationName(challengeData?.category, "Catégorie");
-
       challengeLevel.value = extractRelationName(challengeData?.level, "Niveau");
 
-      // Vérifier si déjà complété
+      // Vérifier si déjà complété aujourd'hui
       const { data: done } = await supabase
         .from("daily_completions")
         .select("day")
@@ -144,15 +156,13 @@ export const useChallengeStore = defineStore("challenge", () => {
   }
 
   /* ============================================================
-     2️⃣ LOAD AVEC FILTRES (Premium + Préférences)
+     2️⃣ LOAD AVEC FILTRES (Premium + Préférences catégories/niveaux)
   ============================================================ */
   async function loadTodayChallengeAlternative() {
     const userStore = useUserStore();
     const settingsStore = useSettingsStore();
 
-    if (!userStore.userId) {
-      throw new Error("Utilisateur non connecté");
-    }
+    if (!userStore.userId) throw new Error("Utilisateur non connecté");
 
     loading.value = true;
     error.value = null;
@@ -177,26 +187,31 @@ export const useChallengeStore = defineStore("challenge", () => {
 
       let filtered = data;
 
+      // Filtre premium
       if (!isPremium) {
         filtered = filtered.filter((c) => c.level?.premium === false);
       }
 
+      // Filtre catégories préférées
       if (settingsStore.preferredCategories?.length > 0) {
         filtered = filtered.filter((c) => settingsStore.preferredCategories.includes(c.category?.name));
       }
 
+      // Filtre niveaux préférés
       if (settingsStore.preferredLevels?.length > 0) {
         filtered = filtered.filter((c) => settingsStore.preferredLevels.includes(c.level?.name));
       }
 
+      // Fallback si aucun défi après filtres
       if (!filtered.length) {
         filtered = data.filter((c) => c.level?.premium === false);
       }
 
       const challenge = filtered[Math.floor(Math.random() * filtered.length)];
+      const lang = settingsStore.language || "fr";
 
-      challengeTitle.value = challenge.title_fr;
-      challengeDescription.value = challenge.description_fr;
+      challengeTitle.value = challenge?.[`title_${lang}`] || challenge?.title_fr || "";
+      challengeDescription.value = challenge?.[`description_${lang}`] || challenge?.description_fr || "";
       challengeCategory.value = extractRelationName(challenge.category, "Catégorie");
       challengeLevel.value = extractRelationName(challenge.level, "Niveau");
     } catch (e) {
@@ -239,11 +254,8 @@ export const useChallengeStore = defineStore("challenge", () => {
     const data = await getChallengeData(assignment.value.challenge_id);
 
     challengeTitle.value = data?.[`title_${lang}`] || data?.title_fr || "";
-
     challengeDescription.value = data?.[`description_${lang}`] || data?.description_fr || "";
-
     challengeCategory.value = extractRelationName(data?.category, "Catégorie");
-
     challengeLevel.value = extractRelationName(data?.level, "Niveau");
   }
 
