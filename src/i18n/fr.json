@@ -1,4 +1,50 @@
 {
+  "landing": {
+    "hero": {
+      "subtitle": "Un petit défi par jour pour devenir une meilleure version de toi-même.",
+      "cta": "Commencer gratuitement"
+    },
+    "about": {
+      "title": "💡 C'est quoi MicroDéfis ?",
+      "text1": "MicroDéfis est une application gratuite qui te propose chaque jour un petit défi personnel à relever : sport, bien-être, productivité, créativité ou développement personnel.",
+      "text2": "Le principe est simple : un défi par jour, quelques minutes suffisent. Tu valides, tu gardes ta série, tu progresses. Pas besoin de te transformer du jour au lendemain — juste un pas à la fois."
+    },
+    "how": {
+      "title": "⚡ Comment ça marche ?",
+      "step1_label": "Reçois ton défi du jour",
+      "step1_desc": "Chaque matin, un nouveau défi t'attend. Adapté à ton niveau et tes préférences.",
+      "step2_label": "Relève-le",
+      "step2_desc": "5 à 15 minutes suffisent. Pas d'excuse, pas de pression — juste l'action.",
+      "step3_label": "Valide et garde ta série 🔥",
+      "step3_desc": "Marque le défi comme accompli, regarde ta série grandir jour après jour.",
+      "step4_label": "Partage tes progrès",
+      "step4_desc": "Génère une image de ta série et partage-la avec tes amis pour les motiver."
+    },
+    "examples": {
+      "title": "🎯 Exemples de défis",
+      "intro": "Voici quelques exemples de défis que tu peux relever sur MicroDéfis :"
+    },
+    "categories": {
+      "title": "📚 Des défis pour chaque domaine",
+      "intro": "MicroDéfis couvre plusieurs catégories pour t'aider à progresser dans tous les aspects de ta vie :"
+    },
+    "science": {
+      "title": "🧠 Pourquoi les micro-défis fonctionnent ?",
+      "text1": "La science est claire : les petites habitudes régulières sont bien plus efficaces que les grands changements ponctuels.",
+      "text2": "Un défi court, une action concrète, une validation — et ta journée est déjà meilleure qu'hier."
+    },
+    "cta": {
+      "title": "🚀 Prêt(e) à relever le premier défi ?",
+      "text": "Rejoins MicroDéfis gratuitement. Pas d'abonnement requis pour commencer.",
+      "button": "Créer mon compte gratuitement",
+      "login": "J'ai déjà un compte → Se connecter"
+    },
+    "footer": {
+      "terms": "CGU",
+      "privacy": "Confidentialité",
+      "help": "Aide"
+    }
+  },
   "consent": {
     "title": "Bienvenue sur MicroDéfis",
     "intro": "Veuillez accepter les conditions suivantes pour continuer :",
@@ -7,7 +53,6 @@
     "accept_cgu": "J'accepte les Conditions d'utilisation",
     "accept_privacy": "J'accepte la Politique de confidentialité",
     "ads_intro": "Nous utilisons des publicités pour financer l'application.",
-    "accept_ads": "J'accepte les publicités personnalisées",
     "start": "Commencer"
   },
   "authCallBack": {
@@ -96,7 +141,7 @@
       "save": "Enregistrer"
     },
     "about": {
-      "title": "ℹ️ A propos",
+      "title": "ℹ️ À propos",
       "help_center": "Centre d'aide",
       "terms": "Conditions d'utilisation",
       "privacy_policy": "Politique de confidentialité",
@@ -104,7 +149,7 @@
     },
     "account": {
       "logout": " Déconnection",
-      "delete": "Supprimer account"
+      "delete": "Supprimer le compte"
     }
   },
   "daily": {
@@ -118,7 +163,7 @@
   },
   "calendar": {
     "title": "Calendrier",
-    "actual_serie": "Série acuelle",
+    "actual_serie": "Série actuelle",
     "days_completed": "Jours validés",
     "best_serie": "Meilleure série",
     "completed_streak": "Mes défis réalisés",

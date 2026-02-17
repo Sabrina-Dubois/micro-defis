@@ -1,269 +1,314 @@
 {
-  "consent": {
-    "title": "Welcome to MicroDéfis",
-    "intro": "Please accept the following terms to continue:",
-    "cgu": "Terms of Use",
-    "privacy": "Privacy Policy",
-    "accept_cgu": "I accept the Terms of Use",
-    "accept_privacy": "I accept the Privacy Policy",
-    "ads_intro": "We use ads to fund the app.",
-    "accept_ads": "I accept personalized ads",
-    "start": "Start"
-  },
-  "authCallBack": {
-    "connexion": "Connecting...",
-    "access": "Finalizing your access."
-  },
-  "auth": {
-    "title": "🔥 MicroDéfis",
-    "login": {
-      "login": "Login",
-      "email": "Email",
-      "password": "Password",
-      "forgot_password": "Forgot password?",
-      "switch_to_login": "I already have an account",
-      "enter_email": "Enter your email first 💌",
-      "reset_email_sent": "Reset email sent ✉️"
-    },
-    "signup": {
-      "title": "Sign Up",
-      "create_account": "Create Account",
-      "username": "Username",
-      "confirm_password": "Confirm Password",
-      "password_mismatch": "Passwords do not match",
-      "account_created": "Account created 🎉 Check your email!",
-      "switch_to_signup": "Create an account"
-    }
-  },
-  "reset_password": {
-    "title": "Reset Password",
-    "new_password": "New Password",
-    "confirm_password": "Confirm Password",
-    "required": "This field is required",
-    "min_chars": "Password must be at least 8 characters",
-    "passwords_must_match": "Passwords must match",
-    "confirm": "Confirm",
-    "success_alert": "✅ Password changed! Logging out..."
-  },
-  "profil": {
-    "member_since": "Member since",
-    "stats": {
-      "streak": "Challenges",
-      "completed": "Completed",
-      "best": "Best"
-    },
-    "level": {
-      "title": "Level",
-      "xp_next": "XP for next level"
-    },
-    "badges": {
-      "title": "🏅 Unlocked Badges",
-      "badges_first": "First Challenge",
-      "badges_3days": "3 Days",
-      "badges_7days": "7 Days",
-      "badges_30days": "30 Days",
-      "badges_100": "100 Challenges",
-      "badges_regular": "Regular",
-      "badges_champion": "Champion"
-    },
-    "activity": {
-      "title": "📊 7-Day Activity"
-    },
-    "premium": {
-      "title": "✨ Upgrade to Premium"
-    }
-  },
-  "settings": {
-    "title": "Settings",
-    "profil": {
-      "title": "👤 Profile",
-      "username": "Username",
-      "email": "Email",
-      "save": "Save"
-    },
-    "preferences": {
-      "title": "⚙️ Preferences",
-      "notifications": "Notifications",
-      "reminder": "Reminder",
-      "language": "Language",
-      "theme": "Theme"
-    },
-    "defis": {
-      "title": "❤️ Favorite Challenges",
-      "category": "Favorite Category",
-      "level": "Favorite Level",
-      "premium": "Beginner level 🌱 is free. Upgrade to Premium ✨ to unlock all levels and categories!",
-      "save": "Save"
+  "landing": {
+    "hero": {
+      "subtitle": "One small challenge a day to become a better version of yourself.",
+      "cta": "Start for free"
     },
     "about": {
-      "title": "ℹ️ About",
-      "help_center": "Help Center",
-      "terms": "Terms of Use",
-      "privacy_policy": "Privacy Policy",
-      "version": "Version"
+      "title": "💡 What is MicroDéfis?",
+      "text1": "MicroDéfis is a free app that gives you a small personal challenge every day: sport, well-being, productivity, creativity, or personal growth.",
+      "text2": "The idea is simple: one challenge per day. It only takes a few minutes. You complete it, keep your streak, and improve step by step."
     },
-    "account": {
-      "logout": "Logout",
-      "delete": "Delete Account"
+    "how": {
+      "title": "⚡ How does it work?",
+      "step1_label": "Receive your daily challenge",
+      "step1_desc": "Every morning, a new challenge awaits you, adapted to your level and preferences.",
+      "step2_label": "Complete it",
+      "step2_desc": "5 to 15 minutes is enough. No pressure, just action.",
+      "step3_label": "Validate and keep your streak 🔥",
+      "step3_desc": "Mark the challenge as done and watch your streak grow.",
+      "step4_label": "Share your progress",
+      "step4_desc": "Generate an image of your streak and share it with friends."
+    },
+    "examples": {
+      "title": "🎯 Example challenges",
+      "intro": "Here are some examples of challenges you can do:"
+    },
+    "categories": {
+      "title": "📚 Challenges for every area",
+      "intro": "MicroDéfis covers multiple categories to help you grow in all aspects of life:"
+    },
+    "science": {
+      "title": "🧠 Why micro-challenges work",
+      "text1": "Science shows that small, consistent habits are more effective than big, occasional changes.",
+      "text2": "One short challenge, one action, one validation — and your day is already better than yesterday."
+    },
+    "cta": {
+      "title": "🚀 Ready for your first challenge?",
+      "text": "Join MicroDéfis for free. No subscription required to start.",
+      "button": "Create my free account",
+      "login": "I already have an account → Log in"
+    },
+    "footer": {
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "help": "Help"
     }
   },
-  "daily": {
-    "title": "Hello, ",
-    "challenge": "Daily Challenge",
-    "loading": "Loading…",
-    "level": "Level",
-    "todo": "To do",
-    "done": "Done!",
-    "share": "Share"
-  },
-  "calendar": {
-    "title": "Calendar",
-    "actual_serie": "Current Series",
-    "days_completed": "Days Completed",
-    "best_serie": "Best Series",
-    "completed_streak": "My Completed Challenges",
-    "weekdays": ["M", "T", "W", "T", "F", "S", "S"]
-  },
-  "share": {
-    "download": "Download Image",
-    "share": "Share",
-    "login_required": "Log in to share your stats.",
-    "default_user": "Champion",
-    "default_challenge": "Take today’s challenge",
-    "day_challenge": "Daily Challenge",
-    "image_downloaded": "Image downloaded",
-    "shared": "Shared",
-    "share_title": "My MicroDéfis Stats",
-    "streak_label": "day streak 🔥",
-    "record": "🏆 Record",
-    "completed": "✅ Completed",
-    "cta": "Join MicroDéfis",
-    "microdefis": "microdefis.app"
-  },
-  "terms": {
-    "title": "Terms of Use",
-    "intro": {
-      "title": "1. Introduction",
-      "content": "MicroDéfis is an application offering daily challenges for well-being and personal growth. By using the app, you agree to these terms."
+    "consent": {
+      "title": "Welcome to MicroDéfis",
+      "intro": "Please accept the following terms to continue:",
+      "cgu": "Terms of Use",
+      "privacy": "Privacy Policy",
+      "accept_cgu": "I accept the Terms of Use",
+      "accept_privacy": "I accept the Privacy Policy",
+      "ads_intro": "We use ads to fund the app.",
+      "start": "Start"
     },
-    "account": {
-      "title": "2. User account",
-      "content": "Some features require an account. You are responsible for the information provided and the security of your account."
+    "authCallBack": {
+      "connexion": "Connecting...",
+      "access": "Finalizing your access."
     },
-    "usage": {
-      "title": "3. Service usage",
-      "content": "The app must be used for personal and non-commercial purposes. Challenges are provided for informational purposes only."
-    },
-    "forbidden": {
-      "title": "4. Prohibited behavior",
-      "content": "It is forbidden to use the app for illegal purposes, disrupt its operation, or attempt to access other users’ data."
-    },
-    "ip": {
-      "title": "5. Intellectual property",
-      "content": "All app content, including text, visuals, and features, is protected by copyright."
-    },
-    "data": {
-      "title": "6. Personal data",
-      "content": "Your data is processed in accordance with applicable regulations.",
-      "content1": "For more information, see the",
-      "content2": "privacy policy",
-      "content3": ".",
-      "content4": "You can exercise your rights at any time."
-    },
-    "liability": {
-      "title": "7. Liability",
-      "content": "The app is provided “as is”. The publisher is not liable for indirect damages."
-    },
-    "termination": {
-      "title": "8. Termination",
-      "content": "You may delete your account at any time. The seevice may suspend accounts that violate these terms."
-    },
-    "changes": {
-      "title": "9. Changes",
-      "content": "These terms may be updated at any time."
-    },
-    "law": {
-      "title": "10. Governing law",
-      "content": "These terms are governed by French law."
-    },
-    "contact": {
-      "title": "11. Contact",
-      "content": "For any questions, contact us at:"
-    }
-  },
-
-  "privacy": {
-    "title": "Privacy Policy",
-
-    "intro_title": "1. Introduction",
-    "intro_text1": "This policy explains how your personal data is collected and used.",
-    "intro_text2": "We comply with the General Data Protection Regulation (GDPR).",
-
-    "data_title": "2. Data collected",
-    "data_intro": "We only collect data necessary for the service:",
-    "data_identity": "Email address and account data.",
-    "data_technical": "Technical connection data.",
-    "data_usage": "Challenge usage statistics.",
-    "data_sensitive": "No sensitive data is collected.",
-
-    "legal_title": "3. Legal basis",
-    "legal_intro": "Data is processed based on:",
-    "legal_consent": "Your consent.",
-    "legal_contract": "Service execution.",
-    "legal_interest": "Legitimate operational interest.",
-    "legal_usage": "Data is used only to provide and improve the service.",
-
-    "share_title": "4. Data sharing",
-    "share_intro": "Some data may be processed by technical providers:",
-    "share_host": "Secure hosting and database.",
-    "share_analytics": "Anonymous analytics tools.",
-    "share_legal": "Legal authorities if required.",
-
-    "retention_title": "5. Retention",
-    "retention_text": "Data is kept as long as your account is active.",
-
-    "security_title": "6. Security",
-    "security_text": "Technical and organizational measures protect your data.",
-
-    "cookies_title": "7. Cookies",
-    "cookies_text": "Technical cookies may be used for app functionality.",
-
-    "rights_title": "8. Your rights",
-    "rights_text": "You may request access, correction, or deletion of your data.",
-
-    "transfer_title": "9. International transfers",
-    "transfer_text": "Some data may be processed outside the EU with safeguards.",
-
-    "changes_title": "10. Changes",
-    "changes_text": "This policy may be updated at any time.",
-
-    "contact_title": "11. Contact",
-    "contact_text": "For any data-related request:"
-  },
-  "pwa": {
-    "button": "Mobile App",
-    "dialog": {
-      "title": "📱 Install the App",
-      "android": {
-        "title": "📱 Android (Chrome)",
-        "step1": "1. Click ⋮ (3 dots)",
-        "step2": "2. 'Add to Home Screen'",
-        "step3": "3. Open as an app!"
+    "auth": {
+      "title": "🔥 MicroDéfis",
+      "login": {
+        "login": "Login",
+        "email": "Email",
+        "password": "Password",
+        "forgot_password": "Forgot password?",
+        "switch_to_login": "I already have an account",
+        "enter_email": "Enter your email first 💌",
+        "reset_email_sent": "Reset email sent ✉️"
       },
-      "ios": {
-        "title": "🍎 iPhone (Safari)",
-        "step1": "1. Top screen → icon ⏵️ (square + arrow) ⏵️",
-        "step2": "2. 'Add to Home Screen'",
-        "step3": "3. App name → 'Add'",
-        "step4": "4. ✅ Icon on home screen!"
+      "signup": {
+        "title": "Sign Up",
+        "create_account": "Create Account",
+        "username": "Username",
+        "confirm_password": "Confirm Password",
+        "password_mismatch": "Passwords do not match",
+        "account_created": "Account created 🎉 Check your email!",
+        "switch_to_signup": "Create an account"
+      }
+    },
+    "reset_password": {
+      "title": "Reset Password",
+      "new_password": "New Password",
+      "confirm_password": "Confirm Password",
+      "required": "This field is required",
+      "min_chars": "Password must be at least 8 characters",
+      "passwords_must_match": "Passwords must match",
+      "confirm": "Confirm",
+      "success_alert": "✅ Password changed! Logging out..."
+    },
+    "profil": {
+      "member_since": "Member since",
+      "stats": {
+        "streak": "Challenges",
+        "completed": "Completed",
+        "best": "Best"
       },
-      "install_button": "Install 👍"
+      "level": {
+        "title": "Level",
+        "xp_next": "XP for next level"
+      },
+      "badges": {
+        "title": "🏅 Unlocked Badges",
+        "badges_first": "First Challenge",
+        "badges_3days": "3 Days",
+        "badges_7days": "7 Days",
+        "badges_30days": "30 Days",
+        "badges_100": "100 Challenges",
+        "badges_regular": "Regular",
+        "badges_champion": "Champion"
+      },
+      "activity": {
+        "title": "📊 7-Day Activity"
+      },
+      "premium": {
+        "title": "✨ Upgrade to Premium"
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "profil": {
+        "title": "👤 Profil",
+        "username": "Username",
+        "email": "Email",
+        "save": "Save"
+      },
+      "preferences": {
+        "title": "⚙️ Preferences",
+        "notifications": "Notifications",
+        "reminder": "Reminder",
+        "language": "Language",
+        "theme": "Theme"
+      },
+      "defis": {
+        "title": "❤️ Favorite Challenges",
+        "category": "Favorite Category",
+        "level": "Favorite Level",
+        "premium": "Beginner level 🌱 is free. Upgrade to Premium ✨ to unlock all levels and categories!",
+        "save": "Save"
+      },
+      "about": {
+        "title": "ℹ️ About",
+        "help_center": "Help Center",
+        "terms": "Terms of Use",
+        "privacy_policy": "Privacy Policy",
+        "version": "Version"
+      },
+      "account": {
+        "logout": "Logout",
+        "delete": "Delete Account"
+      }
+    },
+    "daily": {
+      "title": "Hello, ",
+      "challenge": "Daily Challenge",
+      "loading": "Loading…",
+      "level": "Level",
+      "todo": "To do",
+      "done": "Done!",
+      "share": "Share"
+    },
+    "calendar": {
+      "title": "Calendar",
+      "actual_serie": "Current Series",
+      "days_completed": "Days Completed",
+      "best_serie": "Best Series",
+      "completed_streak": "My Completed Challenges",
+      "weekdays": ["M", "T", "W", "T", "F", "S", "S"]
+    },
+    "share": {
+      "download": "Download Image",
+      "share": "Share",
+      "login_required": "Log in to share your stats.",
+      "default_user": "Champion",
+      "default_challenge": "Take today’s challenge",
+      "day_challenge": "Daily Challenge",
+      "image_downloaded": "Image downloaded",
+      "shared": "Shared",
+      "share_title": "My MicroDéfis Stats",
+      "streak_label": "day streak 🔥",
+      "record": "🏆 Record",
+      "completed": "✅ Completed",
+      "cta": "Join MicroDéfis",
+      "microdefis": "microdefis.app"
+    },
+    "terms": {
+      "title": "Terms of Use",
+      "intro": {
+        "title": "1. Introduction",
+        "content": "MicroDéfis is an application offering daily challenges for well-being and personal growth. By using the app, you agree to these terms."
+      },
+      "account": {
+        "title": "2. User account",
+        "content": "Some features require an account. You are responsible for the information provided and the security of your account."
+      },
+      "usage": {
+        "title": "3. Service usage",
+        "content": "The app must be used for personal and non-commercial purposes. Challenges are provided for informational purposes only."
+      },
+      "forbidden": {
+        "title": "4. Prohibited behavior",
+        "content": "It is forbidden to use the app for illegal purposes, disrupt its operation, or attempt to access other users’ data."
+      },
+      "ip": {
+        "title": "5. Intellectual property",
+        "content": "All app content, including text, visuals, and features, is protected by copyright."
+      },
+      "data": {
+        "title": "6. Personal data",
+        "content": "Your data is processed in accordance with applicable regulations.",
+        "content1": "For more information, see the",
+        "content2": "privacy policy",
+        "content3": ".",
+        "content4": "You can exercise your rights at any time."
+      },
+      "liability": {
+        "title": "7. Liability",
+        "content": "The app is provided “as is”. The publisher is not liable for indirect damages."
+      },
+      "termination": {
+        "title": "8. Termination",
+        "content": "You may delete your account at any time. The service may suspend accounts that violate these terms."
+      },
+      "changes": {
+        "title": "9. Changes",
+        "content": "These terms may be updated at any time."
+      },
+      "law": {
+        "title": "10. Governing law",
+        "content": "These terms are governed by French law."
+      },
+      "contact": {
+        "title": "11. Contact",
+        "content": "For any questions, contact us at:"
+      }
+    },
+
+    "privacy": {
+      "title": "Privacy Policy",
+
+      "intro_title": "1. Introduction",
+      "intro_text1": "This policy explains how your personal data is collected and used.",
+      "intro_text2": "We comply with the General Data Protection Regulation (GDPR).",
+
+      "data_title": "2. Data collected",
+      "data_intro": "We only collect data necessary for the service:",
+      "data_identity": "Email address and account data.",
+      "data_technical": "Technical connection data.",
+      "data_usage": "Challenge usage statistics.",
+      "data_sensitive": "No sensitive data is collected.",
+
+      "legal_title": "3. Legal basis",
+      "legal_intro": "Data is processed based on:",
+      "legal_consent": "Your consent.",
+      "legal_contract": "Service execution.",
+      "legal_interest": "Legitimate operational interest.",
+      "legal_usage": "Data is used only to provide and improve the service.",
+
+      "share_title": "4. Data sharing",
+      "share_intro": "Some data may be processed by technical providers:",
+      "share_host": "Secure hosting and database.",
+      "share_analytics": "Anonymous analytics tools.",
+      "share_legal": "Legal authorities if required.",
+
+      "retention_title": "5. Retention",
+      "retention_text": "Data is kept as long as your account is active.",
+
+      "security_title": "6. Security",
+      "security_text": "Technical and organizational measures protect your data.",
+
+      "cookies_title": "7. Cookies",
+      "cookies_text": "Technical cookies may be used for app functionality.",
+
+      "rights_title": "8. Your rights",
+      "rights_text": "You may request access, correction, or deletion of your data.",
+
+      "transfer_title": "9. International transfers",
+      "transfer_text": "Some data may be processed outside the EU with safeguards.",
+
+      "changes_title": "10. Changes",
+      "changes_text": "This policy may be updated at any time.",
+
+      "contact_title": "11. Contact",
+      "contact_text": "For any data-related request:"
+    },
+    "pwa": {
+      "button": "Mobile App",
+      "dialog": {
+        "title": "📱 Install the App",
+        "android": {
+          "title": "📱 Android (Chrome)",
+          "step1": "1. Click ⋮ (3 dots)",
+          "step2": "2. 'Add to Home Screen'",
+          "step3": "3. Open as an app!"
+        },
+        "ios": {
+          "title": "🍎 iPhone (Safari)",
+          "step1": "1. Top screen → icon ⏵️ (square + arrow) ⏵️",
+          "step2": "2. 'Add to Home Screen'",
+          "step3": "3. App name → 'Add'",
+          "step4": "4. ✅ Icon on home screen!"
+        },
+        "install_button": "Install 👍"
+      }
+    },
+    "errors": {
+      "404": "404",
+      "not_found_title": "Oops! Page not found",
+      "not_found_message": "This page does not exist.",
+      "back_home": "Back home"
     }
-  },
-  "errors": {
-    "404": "404",
-    "not_found_title": "Oops! Page not found",
-    "not_found_message": "This page does not exist.",
-    "back_home": "Back home"
-  }
 }

@@ -32,7 +32,7 @@
 					{{ t("consent.ads_intro") }}
 				</p>
 
-				<v-checkbox v-model="acceptAds" :label="t('consent.accept_ads')" color="primary" hide-details />
+				<v-checkbox v-model="acceptAds" color="primary" hide-details />
 			</v-card-text>
 
 			<v-card-actions>
