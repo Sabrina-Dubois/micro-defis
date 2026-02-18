@@ -31,6 +31,10 @@ export const useSettingsStore = defineStore("settings", () => {
     return `${String(date.getUTCHours()).padStart(2, "0")}:${String(date.getUTCMinutes()).padStart(2, "0")}`;
   }
 
+  function getCurrentTimeZone() {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+  }
+
   // ─────────────────────────────────────────
   // STATE
   // ─────────────────────────────────────────
@@ -93,7 +97,12 @@ export const useSettingsStore = defineStore("settings", () => {
       // Maintient push_subscriptions aligné sur l'UTC courant (timezone/DST).
       if (preferences.value.notifications_enabled) {
         const utcReminderTime = localReminderToUtc(preferences.value.reminder_time);
-        await updatePushReminderTime(userStore.userId, utcReminderTime);
+        await updatePushReminderTime(
+          userStore.userId,
+          utcReminderTime,
+          preferences.value.reminder_time,
+          getCurrentTimeZone(),
+        );
       }
 
       return preferences.value;
@@ -179,7 +188,7 @@ export const useSettingsStore = defineStore("settings", () => {
     const userStore = useUserStore();
     if (preferences.value.notifications_enabled && userStore.userId) {
       const utcReminderTime = localReminderToUtc(time);
-      await updatePushReminderTime(userStore.userId, utcReminderTime);
+      await updatePushReminderTime(userStore.userId, utcReminderTime, time, getCurrentTimeZone());
     }
     return time;
   }
@@ -226,7 +235,13 @@ export const useSettingsStore = defineStore("settings", () => {
       }));
 console.log("5. sauvegarde dans Supabase...");
     const utcReminderTime = localReminderToUtc(preferences.value.reminder_time);
-    await savePushSubscription(userStore.userId, subscription, utcReminderTime);
+    await savePushSubscription(
+      userStore.userId,
+      subscription,
+      utcReminderTime,
+      preferences.value.reminder_time,
+      getCurrentTimeZone(),
+    );
 console.log("6. sauvegarde OK !");
     return subscription;
   }

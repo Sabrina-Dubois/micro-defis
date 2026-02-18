@@ -45,18 +45,30 @@ export async function fetchLevels() {
 // PUSH SUBSCRIPTIONS
 // ─────────────────────────────────────────
 
-export async function savePushSubscription(userId, subscription, reminderTime) {
-  const { error } = await supabase.from("push_subscriptions").upsert(
+export async function savePushSubscription(userId, subscription, reminderTimeUtc, reminderTimeLocal, timezone) {
+  const payload = {
+    user_id: userId,
+    subscription: JSON.stringify(subscription),
+    reminder_time: reminderTimeUtc,
+    reminder_time_local: reminderTimeLocal,
+    timezone,
+    updated_at: new Date().toISOString(),
+  };
+
+  const attempt = await supabase.from("push_subscriptions").upsert(payload, { onConflict: ["user_id"] });
+  if (!attempt.error) return true;
+
+  // Backward compatibility if new columns are not deployed yet.
+  const fallback = await supabase.from("push_subscriptions").upsert(
     {
       user_id: userId,
       subscription: JSON.stringify(subscription),
-      reminder_time: reminderTime,
+      reminder_time: reminderTimeUtc,
       updated_at: new Date().toISOString(),
     },
     { onConflict: ["user_id"] },
   );
-
-  if (error) throw error;
+  if (fallback.error) throw fallback.error;
   return true;
 }
 
@@ -67,12 +79,22 @@ export async function deletePushSubscription(userId) {
   return true;
 }
 
-export async function updatePushReminderTime(userId, reminderTime) {
-  const { error } = await supabase
-    .from("push_subscriptions")
-    .update({ reminder_time: reminderTime, updated_at: new Date().toISOString() })
-    .eq("user_id", userId);
+export async function updatePushReminderTime(userId, reminderTimeUtc, reminderTimeLocal, timezone) {
+  const payload = {
+    reminder_time: reminderTimeUtc,
+    reminder_time_local: reminderTimeLocal,
+    timezone,
+    updated_at: new Date().toISOString(),
+  };
 
-  if (error) throw error;
+  const attempt = await supabase.from("push_subscriptions").update(payload).eq("user_id", userId);
+  if (!attempt.error) return true;
+
+  // Backward compatibility if new columns are not deployed yet.
+  const fallback = await supabase
+    .from("push_subscriptions")
+    .update({ reminder_time: reminderTimeUtc, updated_at: new Date().toISOString() })
+    .eq("user_id", userId);
+  if (fallback.error) throw fallback.error;
   return true;
 }
