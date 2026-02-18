@@ -91,6 +91,18 @@
 					</div>
 				</template>
 
+				<template v-if="settingsStore.notificationsEnabled && isNotificationTestMode">
+					<v-list-item>
+						<template #prepend><v-icon>mdi-flask-outline</v-icon></template>
+						<v-list-item-title>Notification locale (mode test)</v-list-item-title>
+						<template #append>
+							<v-btn size="small" variant="tonal" color="primary" @click="runNotificationTest">
+								Tester
+							</v-btn>
+						</template>
+					</v-list-item>
+				</template>
+
 				<!-- Langue -->
 				<v-list-item style="cursor: pointer" @click="changeLanguage">
 					<template #prepend><v-icon>mdi-web</v-icon></template>
@@ -171,6 +183,7 @@ const settingsStore = useSettingsStore();
 const userName = ref("");
 const preferredCategory = ref([]);
 const preferredLevel = ref([]);
+const isNotificationTestMode = import.meta.env.DEV || import.meta.env.VITE_ENABLE_NOTIFICATION_TEST === "true";
 
 // Valeur du slider (0-23) basée sur l'heure stockée
 const sliderValue = computed(() =>
@@ -216,6 +229,15 @@ async function toggleNotifications(value) {
 
 async function setReminderTime(time) {
 	await settingsStore.setReminderTime(time);
+}
+
+async function runNotificationTest() {
+	try {
+		await settingsStore.sendLocalNotificationTest();
+		alert("Notification locale de test envoyée.");
+	} catch (error) {
+		alert("Impossible d'envoyer la notification de test.");
+	}
 }
 
 async function changeLanguage() {

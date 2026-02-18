@@ -267,8 +267,6 @@ async function toggleNotifications(value) {
     console.log("4. résultat subscribeToPush:", sub);
     if (!sub) {
       await updatePreference("notifications_enabled", false);
-    } else {
-      await sendLocalNotificationTest();
     }
   } else {
     console.log("3. tentative unsubscribeFromPush");
@@ -335,6 +333,7 @@ async function toggleNotifications(value) {
     setChallengePreferences,
     toggleNotifications,
     subscribeToPush,
+    sendLocalNotificationTest,
     unsubscribeFromPush,
     initThemeFromLocalStorage,
     reset,
