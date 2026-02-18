@@ -1,7 +1,4 @@
-alter table if exists public.push_subscriptions
-  add column if not exists reminder_time_local text,
-  add column if not exists timezone text;
-
+-- 2) Backfill existing rows with safe defaults.
 update public.push_subscriptions
 set reminder_time_local = coalesce(reminder_time_local, reminder_time),
     timezone = coalesce(timezone, 'UTC')
