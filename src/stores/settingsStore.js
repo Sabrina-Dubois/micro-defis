@@ -186,9 +186,32 @@ export const useSettingsStore = defineStore("settings", () => {
   async function setReminderTime(time) {
     await updatePreference("reminder_time", time);
     const userStore = useUserStore();
-    if (preferences.value.notifications_enabled && userStore.userId) {
-      const utcReminderTime = localReminderToUtc(time);
-      await updatePushReminderTime(userStore.userId, utcReminderTime, time, getCurrentTimeZone());
+    if (!userStore.userId) return time;
+
+    const utcReminderTime = localReminderToUtc(time);
+    const timezone = getCurrentTimeZone();
+
+    // Keep push_subscriptions synced immediately when reminder time changes,
+    // without forcing users to disable/enable notifications.
+    try {
+      const registration = await getServiceWorkerRegistration();
+      const existingSubscription = registration
+        ? await registration.pushManager.getSubscription()
+        : null;
+
+      if (existingSubscription) {
+        await savePushSubscription(
+          userStore.userId,
+          existingSubscription,
+          utcReminderTime,
+          time,
+          timezone,
+        );
+      } else if (preferences.value.notifications_enabled) {
+        await updatePushReminderTime(userStore.userId, utcReminderTime, time, timezone);
+      }
+    } catch (e) {
+      console.error("Erreur sync reminder_time push_subscriptions:", e);
     }
     return time;
   }
