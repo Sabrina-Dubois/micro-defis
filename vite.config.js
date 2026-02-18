@@ -14,7 +14,10 @@ export default defineConfig({
     vueDevTools(),
     VitePWA({
       registerType: 'autoUpdate',
-      manifest: true
+      manifest: true,
+      workbox: {
+        importScripts: ['/sw-push.js'],
+      },
     })
   ],
   resolve: {
