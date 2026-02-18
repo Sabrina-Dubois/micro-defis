@@ -1,0 +1,5 @@
+-- Legacy full bootstrap SQL kept for traceability.
+-- Source: manual SQL script used during initial project setup.
+-- Note: production changes must go through supabase/migrations/*.sql
+--
+-- Paste the original full script below if needed.
