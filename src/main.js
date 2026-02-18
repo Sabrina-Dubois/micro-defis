@@ -50,10 +50,13 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker
       .register("/sw.js")
       .then(async () => {
-        const legacyRegistration =
-          await navigator.serviceWorker.getRegistration("/serviceWorker.js");
-        if (legacyRegistration) {
-          await legacyRegistration.unregister();
+        // Nettoie les anciens workers pour éviter les conflits de push.
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const reg of registrations) {
+          const scriptUrl = reg.active?.scriptURL || reg.waiting?.scriptURL || reg.installing?.scriptURL || "";
+          if (scriptUrl && !scriptUrl.endsWith("/sw.js")) {
+            await reg.unregister();
+          }
         }
       })
       .catch((err) => {
