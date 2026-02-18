@@ -8,7 +8,7 @@
 		</div>
 
 		<!-- Carte du défi -->
-		<v-card class="micro-card pa-5 fixed-card mb-4">
+		<v-card class="micro-card card-challenge pa-5 fixed-card mb-4">
 			<div class="page-subtitle text-center"
 				style="font-size: 30px !important;font-weight: 600; margin-bottom: 12px;">
 				{{ t("daily.challenge") }}
@@ -42,7 +42,7 @@
 			</div>
 
 			<!-- Bouton action -->
-			<v-btn block class="mt-4" :class="challengeStore.isDone ? 'btn-success' : 'btn-primary'"
+			<v-btn block class="mt-2" :class="challengeStore.isDone ? 'btn-success' : 'btn-primary'"
 				:disabled="challengeStore.loading" @click="markDone">
 				<template v-if="challengeStore.isDone">
 					<v-icon size="28">mdi-check-bold</v-icon>
@@ -137,6 +137,10 @@ onMounted(async () => {
 <style scoped>
 .top {
 	margin: 6px 0 14px;
+}
+
+.card-challenge {
+	height: 260px;
 }
 
 .micro-card {

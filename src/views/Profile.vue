@@ -36,7 +36,7 @@
 			]" />
 
 		<!-- Niveau & Progression -->
-		<v-card class="micro-card pa-4 mt-4">
+		<v-card class="micro-card fixed-card card-level pa-4 mt-4">
 			<div class="d-flex justify-space-between align-center mb-2">
 				<div class="page-subtitle">
 					{{ t("profil.level.title") }} {{ statsStore.userLevel }}
@@ -182,6 +182,10 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.card-level {
+	height: 120px;
+}
+
 .center {
 	display: flex;
 	flex-direction: column;

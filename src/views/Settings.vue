@@ -5,7 +5,7 @@
 		</div>
 
 		<!-- Profil -->
-		<v-card class="micro-card pa-4 mb-4">
+		<v-card class="micro-card fixed-card card-profile pa-4 mb-4">
 			<div class="page-subtitle mb-4">{{ t("settings.profil.title") }}</div>
 			<v-text-field v-model="userName" :label="t('settings.profil.username')" variant="outlined" density="compact"
 				hide-details class="mb-3" />
@@ -17,7 +17,7 @@
 		</v-card>
 
 		<!-- Préférences Défis -->
-		<v-card class="micro-card pa-4 mb-4">
+		<v-card class="micro-card fixed-card card-favorite  pa-4 mb-4">
 			<div class="page-subtitle mb-3">{{ t("settings.defis.title") }}</div>
 
 			<div class="mb-4">
@@ -252,6 +252,18 @@ const levels = computed(() => settingsStore.levels);
 </script>
 
 <style scoped>
+
+.fixed-card {
+	height: 260px;
+}
+.card-profile {
+	height: 230px;
+}
+
+.card-favorite {
+	height: 420px;
+}
+
 .chip-free {
 	background-color: #3bce71 !important;
 	color: white !important;
