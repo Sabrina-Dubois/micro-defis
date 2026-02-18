@@ -34,7 +34,12 @@ self.addEventListener("fetch", (e) => {
 // PUSH NOTIFICATIONS
 // ─────────────────────────────────────────
 self.addEventListener("push", (e) => {
-  const data = e.data?.json() ?? {};
+  let data = {};
+  try {
+    data = e.data ? e.data.json() : {};
+  } catch {
+    data = {};
+  }
 
   e.waitUntil(
     self.registration.showNotification(data.title || "🔥 Défi du jour", {
@@ -43,9 +48,8 @@ self.addEventListener("push", (e) => {
       badge: "/images/microdefis-logo-192.png",
       data: { url: data.url || "/daily" },
       tag: data.tag || "daily",
-      renotify: true,
+      renotify: Boolean(data.renotify),
       requireInteraction: Boolean(data.requireInteraction),
-      vibrate: [200, 100, 200],
     }),
   );
 });

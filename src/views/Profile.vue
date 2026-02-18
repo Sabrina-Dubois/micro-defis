@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<template v-if="isPageReady">
 		<!-- Header Profil -->
 		<div class="center">
 			<div class="avatar" @click="changeAvatar">{{ userStore.userAvatar }}</div>
@@ -91,6 +92,11 @@
 		<v-btn class="btn-primary mt-4" block to="/premium">
 			{{ t("profil.premium.title") }}
 		</v-btn>
+		</template>
+
+		<template v-else>
+			<PageSkeleton :title="t('daily.loading')" :cards="2" />
+		</template>
 	</div>
 </template>
 
@@ -99,6 +105,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import StatsCards from "@/components/StatsCards.vue";
 import GoogleAd from "@/components/GoogleAd.vue";
+import PageSkeleton from "@/components/PageSkeleton.vue";
 
 // ✅ IMPORTS DES STORES
 import { useUserStore } from "@/stores/userStore";
@@ -109,6 +116,7 @@ const { t } = useI18n();
 // ✅ INITIALISATION DES STORES
 const userStore = useUserStore();
 const statsStore = useStatsStore();
+const isPageReady = ref(false);
 
 // ===== BADGES (logique locale) =====
 const badges = ref([
@@ -173,6 +181,8 @@ onMounted(async () => {
 		window.addEventListener("challenge-completed", handleChallengeCompleted);
 	} catch (error) {
 		console.error("❌ Erreur chargement profil:", error);
+	} finally {
+		isPageReady.value = true;
 	}
 });
 
@@ -286,4 +296,5 @@ onUnmounted(() => {
 .mt-3 {
 	margin-top: 12px;
 }
+
 </style>

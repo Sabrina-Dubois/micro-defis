@@ -193,11 +193,19 @@ Deno.serve(async (req) => {
       const lang = langByUser.get(row.user_id) || "fr";
       const type = force ? "manual_test" : isRiskSlot ? "streak_risk" : "daily_reminder";
       const msg = messageFor(type, lang, streak);
+      const notificationTag = force
+        ? `manual-test-${row.user_id}-${Date.now()}`
+        : `${type}-${today}`;
+      const isManualTest = type === "manual_test";
       const payload = {
         ...msg,
+        title: isManualTest ? "🧪 Test push Micro Defis" : msg.title,
+        body: isManualTest ? "Si tu vois ceci, la push distante fonctionne." : msg.body,
         url: "/daily",
-        tag: `${type}-${today}`,
-        requireInteraction: type !== "daily_reminder",
+        tag: notificationTag,
+        requireInteraction: isManualTest ? false : type !== "daily_reminder",
+        renotify: false,
+        ts: Date.now(),
       };
 
       jobs.push({ row, type, payload });

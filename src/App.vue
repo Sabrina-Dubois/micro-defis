@@ -39,7 +39,6 @@ const showConsent = ref(false);
 
 supabase.auth.onAuthStateChange((event, session) => {
 	if (event === "PASSWORD_RECOVERY") {
-		console.log("🔑 Reset password détecté → /reset-password");
 		route.push("/reset-password");
 	}
 });

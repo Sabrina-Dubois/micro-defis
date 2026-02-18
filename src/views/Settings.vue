@@ -1,5 +1,6 @@
 <template>
 	<div class="settings-page">
+		<template v-if="isPageReady">
 		<div class="page-title mt-4 mb-4 text-h4">
 			{{ t("settings.title") }}
 		</div>
@@ -156,6 +157,11 @@
 		<v-btn block variant="text" color="error" size="small" @click="deleteAccount">
 			{{ t("settings.account.delete") }}
 		</v-btn>
+		</template>
+
+		<template v-else>
+			<PageSkeleton :title="t('daily.loading')" :cards="3" />
+		</template>
 
 	</div>
 </template>
@@ -170,6 +176,7 @@ import { useUserStore } from "@/stores/userStore";
 import { useStatsStore } from "@/stores/statsStore";
 import { useChallengeStore } from "@/stores/challengeStore";
 import { useSettingsStore } from "@/stores/settingsStore";
+import PageSkeleton from "@/components/PageSkeleton.vue";
 
 const router = useRouter();
 const { t, locale } = useI18n();
@@ -183,6 +190,7 @@ const settingsStore = useSettingsStore();
 const userName = ref("");
 const preferredCategory = ref([]);
 const preferredLevel = ref([]);
+const isPageReady = ref(false);
 const isNotificationTestMode = import.meta.env.DEV || import.meta.env.VITE_ENABLE_NOTIFICATION_TEST === "true";
 
 // Valeur du slider (0-23) basée sur l'heure stockée
@@ -266,7 +274,11 @@ function deleteAccount() {
 onMounted(async () => {
 	settingsStore.initThemeFromLocalStorage();
 	vuetifyTheme.change(localStorage.getItem("theme") || "light");
-	await loadSettings();
+	try {
+		await loadSettings();
+	} finally {
+		isPageReady.value = true;
+	}
 });
 
 const categories = computed(() => settingsStore.categories);
@@ -299,4 +311,5 @@ const levels = computed(() => settingsStore.levels);
 	margin-left: 8px;
 	font-size: 15px;
 }
+
 </style>

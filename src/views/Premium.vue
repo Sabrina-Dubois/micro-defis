@@ -260,7 +260,6 @@ const faqs = [
 // Actions
 function selectPlan(plan) {
 	selectedPlan.value = plan;
-	console.log("Plan sélectionné:", plan);
 }
 
 async function startTrial() {
@@ -286,8 +285,6 @@ async function startTrial() {
 		await userStore.loadUser();
 
 		showDialog.value = true;
-
-		console.log("✅ Premium activé pour:", selectedPlan.value);
 	} catch (error) {
 		console.error("❌ Erreur activation premium:", error);
 		alert("Erreur lors de l'activation. Réessayez.");

@@ -256,7 +256,6 @@ export const useSettingsStore = defineStore("settings", () => {
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
       }));
-console.log("5. sauvegarde dans Supabase...");
     const utcReminderTime = localReminderToUtc(preferences.value.reminder_time);
     await savePushSubscription(
       userStore.userId,
@@ -265,7 +264,6 @@ console.log("5. sauvegarde dans Supabase...");
       preferences.value.reminder_time,
       getCurrentTimeZone(),
     );
-console.log("6. sauvegarde OK !");
     return subscription;
   }
 
@@ -295,19 +293,14 @@ console.log("6. sauvegarde OK !");
   }
 
 async function toggleNotifications(value) {
-  console.log("1. toggleNotifications appelé avec:", value);
   await updatePreference("notifications_enabled", value);
-  console.log("2. préférence sauvegardée");
 
   if (value) {
-    console.log("3. tentative subscribeToPush");
     const sub = await subscribeToPush();
-    console.log("4. résultat subscribeToPush:", sub);
     if (!sub) {
       await updatePreference("notifications_enabled", false);
     }
   } else {
-    console.log("3. tentative unsubscribeFromPush");
     await unsubscribeFromPush();
   }
 

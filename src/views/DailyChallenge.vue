@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<template v-if="isPageReady">
 		<!-- Top -->
 		<div class="top">
 			<div class="page-title">
@@ -66,6 +67,11 @@
 
 		<!-- Bouton PWA -->
 		<PWAButton />
+		</template>
+
+		<template v-else>
+			<PageSkeleton :title="t('daily.loading')" :cards="2" />
+		</template>
 	</div>
 </template>
 
@@ -73,6 +79,7 @@
 import { ref, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import PWAButton from "@/components/PWAButton.vue";
+import PageSkeleton from "@/components/PageSkeleton.vue";
 
 // ✅ STORES
 import { useUserStore } from "@/stores/userStore";
@@ -89,6 +96,7 @@ const settingsStore = useSettingsStore();
 
 // ✅ COMPUTED
 const categories = computed(() => settingsStore.categories || []);
+const isPageReady = ref(false);
 
 // ⚡️ État local pour le multi-select des catégories
 const selectedCategories = ref([]);
@@ -130,6 +138,8 @@ onMounted(async () => {
 		await challengeStore.loadTodayChallenge();
 	} catch (e) {
 		console.error("❌ Erreur chargement:", e);
+	} finally {
+		isPageReady.value = true;
 	}
 });
 </script>
@@ -152,4 +162,5 @@ onMounted(async () => {
 	z-index: 100;
 
 }
+
 </style>
