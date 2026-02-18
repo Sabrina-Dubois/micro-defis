@@ -175,7 +175,7 @@ async function generateImage() {
 	ctx.shadowOffsetY = 0;
 
 	// Titre "Défi du jour"
-	ctx.fillStyle = "#f7931e";
+	ctx.fillStyle = "#f97922";
 	ctx.font = "bold 80px Arial";
 	ctx.fillText("🎯 " + t("share.day_challenge"), w / 2, challengeY + 70);
 
@@ -203,7 +203,7 @@ async function generateImage() {
 	ctx.shadowBlur = 0;
 	ctx.shadowOffsetY = 0;
 
-	ctx.fillStyle = "#f7931e";
+	ctx.fillStyle = "#f97922";
 	ctx.font = "bold 150px Arial";
 	ctx.fillText(currentStreak.value, w / 2, streakY + 150);
 
@@ -226,7 +226,7 @@ async function generateImage() {
 	ctx.fill();
 	ctx.shadowColor = "transparent";
 
-	ctx.fillStyle = "#f7931e";
+	ctx.fillStyle = "#f97922";
 	ctx.font = "bold 80px Arial";
 	ctx.fillText(bestStreak.value, 60 + smallW / 2, smallY + 95);
 
@@ -244,7 +244,7 @@ async function generateImage() {
 	ctx.fill();
 	ctx.shadowColor = "transparent";
 
-	ctx.fillStyle = "#f7931e";
+	ctx.fillStyle = "#f97922";
 	ctx.font = "bold 80px Arial";
 	ctx.fillText(totalCompleted.value, 100 + smallW + smallW / 2, smallY + 95);
 
@@ -261,7 +261,7 @@ async function generateImage() {
 		const qrDataUrl = await QRCode.toDataURL(APP_URL, {
 			width: qrSize,
 			margin: 1,
-			color: { dark: "#f7931e", light: "#ffffff" },
+			color: { dark: "#f97922", light: "#ffffff" },
 		});
 		const qrImg = await loadImage(qrDataUrl);
 
@@ -301,7 +301,7 @@ async function generateImage() {
 	ctx.shadowColor = "transparent";
 	ctx.shadowBlur = 0;
 
-	ctx.fillStyle = "#f7931e";
+	ctx.fillStyle = "#f97922";
 	ctx.font = "bold 50px Arial";
 	ctx.fillText("🚀 Rejoins-nous !", w / 2, btnY + 70);
 }
@@ -464,7 +464,7 @@ async function shareNow() {
 	margin-top: 20px;
 	text-align: center;
 	font-weight: 600;
-	color: #f7931e;
+	color: #f97922;
 	padding: 12px;
 	background: white;
 	border-radius: 12px;

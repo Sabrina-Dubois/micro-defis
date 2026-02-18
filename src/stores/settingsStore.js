@@ -174,9 +174,9 @@ export const useSettingsStore = defineStore("settings", () => {
       userVisibleOnly: true,
       applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY,
     });
-
+console.log("5. sauvegarde dans Supabase...");
     await savePushSubscription(userStore.userId, subscription, preferences.value.reminder_time);
-
+console.log("6. sauvegarde OK !");
     return subscription;
   }
 
@@ -192,22 +192,25 @@ export const useSettingsStore = defineStore("settings", () => {
     await deletePushSubscription(userStore.userId);
   }
 
-  async function toggleNotifications(value) {
-    await updatePreference("notifications_enabled", value);
+async function toggleNotifications(value) {
+  console.log("1. toggleNotifications appelé avec:", value);
+  await updatePreference("notifications_enabled", value);
+  console.log("2. préférence sauvegardée");
 
-    if (value) {
-      const sub = await subscribeToPush();
-      if (!sub) {
-        // Refus navigateur → on annule
-        await updatePreference("notifications_enabled", false);
-        return false;
-      }
-    } else {
-      await unsubscribeFromPush();
+  if (value) {
+    console.log("3. tentative subscribeToPush");
+    const sub = await subscribeToPush();
+    console.log("4. résultat subscribeToPush:", sub);
+    if (!sub) {
+      await updatePreference("notifications_enabled", false);
     }
-
-    return value;
+  } else {
+    console.log("3. tentative unsubscribeFromPush");
+    await unsubscribeFromPush();
   }
+
+  return value;
+}
 
   // ─────────────────────────────────────────
   // THEME LOCAL STORAGE

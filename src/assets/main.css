@@ -237,3 +237,6 @@ ins.adsbygoogle {
   height: auto !important;
   display: block;
 }
+.v-overlay__content .v-list {
+  background-color: white !important;
+}
