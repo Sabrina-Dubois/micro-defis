@@ -172,17 +172,24 @@ Deno.serve(async (req) => {
     }
 
     const results = await Promise.allSettled(
-      jobs.map(({ row, payload, type }) =>
-        webpush.sendNotification(
+      jobs.map(({ row, payload, type }) => {
+        const shortTopic =
+          type === "manual_test"
+            ? "md-test"
+            : type === "streak_risk"
+              ? "md-risk"
+              : "md-daily";
+
+        return webpush.sendNotification(
           typeof row.subscription === "string" ? JSON.parse(row.subscription) : row.subscription,
           JSON.stringify(payload),
           {
             TTL: 60,
             urgency: type === "streak_risk" ? "high" : "normal",
-            topic: `microdefis-${type}-${today}`,
+            topic: shortTopic,
           },
-        ),
-      ),
+        );
+      }),
     );
 
     const sent = [];
