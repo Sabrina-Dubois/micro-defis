@@ -45,7 +45,22 @@ console.log("App démarrée avec la langue :", i18n.global.locale.value);
 
 // 🔥 PWA SERVICE WORKER + DETECT
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js");
+  // En dev, /sw.js n'est pas toujours servi de la même façon selon la config PWA.
+  // On évite donc les erreurs "Failed to fetch" liées aux workers obsolètes.
+  if (import.meta.env.PROD) {
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then(async () => {
+        const legacyRegistration =
+          await navigator.serviceWorker.getRegistration("/serviceWorker.js");
+        if (legacyRegistration) {
+          await legacyRegistration.unregister();
+        }
+      })
+      .catch((err) => {
+        console.error("Service worker registration failed:", err);
+      });
+  }
 }
 
 let deferredPrompt;

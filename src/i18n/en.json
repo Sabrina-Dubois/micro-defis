@@ -152,6 +152,40 @@
         "delete": "Delete Account"
       }
     },
+    "help": {
+      "title": "Help Center",
+      "search": {
+        "title": "🔍 Search",
+        "placeholder": "Search for a question..."
+      },
+      "faq_title": "❓ Frequently Asked Questions",
+      "support": {
+        "title": "🆘 Support",
+        "subtitle": "Reply within 24 to 48h"
+      },
+      "faqs": [
+        {
+          "question": "How does MicroDéfis work?",
+          "answer": "You get one daily challenge, complete it, then validate it to keep your streak."
+        },
+        {
+          "question": "How do I change my challenge preferences?",
+          "answer": "Go to Settings and select your preferred categories and levels."
+        },
+        {
+          "question": "How do I enable notifications?",
+          "answer": "In Settings, enable notifications and pick your reminder time."
+        },
+        {
+          "question": "I don't receive notifications, what should I do?",
+          "answer": "Check notification permissions in your browser and in your phone system settings."
+        },
+        {
+          "question": "How can I share my streak?",
+          "answer": "From Daily Challenge, use the Share button to generate your image."
+        }
+      ]
+    },
     "daily": {
       "title": "Hello, ",
       "challenge": "Daily Challenge",

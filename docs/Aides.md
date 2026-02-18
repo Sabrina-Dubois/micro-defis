@@ -9,3 +9,14 @@ Il a deux rôles dans ton projet :
 
 src/services/    → code JS importé par ton app (Vite le compile)
 public/          → fichiers servis tels quels, accessibles directement par URL
+
+# depuis la branche dev
+git add .
+git commit -m "Fix push notifications (VAPID + sw + help + responsive)"
+git push origin dev
+
+# passer sur main
+git checkout main
+git pull origin main
+git merge dev
+git push origin main

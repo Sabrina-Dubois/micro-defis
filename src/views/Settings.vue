@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="settings-page">
 		<div class="page-title mt-4 mb-4 text-h4">
 			{{ t("settings.title") }}
 		</div>
@@ -226,7 +226,7 @@ async function changeLanguage() {
 
 async function changeTheme() {
 	const newTheme = await settingsStore.toggleTheme();
-	vuetifyTheme.global.name.value = newTheme;
+	vuetifyTheme.change(newTheme);
 }
 
 async function logout() {
@@ -243,7 +243,7 @@ function deleteAccount() {
 
 onMounted(async () => {
 	settingsStore.initThemeFromLocalStorage();
-	vuetifyTheme.global.name.value = localStorage.getItem("theme") || "light";
+	vuetifyTheme.change(localStorage.getItem("theme") || "light");
 	await loadSettings();
 });
 
@@ -252,6 +252,7 @@ const levels = computed(() => settingsStore.levels);
 </script>
 
 <style scoped>
+<<<<<<< HEAD
 
 .fixed-card {
 	height: 260px;
@@ -262,6 +263,10 @@ const levels = computed(() => settingsStore.levels);
 
 .card-favorite {
 	height: 420px;
+=======
+.settings-page {
+	padding-bottom: 8px;
+>>>>>>> dev
 }
 
 .chip-free {

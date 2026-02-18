@@ -66,3 +66,13 @@ export async function deletePushSubscription(userId) {
   if (error) throw error;
   return true;
 }
+
+export async function updatePushReminderTime(userId, reminderTime) {
+  const { error } = await supabase
+    .from("push_subscriptions")
+    .update({ reminder_time: reminderTime, updated_at: new Date().toISOString() })
+    .eq("user_id", userId);
+
+  if (error) throw error;
+  return true;
+}

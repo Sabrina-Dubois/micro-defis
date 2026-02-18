@@ -9,7 +9,25 @@ self.addEventListener("install", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
-  e.respondWith(caches.match(e.request).then((r) => r || fetch(e.request)));
+  // Ne gère que les requêtes GET pour éviter les erreurs fetch bruyantes.
+  if (e.request.method !== "GET") return;
+
+  e.respondWith(
+    (async () => {
+      const cachedResponse = await caches.match(e.request);
+      if (cachedResponse) return cachedResponse;
+
+      try {
+        return await fetch(e.request);
+      } catch {
+        const offlineFallback = await caches.match("/index.html");
+        if (offlineFallback && e.request.mode === "navigate") {
+          return offlineFallback;
+        }
+        return new Response("", { status: 503, statusText: "Service Unavailable" });
+      }
+    })(),
+  );
 });
 
 // ─────────────────────────────────────────

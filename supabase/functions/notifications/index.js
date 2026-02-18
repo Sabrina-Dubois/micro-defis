@@ -6,11 +6,15 @@ Deno.serve(async () => {
   const vapidPublic = Deno.env.get("VAPID_PUBLIC_KEY");
   const vapidPrivate = Deno.env.get("VAPID_PRIVATE_KEY");
 
+  if (!supabaseUrl || !supabaseKey || !vapidPublic || !vapidPrivate) {
+    return new Response("Variables d'environnement manquantes", { status: 500 });
+  }
+
   webpush.setVapidDetails("mailto:contact@microdefis.com", vapidPublic, vapidPrivate);
 
-  // Heure actuelle HH:MM en UTC
+  // Heure actuelle HH:00 en UTC (les rappels front sont stockés à l'heure pile)
   const now = new Date();
-  const currentTime = String(now.getUTCHours()).padStart(2, "0") + ":" + String(now.getUTCMinutes()).padStart(2, "0");
+  const currentTime = `${String(now.getUTCHours()).padStart(2, "0")}:00`;
 
   // Récupère les abonnés dont c'est l'heure de rappel
   const res = await fetch(`${supabaseUrl}/rest/v1/push_subscriptions?reminder_time=eq.${currentTime}`, {
@@ -30,7 +34,7 @@ Deno.serve(async () => {
   const results = await Promise.allSettled(
     subs.map((row) =>
       webpush.sendNotification(
-        JSON.parse(row.subscription),
+        typeof row.subscription === "string" ? JSON.parse(row.subscription) : row.subscription,
         JSON.stringify({
           title: "🔥 Défi du jour",
           body: "Ton défi quotidien t'attend !",
