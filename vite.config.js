@@ -13,6 +13,7 @@ export default defineConfig({
     }),
     vueDevTools(),
     VitePWA({
+      injectRegister: false,
       registerType: 'autoUpdate',
       manifest: true,
       workbox: {
