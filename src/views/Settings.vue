@@ -252,21 +252,8 @@ const levels = computed(() => settingsStore.levels);
 </script>
 
 <style scoped>
-<<<<<<< HEAD
-
-.fixed-card {
-	height: 260px;
-}
-.card-profile {
-	height: 230px;
-}
-
-.card-favorite {
-	height: 420px;
-=======
 .settings-page {
 	padding-bottom: 8px;
->>>>>>> dev
 }
 
 .chip-free {
