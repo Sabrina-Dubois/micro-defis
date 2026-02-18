@@ -27,7 +27,10 @@ Deno.serve(async () => {
   const subs = await res.json();
 
   if (!subs?.length) {
-    return new Response(`Aucun rappel à ${currentTime}`, { status: 200 });
+    return new Response(
+      JSON.stringify({ ok: true, time: currentTime, matched: 0, success: 0, failed: 0 }),
+      { status: 200, headers: { "Content-Type": "application/json" } },
+    );
   }
 
   // Envoie les notifications en parallèle
@@ -39,7 +42,14 @@ Deno.serve(async () => {
           title: "🔥 Défi du jour",
           body: "Ton défi quotidien t'attend !",
           url: "/daily",
+          tag: `daily-${new Date().toISOString().slice(0, 10)}`,
+          requireInteraction: true,
         }),
+        {
+          TTL: 60,
+          urgency: "high",
+          topic: "microdefis-daily",
+        },
       ),
     ),
   );
@@ -47,9 +57,20 @@ Deno.serve(async () => {
   const success = results.filter((r) => r.status === "fulfilled").length;
   const failed = results.filter((r) => r.status === "rejected").length;
 
+  for (const result of results) {
+    if (result.status === "rejected") {
+      const reason = result.reason || {};
+      console.error("Push send failed:", {
+        statusCode: reason.statusCode,
+        body: reason.body,
+        message: reason.message,
+      });
+    }
+  }
+
   console.log(`✅ ${success} envoyés, ❌ ${failed} échoués à ${currentTime}`);
 
-  return new Response(JSON.stringify({ time: currentTime, success, failed }), {
+  return new Response(JSON.stringify({ ok: true, time: currentTime, matched: subs.length, success, failed }), {
     headers: { "Content-Type": "application/json" },
   });
 });

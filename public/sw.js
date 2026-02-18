@@ -42,6 +42,9 @@ self.addEventListener("push", (e) => {
       icon: "/images/microdefis-logo-192.png",
       badge: "/images/microdefis-logo-192.png",
       data: { url: data.url || "/daily" },
+      tag: data.tag || "daily",
+      renotify: true,
+      requireInteraction: Boolean(data.requireInteraction),
       vibrate: [200, 100, 200],
     }),
   );
