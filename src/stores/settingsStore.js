@@ -231,6 +231,19 @@ console.log("6. sauvegarde OK !");
     return subscription;
   }
 
+  async function sendLocalNotificationTest() {
+    const registration = await getServiceWorkerRegistration();
+    if (!registration) return;
+    await registration.showNotification("✅ Test notification locale", {
+      body: "Si tu vois ça, ton téléphone peut afficher les notifications.",
+      icon: "/images/microdefis-logo-192.png",
+      badge: "/images/microdefis-logo-192.png",
+      data: { url: "/settings" },
+      tag: "local-test",
+      renotify: true,
+    });
+  }
+
   async function unsubscribeFromPush() {
     const userStore = useUserStore();
 
@@ -254,6 +267,8 @@ async function toggleNotifications(value) {
     console.log("4. résultat subscribeToPush:", sub);
     if (!sub) {
       await updatePreference("notifications_enabled", false);
+    } else {
+      await sendLocalNotificationTest();
     }
   } else {
     console.log("3. tentative unsubscribeFromPush");
