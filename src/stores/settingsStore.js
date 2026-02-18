@@ -8,10 +8,22 @@ import {
   fetchLevels,
   savePushSubscription,
   deletePushSubscription,
+  updatePushReminderTime,
 } from "@/services/settingsService";
 import { fetchPremiumStatus } from "@/services/profileService";
 
 export const useSettingsStore = defineStore("settings", () => {
+  function urlBase64ToUint8Array(base64String) {
+    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+    const rawData = atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; i += 1) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+
   // ─────────────────────────────────────────
   // STATE
   // ─────────────────────────────────────────
@@ -151,6 +163,10 @@ export const useSettingsStore = defineStore("settings", () => {
 
   async function setReminderTime(time) {
     await updatePreference("reminder_time", time);
+    const userStore = useUserStore();
+    if (preferences.value.notifications_enabled && userStore.userId) {
+      await updatePushReminderTime(userStore.userId, time);
+    }
     return time;
   }
 
@@ -162,18 +178,38 @@ export const useSettingsStore = defineStore("settings", () => {
   // ─────────────────────────────────────────
   // ACTIONS — PUSH NOTIFICATIONS
   // ─────────────────────────────────────────
+  async function getServiceWorkerRegistration() {
+    if (!("serviceWorker" in navigator)) return null;
+
+    let registration = await navigator.serviceWorker.getRegistration("/sw.js");
+    if (!registration) {
+      registration = await navigator.serviceWorker.getRegistration();
+    }
+    if (!registration) {
+      registration = await navigator.serviceWorker.register("/sw.js");
+    }
+    return registration;
+  }
+
   async function subscribeToPush() {
     const userStore = useUserStore();
 
     const permission = await Notification.requestPermission();
     if (permission !== "granted") return null;
 
-    const registration = await navigator.serviceWorker.register("/sw.js");
+    const registration = await getServiceWorkerRegistration();
+    if (!registration) return null;
 
-    const subscription = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY,
-    });
+    const vapidPublicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
+    if (!vapidPublicKey) throw new Error("VITE_VAPID_PUBLIC_KEY manquante");
+
+    const existingSubscription = await registration.pushManager.getSubscription();
+    const subscription =
+      existingSubscription ||
+      (await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+      }));
 console.log("5. sauvegarde dans Supabase...");
     await savePushSubscription(userStore.userId, subscription, preferences.value.reminder_time);
 console.log("6. sauvegarde OK !");
@@ -183,7 +219,7 @@ console.log("6. sauvegarde OK !");
   async function unsubscribeFromPush() {
     const userStore = useUserStore();
 
-    const registration = await navigator.serviceWorker.getRegistration("/sw.js");
+    const registration = await getServiceWorkerRegistration();
     if (registration) {
       const sub = await registration.pushManager.getSubscription();
       if (sub) await sub.unsubscribe();

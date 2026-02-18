@@ -50,6 +50,7 @@ const { t, tm, locale } = useI18n();
 
 const searchQuery = ref("");
 const activePanels = ref([]);
+const fallbackFaqs = [];
 
 const faqs = computed(() => {
 	const rawFaqs = tm('help.faqs');  // Récupère le tableau JSON direct

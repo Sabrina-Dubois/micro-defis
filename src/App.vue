@@ -52,18 +52,18 @@ onMounted(() => {
 		showConsent.value = true;
 	}
 	const savedTheme = localStorage.getItem("theme") || "light";
-	vuetifyTheme.change = savedTheme;
+	vuetifyTheme.change(savedTheme);
 });
 
 const toggleTheme = () => {
 	const newTheme =
-		vuetifyTheme.change === "light" ? "dark" : "light";
-	vuetifyTheme.change = newTheme;
+		vuetifyTheme.global.name.value === "light" ? "dark" : "light";
+	vuetifyTheme.change(newTheme);
 	localStorage.setItem("theme", newTheme);
 };
 
 watch(
-	() => vuetifyTheme.change,
+	() => vuetifyTheme.global.name.value,
 	(newTheme) => {
 		document.documentElement.setAttribute("data-theme", newTheme);
 		localStorage.setItem("theme", newTheme);

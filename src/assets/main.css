@@ -22,7 +22,8 @@
   --primary-soft: #312e81;
 }
 .main-content {
-  padding-bottom: 96px; /* >= hauteur de la bottom nav + margin */
+  padding: 0 16px 96px; /* marge latérale globale + espace bottom nav */
+  box-sizing: border-box;
 }
 
 /* FIX ANTI-SCROLL/OVERFLOW UNIQUEMENT */
@@ -132,8 +133,8 @@ body {
 }
 /* ===== CARTES FIXES POUR DÉFIS ===== */
 .fixed-card {
-  width: 340px; /* largeur fixe de la carte */
-  height: 290px; /* hauteur fixe de la carte */
+  width: 100%;
+  max-width: 100%;
   border-radius: 24px; /* même arrondi que micro-card */
   background: var(--surface); /* reprend la couleur du thème */
   border: 1px solid var(--border);
@@ -143,7 +144,7 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  overflow: hidden; /* empêche la carte de grandir */
+  overflow: hidden;
 }
 
 /* Contenu interne avec scroll si trop long */

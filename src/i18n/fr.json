@@ -152,6 +152,40 @@
       "delete": "Supprimer le compte"
     }
   },
+  "help": {
+    "title": "Centre d'aide",
+    "search": {
+      "title": " 🔍 Recherche",
+      "placeholder": "Rechercher une question..."
+    },
+    "faq_title": "❓ Questions fréquentes",
+    "support": {
+      "title": "🆘 Support",
+      "subtitle": "Réponse sous 24 à 48h"
+    },
+    "faqs": [
+      {
+        "question": "Comment fonctionne MicroDéfis ?",
+        "answer": "Tu reçois un défi quotidien, tu le réalises, puis tu le valides pour maintenir ta série."
+      },
+      {
+        "question": "Comment changer mes préférences de défis ?",
+        "answer": "Va dans Paramètres puis choisis tes catégories et niveaux préférés."
+      },
+      {
+        "question": "Comment activer les notifications ?",
+        "answer": "Dans Paramètres, active les notifications puis choisis ton heure de rappel."
+      },
+      {
+        "question": "Je ne reçois pas de notification, que faire ?",
+        "answer": "Vérifie les autorisations de notification dans ton navigateur et dans les paramètres système du téléphone."
+      },
+      {
+        "question": "Comment partager ma série ?",
+        "answer": "Depuis la page Défi du jour, utilise le bouton Partager pour générer ton visuel."
+      }
+    ]
+  },
   "daily": {
     "title": "Bonjour, ",
     "challenge": "Défi du jour",
