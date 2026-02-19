@@ -1,6 +1,6 @@
 import webpush from "npm:web-push@3.6.7";
 
-const VERSION = "notif-v16";
+const VERSION = "notif-v17";
 
 function jsonResponse(payload, status = 200) {
   return new Response(JSON.stringify({ version: VERSION, ...payload }), {
@@ -26,6 +26,10 @@ function isWithinWindow(nowHHMM, targetHHMM, windowMinutes = 5) {
   // works across midnight as well
   const delta = ((now - target) + 24 * 60) % (24 * 60);
   return delta >= 0 && delta < windowMinutes;
+}
+
+function isAfterOrEqualTime(nowHHMM, targetHHMM) {
+  return hhmmToMinutes(nowHHMM) >= hhmmToMinutes(targetHHMM);
 }
 
 function utcNowHHMM() {
@@ -237,12 +241,12 @@ Deno.serve(async (req) => {
     let subscriptions = [];
     try {
       const u = new URL(`${supabaseUrl}/rest/v1/push_subscriptions`);
-      u.searchParams.set("select", "user_id,subscription,reminder_time,reminder_time_local,timezone");
+      u.searchParams.set("select", "user_id,subscription,reminder_time,reminder_time_local,timezone,updated_at");
       if (targetUserId) u.searchParams.set("user_id", `eq.${targetUserId}`);
       subscriptions = await fetchJson(u.toString(), headers);
     } catch {
       const u = new URL(`${supabaseUrl}/rest/v1/push_subscriptions`);
-      u.searchParams.set("select", "user_id,subscription,reminder_time");
+      u.searchParams.set("select", "user_id,subscription,reminder_time,updated_at");
       if (targetUserId) u.searchParams.set("user_id", `eq.${targetUserId}`);
       subscriptions = await fetchJson(u.toString(), headers);
     }
@@ -287,8 +291,18 @@ Deno.serve(async (req) => {
 
       const isMainSlot = isWithinWindow(currentTimeForUser, activeBaseTime, 5);
       const isRiskSlot = isWithinWindow(currentTimeForUser, addHours(activeBaseTime, 4), 5);
+      const minutesSinceUpdate = row.updated_at
+        ? Math.floor((Date.now() - new Date(row.updated_at).getTime()) / 60000)
+        : Number.POSITIVE_INFINITY;
+      const shouldCatchUpAfterRecentChange =
+        !force &&
+        !isMainSlot &&
+        !isRiskSlot &&
+        minutesSinceUpdate >= 0 &&
+        minutesSinceUpdate <= 3 &&
+        isAfterOrEqualTime(currentTimeForUser, activeBaseTime);
 
-      if (!force && !isMainSlot && !isRiskSlot) continue;
+      if (!force && !isMainSlot && !isRiskSlot && !shouldCatchUpAfterRecentChange) continue;
 
       const doneToday = daysByUser.get(row.user_id)?.has(userToday) ?? false;
       if (doneToday && !force) continue;

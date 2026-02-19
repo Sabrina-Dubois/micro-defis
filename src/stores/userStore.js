@@ -65,7 +65,45 @@ export const useUserStore = defineStore("user", () => {
   }
 
   async function changeAvatar() {
-    const avatars = ["🙂", "😎", "🦄", "🚀", "⭐", "🔥", "💪", "🌟", "⚡", "🎉"];
+    const avatars = [
+      "🙂",
+      "😙",
+      "😝",
+      "🤪",
+      "🤓",
+      "💩",
+      "😎",
+      "🦄",
+      "🚀",
+      "⭐",
+      "🔥",
+      "💪",
+      "🌟",
+      "⚡",
+      "🎉",
+      "🎀",
+      "❤️",
+      "😈",
+      "🫶🏼",
+      "🐾",
+      "🖕🏼",
+      "🫦",
+      "🐙",
+      "🐣",
+      "🐿️",
+      "🌵",
+      "🩵",
+      "💙",
+      "🧡",
+      "💛",
+      "💜",
+      "🤎",
+      "🖤",
+      "🩶",
+      "🤍",
+      "🩷",
+      "💘",
+    ];
     const currentIdx = avatars.indexOf(profile.value.avatar_emoji);
     const nextAvatar = avatars[(currentIdx + 1) % avatars.length];
     await updateProfile({ avatar_emoji: nextAvatar });
