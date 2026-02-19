@@ -125,7 +125,7 @@ function onTouchEnd(event) {
 	finishSwipe(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
 }
 
-onMounted(() => {
+onMounted(async () => {
 	if (
 		!localStorage.getItem("microdefis-consent") &&
 		!hiddenRoutes.includes(route.path)
@@ -138,6 +138,18 @@ onMounted(() => {
 	window.addEventListener("touchstart", onTouchStart, { passive: true });
 	window.addEventListener("touchend", onTouchEnd, { passive: true });
 	window.addEventListener("touchcancel", resetTouch, { passive: true });
+
+	const { data } = await supabase.auth.getSession();
+	session.value = data.session;
+	authChecked.value = true;
+
+	const { data: authListener } = supabase.auth.onAuthStateChange((event, newSession) => {
+		if (event === "PASSWORD_RECOVERY") {
+			router.push("/reset-password");
+		}
+		session.value = newSession;
+	});
+	authSubscription = authListener.subscription;
 });
 
 onUnmounted(() => {
@@ -165,27 +177,6 @@ watch(
 
 // ------------------ AUTH ------------------
 const authChecked = ref(false);
-
-onMounted(async () => {
-	if (
-		!localStorage.getItem("microdefis-consent") &&
-		!hiddenRoutes.includes(route.path)
-	) {
-		showConsent.value = true;
-	}
-
-	const { data } = await supabase.auth.getSession();
-	session.value = data.session;
-	authChecked.value = true;
-
-	const { data: authListener } = supabase.auth.onAuthStateChange((event, newSession) => {
-		if (event === "PASSWORD_RECOVERY") {
-			router.push("/reset-password");
-		}
-		session.value = newSession;
-	});
-	authSubscription = authListener.subscription;
-});
 
 defineExpose({ toggleTheme, session, authChecked });
 </script>

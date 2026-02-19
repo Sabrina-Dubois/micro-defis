@@ -60,6 +60,9 @@
 				<div v-if="error" class="mt-3" style="color: #ef4444; font-weight: 800">
 					{{ error }}
 				</div>
+				<div v-if="success" class="mt-3" style="color: #16a34a; font-weight: 800">
+					{{ success }}
+				</div>
 			</v-card-text>
 		</v-card>
 	</div>
@@ -81,6 +84,7 @@ const showPassword = ref(false);
 const isLogin = ref(true);
 const loading = ref(false);
 const error = ref("");
+const success = ref("");
 
 const togglePassword = () => {
 	showPassword.value = !showPassword.value;
@@ -88,6 +92,7 @@ const togglePassword = () => {
 
 const handleAuth = async () => {
 	error.value = "";
+	success.value = "";
 
 	if (!isLogin.value && password.value !== confirmPassword.value) {
 		error.value = t("auth.signup.password_mismatch");
@@ -124,16 +129,17 @@ const handleAuth = async () => {
 			return;
 		}
 
-		alert("Compte créé 🎉 Vérifie ton email !");
+		success.value = t("auth.signup.account_created");
 		isLogin.value = true;
 	}
 };
 
 const resetPassword = async () => {
 	if (!email.value) {
-		error.value = "Entre ton email d'abord 💌";
+		error.value = t("auth.login.enter_email");
 		return;
 	}
+	success.value = "";
 
 	loading.value = true;
 
@@ -148,7 +154,7 @@ const resetPassword = async () => {
 		return;
 	}
 
-	alert("Email de réinitialisation envoyé ✉️");
+	success.value = t("auth.login.reset_email_sent");
 };
 </script>
 
