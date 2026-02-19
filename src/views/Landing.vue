@@ -101,21 +101,18 @@ const categories = [
 
 <style scoped>
 .landing-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: block;
     width: 100%;
-    max-width: 520px;
     box-sizing: border-box;
-    padding: 16px;
+    padding: 16px 0;
     min-height: 100vh;
     padding-bottom: 40px;
-    margin: 0 auto;
     overflow-x: hidden;
 }
 
 .landing-page > * {
     width: 100%;
+    max-width: 100%;
 }
 
 /* Hero */
@@ -149,6 +146,8 @@ const categories = [
 .micro-card {
     border-radius: 24px !important;
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     margin-bottom: 16px;
 }
 
@@ -266,6 +265,8 @@ const categories = [
     display: flex;
     gap: 10px;
     align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
     font-size: 12px;
     color: #94a3b8;
     margin-top: 8px;

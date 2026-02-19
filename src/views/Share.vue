@@ -1,11 +1,7 @@
 <template>
 	<div class="share-page">
-		<div class="preview-container" @click="handleImageClick">
+		<div class="preview-container" @click="handleImageClick" @touchend="handleImageClick">
 			<canvas ref="canvas" width="1080" height="1350" class="preview-canvas"></canvas>
-
-			<div class="clickable-cta" @click.stop="goToApp">
-				<span class="cta-hint">👆 Clique pour rejoindre</span>
-			</div>
 		</div>
 
 		<div class="share-buttons">
@@ -17,6 +13,11 @@
 			<v-btn block variant="outlined" class="download-btn-primary" @click="downloadImage">
 				<v-icon left>mdi-download</v-icon>
 				{{ t("share.download") }}
+			</v-btn>
+
+			<v-btn block variant="tonal" color="deep-purple" class="join-btn" @click="goToApp">
+				<v-icon left>mdi-open-in-new</v-icon>
+				{{ t("share.join_button") }}
 			</v-btn>
 		</div>
 
@@ -278,9 +279,9 @@ async function generateImage() {
 	ctx.textAlign = "left";
 	ctx.fillStyle = "#ffffff";
 	ctx.font = "bold 32px Arial";
-	ctx.fillText("Scanne-moi", qrX + qrSize + 40, qrY + 50);
+	ctx.fillText(t("share.scan_me"), qrX + qrSize + 40, qrY + 50);
 	ctx.font = "bold 40px Arial";
-	ctx.fillText("micro-defis.vercel.app", qrX + qrSize + 40, qrY + 140);
+	ctx.fillText(t("share.microdefis"), qrX + qrSize + 40, qrY + 140);
 
 	// Bouton CTA
 	ctx.textAlign = "center";
@@ -303,7 +304,7 @@ async function generateImage() {
 
 	ctx.fillStyle = "#f97922";
 	ctx.font = "bold 50px Arial";
-	ctx.fillText("🚀 Rejoins-nous !", w / 2, btnY + 70);
+	ctx.fillText(t("share.cta"), w / 2, btnY + 70);
 }
 
 /* HELPERS */
@@ -337,17 +338,21 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
 
 /* ACTIONS */
 function goToApp() {
-	window.open(APP_URL, "_blank");
-	infoMsg.value = "🚀 Ouverture de l'app...";
+	const popup = window.open(APP_URL, "_blank", "noopener,noreferrer");
+	if (!popup) window.location.href = APP_URL;
+	infoMsg.value = t("share.opening_app");
 }
 
 function handleImageClick(event) {
+	if (!canvas.value) return;
 	const rect = canvas.value.getBoundingClientRect();
 	const scaleX = 1080 / rect.width;
 	const scaleY = 1350 / rect.height;
+	const point = event.changedTouches?.[0] || event.touches?.[0] || event;
+	if (!point?.clientX || !point?.clientY) return;
 
-	const clickX = (event.clientX - rect.left) * scaleX;
-	const clickY = (event.clientY - rect.top) * scaleY;
+	const clickX = (point.clientX - rect.left) * scaleX;
+	const clickY = (point.clientY - rect.top) * scaleY;
 
 	if (clickX > 240 && clickX < 840 && clickY > 1210 && clickY < 1320) {
 		goToApp();
@@ -364,7 +369,7 @@ function downloadImage() {
 		a.download = "microdefis-stats.png";
 		a.click();
 		URL.revokeObjectURL(url);
-		infoMsg.value = "✅ Image téléchargée !";
+		infoMsg.value = `✅ ${t("share.image_downloaded")}`;
 	});
 }
 
@@ -380,10 +385,10 @@ async function shareNow() {
 			try {
 				await navigator.share({
 					files: [file],
-					title: "Mes stats MicroDéfis",
-					text: "Mes stats MicroDéfis",
+					title: t("share.share_title"),
+					text: t("share.share_text"),
 				});
-				infoMsg.value = "✅ Partagé avec succès !";
+				infoMsg.value = `✅ ${t("share.shared")}`;
 				return;
 			} catch (error) {
 				if (error.name !== "AbortError") console.error("Erreur partage:", error);
@@ -397,7 +402,7 @@ async function shareNow() {
 
 <style scoped>
 .share-page {
-	background: linear-gradient(135deg, #f3e8ff 0%, #ffffff 100%);
+	background: var(--bg-primary);
 	min-height: 100vh;
 	padding: 20px;
 }
@@ -422,31 +427,6 @@ async function shareNow() {
 	display: block;
 }
 
-.clickable-cta {
-	position: absolute;
-	bottom: 50px;
-	left: 50%;
-	transform: translateX(-50%);
-	background: rgba(255, 255, 255, 0.95);
-	padding: 12px 24px;
-	border-radius: 30px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-	opacity: 0;
-	transition: opacity 0.3s ease;
-	pointer-events: none;
-}
-
-.preview-container:hover .clickable-cta {
-	opacity: 1;
-	pointer-events: auto;
-}
-
-.cta-hint {
-	font-size: 14px;
-	font-weight: 600;
-	color: #ff6b35;
-}
-
 .share-buttons {
 	display: flex;
 	flex-direction: column;
@@ -454,7 +434,8 @@ async function shareNow() {
 }
 
 .share-btn-primary,
-.download-btn-primary {
+.download-btn-primary,
+.join-btn {
 	font-weight: 700;
 	font-size: 16px;
 	letter-spacing: 0.5px;
@@ -466,7 +447,7 @@ async function shareNow() {
 	font-weight: 600;
 	color: #f97922;
 	padding: 12px;
-	background: white;
+	background: var(--surface);
 	border-radius: 12px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }

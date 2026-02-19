@@ -217,7 +217,11 @@
       "record": "🏆 Record",
       "completed": "✅ Completed",
       "cta": "Join MicroDéfis",
-      "microdefis": "microdefis.app"
+      "microdefis": "micro-defis.vercel.app",
+      "scan_me": "Scan me",
+      "opening_app": "Opening app...",
+      "join_button": "🚀 Join MicroDéfis",
+      "share_text": "My MicroDéfis stats"
     },
     "terms": {
       "title": "Terms of Use",

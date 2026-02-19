@@ -217,7 +217,11 @@
     "record": "🏆 Record",
     "completed": "✅ Validés",
     "cta": "Rejoins MicroDéfis",
-    "microdefis": "microdefis.app"
+    "microdefis": "micro-defis.vercel.app",
+    "scan_me": "Scanne-moi",
+    "opening_app": "Ouverture de l'app...",
+    "join_button": "🚀 Rejoindre MicroDéfis",
+    "share_text": "Mes stats MicroDéfis"
   },
   "terms": {
     "title": "Conditions d’utilisation",
