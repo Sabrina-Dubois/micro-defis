@@ -23,59 +23,79 @@ git push origin main
 
 ## Checklist prod notifications
 
-### 1) Secrets Supabase (Edge Function)
-- `VAPID_PUBLIC_KEY`
-- `VAPID_PRIVATE_KEY`
-- `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
+Les notifications doivent être automatisées : ne redéploie pas pour un changement de créneau utilisateur, le `cron` lit `reminder_time_local` et `timezone` à chaque minute.
 
-### 2) Déployer
-- Front (Vercel): push sur `main`
-- Function:
-```bash
-supabase functions deploy notifications
-```
+1) **Secrets fonction Edge**
+   - `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
+   - Vérifie qu’ils sont bien injectés dans la fonction `notifications`.
 
-### 3) Vérifier le Service Worker prod
-```bash
-curl -s https://micro-defis.vercel.app/sw.js | grep -i "sw-push"
-```
-Attendu: `importScripts("/sw-push.js")`
+2) **Déploiements**
+   - Front sur `main` (Vercel).
+   - Edge function :
+     ```bash
+     supabase functions deploy notifications --project-ref odnvnewqvotgddgnlkuj
+     ```
 
-### 4) Vérifier le cron auto
-```sql
-select jobid, jobname, schedule, active
-from cron.job
-where jobname = 'notifications-rappels';
-```
-Attendu: `active = true`
+3) **Env. de test temporaire**
+   - Pour activer le bouton “Test notifications” en prod : `VITE_ENABLE_NOTIFICATION_TEST=true`.
+   - Tu peux le mettre dans un fichier `.env.production` ou dans les variables d’environnement de déploiement.
 
-### 5) Vérifier l’abonnement user (Apple iOS)
-```sql
-select
-  subscription::jsonb->>'endpoint' as endpoint,
-  reminder_time_local,
-  timezone,
-  updated_at
-from public.push_subscriptions
-where user_id = 'USER_ID';
-```
-Attendu iPhone: endpoint `https://web.push.apple.com/...`
+4) **Service Worker**
+   - `curl -s https://micro-defis.vercel.app/sw.js | grep -i "sw-push"`
+   - Attendu : `importScripts("/sw-push.js")`
+   - Vérifier que `/sw-push.js` contient les écouteurs `push` + `notificationclick`.
 
-### 6) Test immédiat (sans attendre l’heure)
-```bash
-curl -X POST "https://odnvnewqvotgddgnlkuj.supabase.co/functions/v1/notifications" \
-  -H "Authorization: Bearer TON_ANON_JWT" \
-  -H "Content-Type: application/json" \
-  -d '{"force":true,"user_id":"USER_ID"}'
-```
-Attendu: `"success":1`
+5) **Cron automatique**
+   - `http_post` doit être utilisé (pas `net.http_post`).
+   - Exemple de recette SQL à exécuter dans Supabase SQL Editor :
+     ```sql
+     select cron.schedule(
+       'notifications-rappels',
+       '* * * * *',
+       $$
+       select http_post(
+         url := 'https://odnvnewqvotgddgnlkuj.supabase.co/functions/v1/notifications',
+         headers := jsonb_build_object(
+           'Authorization', 'Bearer <SERVICE_ROLE_KEY>',
+           'Content-Type', 'application/json'
+         ),
+         body := '{}'::jsonb
+       );
+       $$
+     );
+     ```
+   - Vérifie ensuite :
+     ```sql
+     select jobid, jobname, schedule, active from cron.job where jobname = 'notifications-rappels';
+     ```
 
-### 7) Si `success:1` mais rien affiché
-- Ouvrir l’app installée depuis l’écran d’accueil (iOS)
-- Vérifier notifications iOS (lock screen + centre + bannières)
-- Vérifier que `updated_at` de `push_subscriptions` bouge après réactivation
-- Supprimer/réactiver l’abonnement user si besoin:
-```sql
-delete from public.push_subscriptions where user_id = 'USER_ID';
-```
+6) **Abonnement utilisateur**
+   - `reminder_time_local` et `timezone` doivent être définis et valides (`Europe/Paris`, etc.).
+   - Requêtes utiles :
+     ```sql
+     select
+       subscription::jsonb->>'endpoint' as endpoint,
+       reminder_time, reminder_time_local, timezone, updated_at
+     from public.push_subscriptions
+     where user_id = 'USER_ID';
+     ```
+   - L’endpoint iPhone commence par `https://web.push.apple.com/…`.
+
+7) **Test serveur forcé**
+   - Appelle la fonction avec le `service_role_key` (pas `anon`), `force` et `user_id`.
+     ```bash
+     curl -X POST "https://odnvnewqvotgddgnlkuj.supabase.co/functions/v1/notifications" \
+       -H "Authorization: Bearer <SERVICE_ROLE_KEY>" \
+       -H "Content-Type: application/json" \
+       -d '{"force":true,"user_id":"USER_ID"}'
+     ```
+   - Attendu : `{"ok":true,"success":1,"sent":[...],"version":"notif-v19"}`
+
+8) **Quand le push  passe mais rien n’apparaît**
+   - Ouvre l’app (iOS/Android) depuis l’écran d’accueil.
+   - Vérifie la permission système + l’état du badge.
+   - Supprime/réinscrit l’abonnement si `updated_at` n’évolue pas :
+     ```sql
+     delete from public.push_subscriptions where user_id = 'USER_ID';
+     ```
+   - Sur iOS, les notifications disparaissent dans le Centre si tu as refusé à un moment — supprime l’appli, mets-la à jour et réactive.
