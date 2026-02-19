@@ -9,7 +9,7 @@
 		</div>
 
 		<!-- Carte du défi -->
-		<v-card class="micro-card card-challenge pa-5 fixed-card mb-4">
+		<v-card class="micro-card card-challenge pa-5 mb-4">
 			<div class="page-subtitle text-center"
 				style="font-size: 30px !important;font-weight: 600; margin-bottom: 12px;">
 				{{ t("daily.challenge") }}
@@ -153,6 +153,8 @@ onMounted(async () => {
 	height: auto;
 	display: flex;
 	flex-direction: column;
+	width: 100%;
+	overflow: hidden;
 }
 
 .micro-card {
@@ -168,16 +170,22 @@ onMounted(async () => {
 .challenge-title {
 	font-size: 30px;
 	font-weight: 800;
-	color: var(--text-primary);
+	color: var(--text-primary) !important;
 	margin-bottom: 6px;
 	text-align: center;
+	line-height: 1.2;
+	word-break: break-word;
+	overflow-wrap: anywhere;
 }
 
 .challenge-description {
 	font-size: 20px;
-	color: var(--text-secondary);
+	color: var(--text-secondary) !important;
 	font-weight: 500;
 	text-align: center;
+	line-height: 1.3;
+	word-break: break-word;
+	overflow-wrap: anywhere;
 }
 
 .challenge-content {
