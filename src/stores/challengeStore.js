@@ -27,7 +27,15 @@ export const useChallengeStore = defineStore("challenge", () => {
   // ─────────────────────────────────────────
   // GETTERS
   // ─────────────────────────────────────────
-  const todayISO = computed(() => new Date().toISOString().slice(0, 10));
+  function getLocalISODate() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+
+  const todayISO = computed(() => getLocalISODate());
   const hasChallenge = computed(() => !!assignment.value);
 
   // ─────────────────────────────────────────

@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import PWAButton from "@/components/PWAButton.vue";
 import PageSkeleton from "@/components/PageSkeleton.vue";
@@ -99,6 +99,29 @@ const isPageReady = ref(false);
 
 // ⚡️ État local pour le multi-select des catégories
 const selectedCategories = ref([]);
+const currentLocalDay = ref("");
+let dayWatcherTimer = null;
+
+function getLocalISODate() {
+	const d = new Date();
+	const y = d.getFullYear();
+	const m = String(d.getMonth() + 1).padStart(2, "0");
+	const day = String(d.getDate()).padStart(2, "0");
+	return `${y}-${m}-${day}`;
+}
+
+async function refreshForNewDayIfNeeded() {
+	const nowDay = getLocalISODate();
+	if (!currentLocalDay.value) {
+		currentLocalDay.value = nowDay;
+		return;
+	}
+	if (currentLocalDay.value === nowDay) return;
+
+	currentLocalDay.value = nowDay;
+	await challengeStore.loadTodayChallenge();
+	await statsStore.loadCompletions();
+}
 
 // ===== FUNCTIONS =====
 function toggleCategory(cat) {
@@ -135,10 +158,19 @@ onMounted(async () => {
 		await statsStore.loadCompletions();
 		await settingsStore.loadPreferences();
 		await challengeStore.loadTodayChallenge();
+		currentLocalDay.value = getLocalISODate();
+		dayWatcherTimer = setInterval(refreshForNewDayIfNeeded, 60000);
 	} catch (e) {
 		console.error("❌ Erreur chargement:", e);
 	} finally {
 		isPageReady.value = true;
+	}
+});
+
+onUnmounted(() => {
+	if (dayWatcherTimer) {
+		clearInterval(dayWatcherTimer);
+		dayWatcherTimer = null;
 	}
 });
 </script>
