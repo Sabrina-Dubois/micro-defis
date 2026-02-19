@@ -41,7 +41,7 @@
 	flex: 1;
 	text-align: center;
 	text-decoration: none;
-	color: var(--muted);
+	color: var(--text-secondary);
 	font-weight: 600;
 	font-size: 12px;
 	padding: 10px 8px;

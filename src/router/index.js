@@ -11,6 +11,11 @@ const router = createRouter({
       name: "home",
       component: () => import("../views/Landing.vue"),
     },
+    {
+      path: "/landing",
+      name: "landing",
+      component: () => import("../views/Landing.vue"),
+    },
 
     { path: "/login", name: "login", component: Login },
     { path: "/auth/callback", component: AuthCallback },

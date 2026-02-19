@@ -33,23 +33,22 @@
 			</div>
 
 			<!-- Jours de la semaine -->
-			<v-row dense no-gutters class="mb-2">
-				<v-col v-for="day in tm('calendar.weekdays')" :key="day" class="text-center">
+			<div class="weekdays-grid mb-2">
+				<div v-for="day in tm('calendar.weekdays')" :key="day" class="weekday-item text-center">
 					<div class="text-h7 font-weight-bold text-grey">{{ day }}</div>
-				</v-col>
-			</v-row>
+				</div>
+			</div>
 
 			<!-- Grille des jours -->
-			<v-row dense no-gutters>
-				<v-col v-for="(day, dayIndex) in calendarDays" :key="dayIndex" cols="auto" style="width: 14.285%"
-					class="d-flex justify-center mb-2">
+			<div class="days-grid">
+				<div v-for="(day, dayIndex) in calendarDays" :key="dayIndex" class="day-col d-flex justify-center mb-2">
 					<!-- Jour vide -->
-					<div v-if="!day.inMonth" style="width: 40px; height: 40px"></div>
+					<div v-if="!day.inMonth" class="empty-day"></div>
 
 					<!-- Jour avec contenu -->
 					<v-sheet v-else :color="getDayColor(day)"
-						class="d-flex align-center justify-center position-relative" rounded="circle" :height="40"
-						:width="40" :elevation="day.done ? 2 : 0">
+						class="day-cell d-flex align-center justify-center position-relative" rounded="circle"
+						:elevation="day.done ? 2 : 0">
 						<!-- V VERT pour jour validé -->
 						<v-icon v-if="day.done" color="green" size="24"> mdi-check </v-icon>
 
@@ -58,8 +57,8 @@
 							{{ day.label }}
 						</span>
 					</v-sheet>
-				</v-col>
-			</v-row>
+				</div>
+			</div>
 		</v-card>
 	</div>
 </template>
@@ -206,9 +205,8 @@ defineExpose({ loadCalendar });
 
 <style scoped>
 .calendar-page {
-	padding: 12px;
-	max-width: 520px;
-	margin: 0 auto;
+	padding: 12px 0;
+	width: 100%;
 	position: relative;
 	overflow-x: hidden; /* évite blocage horizontal */
 }
@@ -231,12 +229,11 @@ defineExpose({ loadCalendar });
 	text-align: center;
 }
 
-.weekdays-row .v-col {
-	padding: 0 2px;
-}
-
-.days-grid .day-col {
-	padding: 2px;
+.weekdays-grid,
+.days-grid {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	column-gap: 2px;
 }
 
 .day-cell {

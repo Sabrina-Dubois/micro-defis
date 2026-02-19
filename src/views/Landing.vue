@@ -1,6 +1,5 @@
 <template>
     <div class="landing-page">
-
         <!-- Hero -->
         <div class="hero">
             <div class="hero-emoji">🔥</div>
@@ -76,7 +75,6 @@
             <span>·</span>
             <router-link to="/help">{{ t('landing.footer.help') }}</router-link>
         </div>
-
     </div>
 </template>
 
@@ -101,18 +99,18 @@ const categories = [
 
 <style scoped>
 .landing-page {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 16px 0;
-    min-height: 100vh;
-    padding-bottom: 40px;
-    overflow-x: hidden;
-}
-
-.landing-page > * {
+    padding: 12px 0 40px;
     width: 100%;
     max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.landing-page * {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
 }
 
 /* Hero */
@@ -164,6 +162,7 @@ const categories = [
     color: #475569;
     line-height: 1.7;
     margin: 0 0 10px 0;
+    overflow-wrap: anywhere;
 }
 
 /* Steps */
@@ -172,6 +171,10 @@ const categories = [
     align-items: flex-start;
     gap: 14px;
     margin-bottom: 16px;
+}
+
+.step > div {
+    min-width: 0;
 }
 
 .step-number {
@@ -196,6 +199,7 @@ const categories = [
     font-size: 13px;
     color: #64748b;
     line-height: 1.5;
+    overflow-wrap: anywhere;
 }
 
 /* Exemples de défis */
@@ -216,6 +220,10 @@ const categories = [
     border: 1px solid #e2e8f0;
 }
 
+.challenge-item > div {
+    min-width: 0;
+}
+
 .challenge-emoji {
     font-size: 24px;
     flex-shrink: 0;
@@ -225,6 +233,7 @@ const categories = [
     font-size: 14px;
     font-weight: 600;
     color: #1e293b;
+    overflow-wrap: anywhere;
 }
 
 .challenge-cat {
@@ -280,5 +289,16 @@ const categories = [
 
 .footer-links a:hover {
     color: #7c3aed;
+}
+
+/* Boutons toujours centrés visuellement */
+.landing-page :deep(.btn-primary) {
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+}
+
+.landing-page :deep(.v-btn) {
+    text-align: center;
 }
 </style>

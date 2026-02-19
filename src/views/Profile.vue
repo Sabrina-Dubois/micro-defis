@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="profile-page">
 		<template v-if="isPageReady">
 		<!-- Header Profil -->
 		<div class="center">
@@ -193,7 +193,8 @@ onUnmounted(() => {
 
 <style scoped>
 .card-level {
-	height: 120px;
+	min-height: 120px;
+	height: auto;
 }
 
 .center {
@@ -295,6 +296,20 @@ onUnmounted(() => {
 
 .mt-3 {
 	margin-top: 12px;
+}
+
+.profile-page {
+	width: 100%;
+}
+
+@media (max-width: 600px) {
+	.badges-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.badge-name {
+		font-size: 10px;
+	}
 }
 
 </style>

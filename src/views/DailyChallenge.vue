@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="daily-page">
 		<template v-if="isPageReady">
 		<!-- Top -->
 		<div class="top">

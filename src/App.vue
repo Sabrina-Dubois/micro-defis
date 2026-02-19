@@ -32,18 +32,16 @@ import { supabase } from "./lib/supabase";
 const route = useRoute();
 const router = useRouter();
 const hiddenRoutes = ["/login", "/auth/callback"];
-const showNav = computed(() => !hiddenRoutes.includes(route.path));
 const swipeRoutes = ["/daily", "/calendar", "/profile", "/settings"];
+const session = ref(null);
+const showNav = computed(
+	() => !hiddenRoutes.includes(route.path) && !!session.value,
+);
 
 // ------------------ THEME ------------------
 const vuetifyTheme = useTheme();
 const showConsent = ref(false);
-
-supabase.auth.onAuthStateChange((event, session) => {
-	if (event === "PASSWORD_RECOVERY") {
-		router.push("/reset-password");
-	}
-});
+let authSubscription = null;
 
 // ------------------ SWIPE NAVIGATION ------------------
 const touchStartX = ref(0);
@@ -146,6 +144,8 @@ onUnmounted(() => {
 	window.removeEventListener("touchstart", onTouchStart);
 	window.removeEventListener("touchend", onTouchEnd);
 	window.removeEventListener("touchcancel", resetTouch);
+	authSubscription?.unsubscribe?.();
+	authSubscription = null;
 });
 
 const toggleTheme = () => {
@@ -165,7 +165,6 @@ watch(
 
 // ------------------ AUTH ------------------
 const authChecked = ref(false);
-const session = ref(null);
 
 onMounted(async () => {
 	if (
@@ -179,9 +178,13 @@ onMounted(async () => {
 	session.value = data.session;
 	authChecked.value = true;
 
-	supabase.auth.onAuthStateChange((_event, newSession) => {
+	const { data: authListener } = supabase.auth.onAuthStateChange((event, newSession) => {
+		if (event === "PASSWORD_RECOVERY") {
+			router.push("/reset-password");
+		}
 		session.value = newSession;
 	});
+	authSubscription = authListener.subscription;
 });
 
 defineExpose({ toggleTheme, session, authChecked });

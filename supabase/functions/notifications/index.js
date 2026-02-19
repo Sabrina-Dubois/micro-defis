@@ -30,7 +30,7 @@ function isWithinWindow(nowHHMM, targetHHMM, windowMinutes = 5) {
 
 function utcNowHHMM() {
   const now = new Date();
-  return `${String(now.getUTCHours()).padStart(2, "0")}:00`;
+  return `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")}`;
 }
 
 function todayUtcDate() {
@@ -64,9 +64,10 @@ function zonedTodayDate(timeZone) {
   return `${y}-${m}-${d}`;
 }
 
-function computeStreak(days) {
+function computeStreak(days, todayKey) {
   if (!days?.size) return 0;
-  const today = new Date(todayUtcDate());
+  const baseDay = todayKey || todayUtcDate();
+  const today = new Date(`${baseDay}T00:00:00.000Z`);
   let streak = 0;
 
   while (true) {
@@ -292,7 +293,7 @@ Deno.serve(async (req) => {
       const doneToday = daysByUser.get(row.user_id)?.has(userToday) ?? false;
       if (doneToday && !force) continue;
 
-      const streak = computeStreak(daysByUser.get(row.user_id) || new Set());
+      const streak = computeStreak(daysByUser.get(row.user_id) || new Set(), userToday);
       const lang = langByUser.get(row.user_id) || "fr";
       const type = force ? "manual_test" : isRiskSlot ? "streak_risk" : "daily_reminder";
       const msg = messageFor(type, lang, streak, `${row.user_id}:${userToday}:${type}`);

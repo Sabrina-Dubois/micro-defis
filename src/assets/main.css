@@ -24,6 +24,7 @@
 .main-content {
   padding: 0 16px 96px; /* marge latérale globale + espace bottom nav */
   box-sizing: border-box;
+  width: 100%;
 }
 
 /* FIX ANTI-SCROLL/OVERFLOW UNIQUEMENT */
@@ -40,10 +41,27 @@ body {
   overflow-x: hidden;
 }
 .page {
+  width: 100% !important;
   max-width: 520px !important;
   margin: 0 auto !important;
   overflow-x: hidden;
   position: relative;
+}
+
+/* Conteneur responsive unique pour toutes les vues */
+.daily-page,
+.settings-page,
+.calendar-page,
+.profile-page,
+.help-page,
+.premium-page,
+.share-page,
+.landing-page {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* Protège calendrier/profil/buttons */
@@ -51,8 +69,7 @@ body {
 .profil,
 .profile,
 .settings,
-.bottom-nav,
-.v-btn {
+.bottom-nav {
   max-width: 100% !important;
   overflow: visible !important;
   pointer-events: auto !important;
@@ -166,7 +183,7 @@ body {
 /* Titre et sous-titre */
 .fixed-card .card-title {
   font-weight: 700;
-  margin-bottom: px;
+  margin-bottom: 8px;
   font-size: 0.9rem;
   color: var(--text-secondary);
 }
