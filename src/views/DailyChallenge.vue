@@ -32,12 +32,11 @@
 
 			<!-- Contenu -->
 			<div v-else>
-				<div style="font-size: 30px; font-weight: 800; color: #0f172a; margin-bottom: 6px; text-align: center">
+				<div class="challenge-title">
 					{{ challengeStore.loading ? t("daily.loading") : challengeStore.challengeTitle }}
 				</div>
 
-				<div v-if="challengeStore.challengeDescription"
-					style="font-size: 20px; color: #64748b; font-weight: 500; text-align: center">
+				<div v-if="challengeStore.challengeDescription" class="challenge-description">
 					{{ challengeStore.challengeDescription }}
 				</div>
 			</div>
@@ -161,6 +160,21 @@ onMounted(async () => {
 	/* ✅ ajouter */
 	z-index: 100;
 
+}
+
+.challenge-title {
+	font-size: 30px;
+	font-weight: 800;
+	color: var(--text-primary);
+	margin-bottom: 6px;
+	text-align: center;
+}
+
+.challenge-description {
+	font-size: 20px;
+	color: var(--text-secondary);
+	font-weight: 500;
+	text-align: center;
 }
 
 </style>

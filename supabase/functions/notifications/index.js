@@ -15,6 +15,19 @@ function addHours(hhmm, hoursToAdd) {
   return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
 }
 
+function hhmmToMinutes(hhmm) {
+  const [h, m] = (hhmm || "00:00").split(":").map(Number);
+  return ((Number.isFinite(h) ? h : 0) * 60) + (Number.isFinite(m) ? m : 0);
+}
+
+function isWithinWindow(nowHHMM, targetHHMM, windowMinutes = 5) {
+  const now = hhmmToMinutes(nowHHMM);
+  const target = hhmmToMinutes(targetHHMM);
+  // works across midnight as well
+  const delta = ((now - target) + 24 * 60) % (24 * 60);
+  return delta >= 0 && delta < windowMinutes;
+}
+
 function utcNowHHMM() {
   const now = new Date();
   return `${String(now.getUTCHours()).padStart(2, "0")}:00`;
@@ -271,8 +284,8 @@ Deno.serve(async (req) => {
       const currentTimeForUser = localReminder ? zonedNowHHMM(timezone) : nowHHMM;
       const userToday = localReminder ? zonedTodayDate(timezone) : today;
 
-      const isMainSlot = currentTimeForUser === activeBaseTime;
-      const isRiskSlot = currentTimeForUser === addHours(activeBaseTime, 4);
+      const isMainSlot = isWithinWindow(currentTimeForUser, activeBaseTime, 5);
+      const isRiskSlot = isWithinWindow(currentTimeForUser, addHours(activeBaseTime, 4), 5);
 
       if (!force && !isMainSlot && !isRiskSlot) continue;
 
