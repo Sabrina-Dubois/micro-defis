@@ -2,6 +2,68 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { getAuthUser, signOut, fetchProfile, upsertProfile } from "@/services/profileService";
 
+const AVATAR_OPTIONS = [
+  "🙂",
+  "😙",
+  "😝",
+  "🤪",
+  "🤓",
+  "😎",
+  "💩",
+  "🦄",
+  "🚀",
+  "⭐",
+  "🔥",
+  "💪",
+  "🌟",
+  "⚡",
+  "🎉",
+  "🎀",
+  "❤️",
+  "🤍",
+  "🤎",
+  "🩷",
+  "💙",
+  "🧡",
+  "💛",
+  "💜",
+  "🖤",
+  "💚",
+  "🩶",
+  "🖕🏼",
+  "🫶🏼",
+  "🩷",
+  "🫦",
+  "🐾",
+  "🐙",
+  "🐣",
+  "🐿️",
+  "🌵",
+  "🌈",
+  "🧠",
+  "🎯",
+  "🎧",
+  "📱",
+  "📸",
+  "🧭",
+  "🪄",
+  "🧇",
+  "🪬",
+  "💫",
+  "🕊️",
+  "☀️",
+  "🌙",
+  "⛰️",
+  "🏝️",
+  "🍀",
+  "🍓",
+  "🍍",
+  "☕",
+  "🍵",
+  "🧋",
+  "🧃",
+];
+
 export const useUserStore = defineStore("user", () => {
   // ─────────────────────────────────────────
   // STATE
@@ -65,47 +127,8 @@ export const useUserStore = defineStore("user", () => {
   }
 
   async function changeAvatar() {
-    const avatars = [
-      "🙂",
-      "😙",
-      "😝",
-      "🤪",
-      "🤓",
-      "💩",
-      "😎",
-      "🦄",
-      "🚀",
-      "⭐",
-      "🔥",
-      "💪",
-      "🌟",
-      "⚡",
-      "🎉",
-      "🎀",
-      "❤️",
-      "😈",
-      "🫶🏼",
-      "🐾",
-      "🖕🏼",
-      "🫦",
-      "🐙",
-      "🐣",
-      "🐿️",
-      "🌵",
-      "🩵",
-      "💙",
-      "🧡",
-      "💛",
-      "💜",
-      "🤎",
-      "🖤",
-      "🩶",
-      "🤍",
-      "🩷",
-      "💘",
-    ];
-    const currentIdx = avatars.indexOf(profile.value.avatar_emoji);
-    const nextAvatar = avatars[(currentIdx + 1) % avatars.length];
+    const currentIdx = AVATAR_OPTIONS.indexOf(profile.value.avatar_emoji);
+    const nextAvatar = AVATAR_OPTIONS[(currentIdx + 1) % AVATAR_OPTIONS.length];
     await updateProfile({ avatar_emoji: nextAvatar });
     return nextAvatar;
   }
