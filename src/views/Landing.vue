@@ -104,11 +104,18 @@ const categories = [
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 16px 12px;
+    width: 100%;
+    max-width: 520px;
+    box-sizing: border-box;
+    padding: 16px 0;
     min-height: 100vh;
     padding-bottom: 40px;
-    max-width: 520px;
     margin: 0 auto;
+    overflow-x: hidden;
+}
+
+.landing-page > * {
+    width: 100%;
 }
 
 /* Hero */

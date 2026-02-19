@@ -31,7 +31,7 @@
 			</div>
 
 			<!-- Contenu -->
-			<div v-else>
+			<div v-else class="challenge-content">
 				<div class="challenge-title">
 					{{ challengeStore.loading ? t("daily.loading") : challengeStore.challengeTitle }}
 				</div>
@@ -42,7 +42,7 @@
 			</div>
 
 			<!-- Bouton action -->
-			<v-btn block class="mt-2" :class="challengeStore.isDone ? 'btn-success' : 'btn-primary'"
+			<v-btn block class="mt-2 challenge-action-btn" :class="challengeStore.isDone ? 'btn-success' : 'btn-primary'"
 				:disabled="challengeStore.loading" @click="markDone">
 				<template v-if="challengeStore.isDone">
 					<v-icon size="28">mdi-check-bold</v-icon>
@@ -149,7 +149,10 @@ onMounted(async () => {
 }
 
 .card-challenge {
-	height: 260px;
+	min-height: 260px;
+	height: auto;
+	display: flex;
+	flex-direction: column;
 }
 
 .micro-card {
@@ -175,6 +178,14 @@ onMounted(async () => {
 	color: var(--text-secondary);
 	font-weight: 500;
 	text-align: center;
+}
+
+.challenge-content {
+	flex: 1;
+}
+
+.challenge-action-btn {
+	margin-top: auto !important;
 }
 
 </style>
