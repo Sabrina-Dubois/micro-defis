@@ -121,7 +121,7 @@ function messageFor(type, lang, streak, seed) {
     },
     {
       title: "🎉 Boost instantané",
-      body: streak > 0 ? `${streak} jours de flow 💫 On continue !` : "Un micro-défi et c’est validé ✅",
+      body: streak > 0 ? `${streak} jours de flow 💫 On continue !` : "Un MicroDéfi et c’est validé ✅",
     },
   ];
 
@@ -139,7 +139,7 @@ function messageFor(type, lang, streak, seed) {
       body: streak > 0 ? `${streak} jours en feu 🔥 Un défi suffit` : "Petit défi = streak sauvé ✅",
     },
     {
-      title: "⚡ Alerte micro-challenge",
+      title: "⚡ Alerte MicroDefis",
       body: streak > 0 ? `Streak ${streak} jours en danger 😱` : "Ton futur toi te dira merci 😎",
     },
     {
@@ -172,7 +172,7 @@ function messageFor(type, lang, streak, seed) {
     },
     {
       title: "🎉 Instant boost",
-      body: streak > 0 ? `${streak} days on fire 💫 Keep rolling!` : "One micro-challenge = ✅",
+      body: streak > 0 ? `${streak} days on fire 💫 Keep rolling!` : "One MicroDefi = ✅",
     },
   ];
 

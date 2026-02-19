@@ -14,11 +14,6 @@
 				<v-icon left>mdi-download</v-icon>
 				{{ t("share.download") }}
 			</v-btn>
-
-			<v-btn block variant="tonal" color="deep-purple" class="join-btn" @click="goToApp">
-				<v-icon left>mdi-open-in-new</v-icon>
-				{{ t("share.join_button") }}
-			</v-btn>
 		</div>
 
 		<div v-if="infoMsg" class="info-msg">
@@ -387,6 +382,7 @@ async function shareNow() {
 					files: [file],
 					title: t("share.share_title"),
 					text: t("share.share_text"),
+					url: APP_URL,
 				});
 				infoMsg.value = `✅ ${t("share.shared")}`;
 				return;
@@ -434,8 +430,7 @@ async function shareNow() {
 }
 
 .share-btn-primary,
-.download-btn-primary,
-.join-btn {
+.download-btn-primary {
 	font-weight: 700;
 	font-size: 16px;
 	letter-spacing: 0.5px;

@@ -29,13 +29,13 @@
       "intro": "MicroDéfis couvre plusieurs catégories pour t'aider à progresser dans tous les aspects de ta vie :"
     },
     "science": {
-      "title": "🧠 Pourquoi les micro-défis fonctionnent ?",
+      "title": "🧠 Pourquoi les MicroDéfis fonctionnent ?",
       "text1": "La science est claire : les petites habitudes régulières sont bien plus efficaces que les grands changements ponctuels.",
       "text2": "Un défi court, une action concrète, une validation — et ta journée est déjà meilleure qu'hier."
     },
     "cta": {
       "title": "🚀 Prêt(e) à relever le premier défi ?",
-      "text": "Rejoins MicroDéfis gratuitement. Pas d'abonnement requis pour commencer.",
+      "text": "🚀 Rejoins MicroDéfis gratuitement. Pas d'abonnement requis pour commencer.",
       "button": "Créer mon compte gratuitement",
       "login": "J'ai déjà un compte → Se connecter"
     },
@@ -216,12 +216,12 @@
     "streak_label": "jours de série 🔥",
     "record": "🏆 Record",
     "completed": "✅ Validés",
-    "cta": "Rejoins MicroDéfis",
+    "cta": "🚀 Rejoins MicroDéfis",
     "microdefis": "micro-defis.vercel.app",
     "scan_me": "Scanne-moi",
     "opening_app": "Ouverture de l'app...",
     "join_button": "🚀 Rejoindre MicroDéfis",
-    "share_text": "Mes stats MicroDéfis"
+    "share_text": "🔥 Mes MicroDéfis du jour\n\n🏆 Check mon score et lance-toi aussi !"
   },
   "terms": {
     "title": "Conditions d’utilisation",
