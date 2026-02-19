@@ -113,7 +113,7 @@ function messageFor(type, lang, streak, seed) {
     },
     {
       title: "🔥 Allume ton flow",
-      body: streak > 0 ? `${streak} jours d'affilée 🔥 T'es chaud !` : "Micro-défi du jour, go go go 🏃‍♂️💨",
+      body: streak > 0 ? `${streak} jours d'affilée 🔥 T'es chaud !` : "MicroDéfi du jour, go go go 🏃‍♂️💨",
     },
     {
       title: "✨ Action du jour",
@@ -133,7 +133,7 @@ function messageFor(type, lang, streak, seed) {
   const frRisk = [
     {
       title: "🚨 Danger streak !",
-      body: streak > 0 ? `${streak} jours en jeu 😱 Sauve ta série !` : "Ton défi du jour n'est pas fait 😳💨",
+      body: streak > 0 ? `${streak} jours en jeu 😱 Sauve ta série !` : "Ton défi du jour n'est pas fait 😳 😱",
     },
     {
       title: "⏳ Dernier rappel",
@@ -149,7 +149,7 @@ function messageFor(type, lang, streak, seed) {
     },
     {
       title: "🏃‍♂️ Action immédiate",
-      body: streak > 0 ? `${streak} jours sur la corde raide !` : "5 minutes pour sauver ton streak 💨",
+      body: streak > 0 ? `${streak} jours sur la corde raide !` : "5 minutes pour sauver ton streak 🥺",
     },
     {
       title: "🎯 Streak critique",
@@ -184,7 +184,7 @@ function messageFor(type, lang, streak, seed) {
   const enRisk = [
     {
       title: "🚨 Streak danger!",
-      body: streak > 0 ? `${streak}-day streak at risk 😱` : "Your daily challenge is still pending 😳💨",
+      body: streak > 0 ? `${streak}-day streak at risk 😱` : "Your daily challenge is still pending 😳 😱",
     },
     { title: "⏳ Last reminder", body: streak > 0 ? `${streak} days might break!` : "Finish it now, still time 😎" },
     {
@@ -197,7 +197,7 @@ function messageFor(type, lang, streak, seed) {
     },
     {
       title: "🏃‍♂️ Immediate action",
-      body: streak > 0 ? `${streak} days on the edge!` : "5 minutes to save your streak 💨",
+      body: streak > 0 ? `${streak} days on the edge!` : "5 minutes to save your streak 🥺",
     },
     {
       title: "🎯 Critical streak",
@@ -294,8 +294,8 @@ Deno.serve(async (req) => {
       const currentTimeForUser = localReminder ? zonedNowHHMM(timezone) : nowHHMM;
       const userToday = localReminder ? zonedTodayDate(timezone) : today;
 
-      const isMainSlot = isWithinWindow(currentTimeForUser, activeBaseTime, 5);
-      const isRiskSlot = isWithinWindow(currentTimeForUser, addHours(activeBaseTime, 4), 5);
+      const isMainSlot = isWithinWindow(currentTimeForUser, activeBaseTime, 1);
+      const isRiskSlot = isWithinWindow(currentTimeForUser, addHours(activeBaseTime, 4), 1);
       const minutesSinceUpdate = row.updated_at
         ? Math.floor((Date.now() - new Date(row.updated_at).getTime()) / 60000)
         : Number.POSITIVE_INFINITY;
