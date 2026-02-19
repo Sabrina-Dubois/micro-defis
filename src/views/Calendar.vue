@@ -10,7 +10,7 @@
 				{ icon: '✅', value: statsStore.totalCompleted, label: t('calendar.days_completed') },
 				{ icon: '🏆', value: statsStore.bestStreak, label: t('calendar.best_serie') },
 			]" />
-		<GoogleAd adSlot="3324576724" />
+		//<GoogleAd adSlot="3324576724" />
 
 		<!-- Calendrier -->
 		<v-card class="calendar-card pa-4">
@@ -68,7 +68,7 @@ import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import StatsCards from "@/components/StatsCards.vue";
-import GoogleAd from "@/components/GoogleAd.vue";
+//import GoogleAd from "@/components/GoogleAd.vue";
 
 // ✅ IMPORT DU STORE
 import { useStatsStore } from "@/stores/statsStore";
