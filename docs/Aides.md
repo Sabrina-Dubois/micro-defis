@@ -41,9 +41,8 @@ Les notifications doivent être automatisées : ne redéploie pas pour un change
    - Tu peux le mettre dans un fichier `.env.production` ou dans les variables d’environnement de déploiement.
 
 4) **Service Worker**
-   - `curl -s https://micro-defis.vercel.app/sw.js | grep -i "sw-push"`
-   - Attendu : `importScripts("/sw-push.js")`
-   - Vérifier que `/sw-push.js` contient les écouteurs `push` + `notificationclick`.
+  - `curl -s https://micro-defis.vercel.app/sw.js | grep -i "addEventListener(\"push\")"`
+  - Attendu : les écouteurs `push` + `notificationclick` sont directement dans `/sw.js`.
 
 5) **Cron automatique**
    - `http_post` doit être utilisé (pas `net.http_post`).
