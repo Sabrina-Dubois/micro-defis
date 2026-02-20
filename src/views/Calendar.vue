@@ -10,7 +10,7 @@
 				{ icon: '✅', value: statsStore.totalCompleted, label: t('calendar.days_completed') },
 				{ icon: '🏆', value: statsStore.bestStreak, label: t('calendar.best_serie') },
 			]" />
-		//<GoogleAd adSlot="3324576724" />
+		<!--<GoogleAd adSlot="3324576724" />-->
 
 		<!-- Calendrier -->
 		<v-card class="calendar-card pa-4">

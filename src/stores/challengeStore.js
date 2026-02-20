@@ -8,7 +8,6 @@ import {
   fetchActiveChallenges,
   fetchDailyAssignment,
   createDailyAssignment,
-  fetchCompletion,
 } from "@/services/challengeService";
 
 export const useChallengeStore = defineStore("challenge", () => {
@@ -23,6 +22,8 @@ export const useChallengeStore = defineStore("challenge", () => {
   const isDone = ref(false);
   const loading = ref(false);
   const error = ref(null);
+  const lastChallengeData = ref(null);
+  const lastChallengeDay = ref("");
 
   // ─────────────────────────────────────────
   // GETTERS
@@ -62,7 +63,7 @@ export const useChallengeStore = defineStore("challenge", () => {
   /**
    * Charge le défi du jour avec assignment quotidien
    */
-  async function loadTodayChallenge() {
+  async function loadTodayChallenge(force = false) {
     const userStore = useUserStore();
     const settingsStore = useSettingsStore();
     if (!userStore.userId) throw new Error("Utilisateur non connecté");
@@ -76,6 +77,14 @@ export const useChallengeStore = defineStore("challenge", () => {
       const day = todayISO.value;
       const lang = settingsStore.language || "fr";
       const isPremium = settingsStore.isPremium;
+
+      const statsStore = useStatsStore();
+
+      if (!force && assignment.value?.day === day && lastChallengeDay.value === day && lastChallengeData.value) {
+        applyChallenge(lastChallengeData.value, lang);
+        isDone.value = statsStore.isCompletedDay(day);
+        return;
+      }
 
       // Vérifier si un assignment existe déjà aujourd'hui
       const existing = await fetchDailyAssignment(userStore.userId, day);
@@ -99,10 +108,9 @@ export const useChallengeStore = defineStore("challenge", () => {
       }
 
       applyChallenge(challengeData, lang);
-
-      // Vérifier si déjà complété
-      const done = await fetchCompletion(userStore.userId, day);
-      isDone.value = !!done;
+      lastChallengeData.value = challengeData;
+      lastChallengeDay.value = day;
+      isDone.value = statsStore.isCompletedDay(day);
     } catch (e) {
       error.value = e.message;
       console.error("❌ Erreur loadTodayChallenge:", e);

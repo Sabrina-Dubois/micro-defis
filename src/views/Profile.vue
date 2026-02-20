@@ -72,7 +72,8 @@
 			</div>
 		</v-card>
 
-		//<GoogleAd adSlot="2127045122" />
+	<!--<GoogleAd adSlot="2127045122" />-->
+
 
 		<!-- Graphique Activité -->
 		<v-card class="micro-card pa-4 mt-4">
@@ -95,7 +96,7 @@
 		</template>
 
 		<template v-else>
-			<PageSkeleton :title="t('daily.loading')" :cards="2" />
+			<FlameLoader />
 		</template>
 	</div>
 </template>
@@ -105,7 +106,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import StatsCards from "@/components/StatsCards.vue";
 //import GoogleAd from "@/components/GoogleAd.vue";
-import PageSkeleton from "@/components/PageSkeleton.vue";
+import FlameLoader from "@/components/FlameLoader.vue";
 
 // ✅ IMPORTS DES STORES
 import { useUserStore } from "@/stores/userStore";

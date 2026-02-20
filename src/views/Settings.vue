@@ -160,7 +160,7 @@
 		</template>
 
 		<template v-else>
-			<PageSkeleton :title="t('daily.loading')" :cards="3" />
+			<FlameLoader />
 		</template>
 
 	</div>
@@ -176,7 +176,7 @@ import { useUserStore } from "@/stores/userStore";
 import { useStatsStore } from "@/stores/statsStore";
 import { useChallengeStore } from "@/stores/challengeStore";
 import { useSettingsStore } from "@/stores/settingsStore";
-import PageSkeleton from "@/components/PageSkeleton.vue";
+import FlameLoader from "@/components/FlameLoader.vue";
 
 const router = useRouter();
 const { t, locale } = useI18n();

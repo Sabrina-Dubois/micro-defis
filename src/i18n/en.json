@@ -190,6 +190,7 @@
       "title": "Hello, ",
       "challenge": "Daily Challenge",
       "loading": "Loading…",
+      "loading_message": "Preparing your new challenge...",
       "level": "Level",
       "todo": "To do",
       "done": "Done!",
