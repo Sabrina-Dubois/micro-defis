@@ -27,10 +27,6 @@ function isWithinWindow(nowHHMM, targetHHMM, windowMinutes = 5) {
   return delta >= 0 && delta < windowMinutes;
 }
 
-function isAfterOrEqualTime(nowHHMM, targetHHMM) {
-  return hhmmToMinutes(nowHHMM) >= hhmmToMinutes(targetHHMM);
-}
-
 function utcNowHHMM() {
   const now = new Date();
   return `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")}`;
@@ -84,15 +80,7 @@ function computeStreak(days, todayKey) {
   return streak;
 }
 
-function hashString(input) {
-  let hash = 0;
-  for (let i = 0; i < input.length; i += 1) {
-    hash = (hash * 31 + input.charCodeAt(i)) >>> 0;
-  }
-  return hash;
-}
-
-function pickOne(items, seed) {
+function pickOne(items) {
   if (!items.length) return null;
   // Vrai aléatoire à chaque envoi
   const index = Math.floor(Math.random() * items.length);
@@ -239,8 +227,6 @@ Deno.serve(async (req) => {
     const nowHHMM = utcNowHHMM();
     const today = todayUtcDate();
 
-    console.log("=== START ===", { nowHHMM, today, force, targetUserId });
-
     let subscriptions = [];
     try {
       const u = new URL(`${supabaseUrl}/rest/v1/push_subscriptions`);
@@ -253,8 +239,6 @@ Deno.serve(async (req) => {
       if (targetUserId) u.searchParams.set("user_id", `eq.${targetUserId}`);
       subscriptions = await fetchJson(u.toString(), headers);
     }
-
-    console.log("Subscriptions fetched:", subscriptions.length);
 
     if (!subscriptions.length) {
       return jsonResponse({ ok: true, now: nowHHMM, matched: 0, success: 0, failed: 0, sent: [] });
@@ -299,26 +283,11 @@ Deno.serve(async (req) => {
       const minutesSinceUpdate = row.updated_at
         ? Math.floor((Date.now() - new Date(row.updated_at).getTime()) / 60000)
         : Number.POSITIVE_INFINITY;
-      const shouldCatchUpAfterRecentChange =
-        !force &&
-        !isMainSlot &&
-        !isRiskSlot &&
-        minutesSinceUpdate >= 0 &&
-        minutesSinceUpdate <= 3 &&
-        isAfterOrEqualTime(currentTimeForUser, activeBaseTime);
+      // Disabled catch-up: using updated_at as a trigger can generate repeated sends
+      // when reminder settings are refreshed from the app.
+      const shouldCatchUpAfterRecentChange = false;
 
       const doneToday = daysByUser.get(row.user_id)?.has(userToday) ?? false;
-
-      console.log("USER CHECK:", row.user_id, {
-        currentTimeForUser,
-        activeBaseTime,
-        isMainSlot,
-        isRiskSlot,
-        doneToday,
-        minutesSinceUpdate,
-        shouldCatchUpAfterRecentChange,
-        force,
-      });
 
       if (!force && !isMainSlot && !isRiskSlot && !shouldCatchUpAfterRecentChange) continue;
       if (doneToday && !force) continue;
@@ -345,8 +314,6 @@ Deno.serve(async (req) => {
         },
       });
     }
-
-    console.log("Jobs to send:", jobs.length);
 
     if (!jobs.length) {
       return jsonResponse({ ok: true, now: nowHHMM, matched: 0, success: 0, failed: 0, sent: [] });
@@ -379,11 +346,8 @@ Deno.serve(async (req) => {
       };
     });
 
-    console.log("=== DONE ===", { matched: jobs.length, success, failed });
-
     return jsonResponse({ ok: true, now: nowHHMM, matched: jobs.length, success, failed, sent });
   } catch (e) {
-    console.error("=== ERROR ===", e?.message);
     return jsonResponse({ ok: false, error: e?.message || "Unknown error" }, 500);
   }
 });

@@ -227,6 +227,15 @@ export const useSettingsStore = defineStore("settings", () => {
   async function getServiceWorkerRegistration() {
     if (!("serviceWorker" in navigator)) return null;
 
+    // Clean up legacy workers (ex: /sw-push.js) that could duplicate push handling.
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    for (const reg of registrations) {
+      const scriptUrl = reg.active?.scriptURL || reg.waiting?.scriptURL || reg.installing?.scriptURL || "";
+      if (scriptUrl && !scriptUrl.endsWith("/sw.js")) {
+        await reg.unregister();
+      }
+    }
+
     let registration = await navigator.serviceWorker.getRegistration("/sw.js");
     if (!registration) {
       registration = await navigator.serviceWorker.getRegistration();
