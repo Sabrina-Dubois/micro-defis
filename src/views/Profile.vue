@@ -1,32 +1,52 @@
 <template>
 	<div class="profile-page">
 		<template v-if="isPageReady">
-		<!-- Header Profil -->
-		<div class="center">
-			<div class="avatar" @click="changeAvatar">{{ userStore.userAvatar }}</div>
-			<div class="page-title">
-				{{ userStore.userName }}
-			</div>
-			<div style="
+			<!-- Header Profil -->
+			<div class="center">
+				<div class="avatar" @click="changeAvatar">{{ userStore.userAvatar }}</div>
+				<div class="page-title">
+					{{ userStore.userName }}
+				</div>
+
+				<!-- Option B — Badge pill -->
+				<div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">
+					<span style="font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 600;">
+						Rang
+					</span>
+					<div style="
+    background: rgba(255, 107, 53, 0.15);
+    border: 1px solid rgba(255, 107, 53, 0.5);
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #ff6b35;
+  ">
+						{{ statsStore.userTitle.icon }} {{ statsStore.userTitle.title }}
+					</div>
+				</div>
+
+				<div style="
 					color: rgba(255, 255, 255, 0.85);
 					font-weight: 700;
 					font-size: 13px;
+					margin-top: 6px;
 				">
-				{{ userStore.userEmail }}
-			</div>
-			<div style="
+					{{ userStore.userEmail }}
+				</div>
+				<div style="
 					color: rgba(255, 255, 255, 0.7);
 					font-weight: 600;
 					font-size: 12px;
 					margin-top: 4px;
 					margin-bottom: 12px;
 				">
-				{{ t("profil.member_since") }} {{ userStore.memberSince }}
+					{{ t("profil.member_since") }} {{ userStore.memberSince }}
+				</div>
 			</div>
-		</div>
 
-		<!-- Stats Rapides -->
-		<StatsCards :stats="[
+			<!-- Stats Rapides -->
+			<StatsCards :stats="[
 				{ icon: '🔥', value: statsStore.currentStreak, label: t('profil.stats.streak') },
 				{
 					icon: '✅',
@@ -36,63 +56,63 @@
 				{ icon: '🏆', value: statsStore.bestStreak, label: t('profil.stats.best') },
 			]" />
 
-		<!-- Niveau & Progression -->
-		<v-card class="micro-card fixed-card card-level pa-4 mt-4">
-			<div class="d-flex justify-space-between align-center mb-2">
-				<div class="page-subtitle">
-					{{ t("profil.level.title") }} {{ statsStore.userLevel }}
+			<!-- Niveau & Progression — Option C intégrée ici -->
+			<v-card class="micro-card fixed-card card-level pa-4 mt-4">
+				<div class="d-flex justify-space-between align-center mb-2">
+					<div class="page-subtitle">
+						{{ t("profil.level.title") }} {{ statsStore.userLevel }}
+					</div>
+					<div style="font-weight: 700; font-size: 13px; color: #ff6b35">
+						{{ statsStore.xpCurrentDisplay }} / {{ statsStore.xpNext }} XP
+					</div>
 				</div>
-				<div style="font-weight: 700; font-size: 13px; color: #ff6b35">
-					{{ statsStore.xpCurrentDisplay }} / {{ statsStore.xpNext }} XP
-				</div>
-			</div>
-			<v-progress-linear :model-value="statsStore.xpProgress" color="deep-orange" height="12"
-				rounded></v-progress-linear>
-			<div style="
+				<v-progress-linear :model-value="statsStore.xpProgress" color="deep-orange" height="12"
+					rounded></v-progress-linear>
+				<div style="
 					font-size: 12px;
 					color: #64748b;
 					margin-top: 6px;
 					font-weight: 600;
 				">
-				{{ statsStore.xpRemaining }} {{ t("profil.level.xp_next") }}
-				{{ statsStore.userLevel + 1 }}
-			</div>
-		</v-card>
-
-		<!-- Badges -->
-		<v-card class="micro-card pa-4 mt-4">
-			<div class="page-subtitle">
-				{{ t("profil.badges.title") }} ({{ unlockedBadges }}/{{ totalBadges }})
-			</div>
-			<div class="badges-grid">
-				<div v-for="badge in badges" :key="badge.id" class="badge-item" :class="{ locked: !badge.unlocked }">
-					<div class="badge-icon">{{ badge.icon }}</div>
-					<div class="badge-name">{{ t(badge.key) }}</div>
+					{{ statsStore.xpRemaining }} {{ t("profil.level.xp_next") }}
+					{{ statsStore.userLevel + 1 }}
 				</div>
-			</div>
-		</v-card>
+			</v-card>
 
-	<!--<GoogleAd adSlot="2127045122" />-->
-
-
-		<!-- Graphique Activité -->
-		<v-card class="micro-card pa-4 mt-4">
-			<div class="page-subtitle">{{ t("profil.activity.title") }}</div>
-			<div class="activity-chart">
-				<div v-for="(day, index) in last7Days" :key="index" class="activity-bar">
-					<div class="bar" :style="{
-				height: day.completed ? '80px' : '8px',
-				background: day.completed ? '#ff6b35' : '#e2e8f0',
-			}"></div>
-					<div class="day-label">{{ day.label }}</div>
+			<!-- Badges -->
+			<v-card class="micro-card pa-4 mt-4">
+				<div class="page-subtitle">
+					{{ t("profil.badges.title") }} ({{ unlockedBadges }}/{{ totalBadges }})
 				</div>
-			</div>
-		</v-card>
+				<div class="badges-grid">
+					<div v-for="badge in badges" :key="badge.id" class="badge-item"
+						:class="{ locked: !badge.unlocked }">
+						<div class="badge-icon">{{ badge.icon }}</div>
+						<div class="badge-name">{{ t(badge.key) }}</div>
+					</div>
+				</div>
+			</v-card>
 
-		<!-- Bouton Premium -->
-		<v-btn class="btn-primary mt-4" block to="/premium">
-			{{ t("profil.premium.title") }}
-		</v-btn>
+			<!--<GoogleAd adSlot="2127045122" />-->
+
+			<!-- Graphique Activité -->
+			<v-card class="micro-card pa-4 mt-4">
+				<div class="page-subtitle">{{ t("profil.activity.title") }}</div>
+				<div class="activity-chart">
+					<div v-for="(day, index) in last7Days" :key="index" class="activity-bar">
+						<div class="bar" :style="{
+							height: day.completed ? '80px' : '8px',
+							background: day.completed ? '#ff6b35' : '#e2e8f0',
+						}"></div>
+						<div class="day-label">{{ day.label }}</div>
+					</div>
+				</div>
+			</v-card>
+
+			<!-- Bouton Premium -->
+			<v-btn class="btn-primary mt-4" block to="/premium">
+				{{ t("profil.premium.title") }}
+			</v-btn>
 		</template>
 
 		<template v-else>
@@ -141,7 +161,6 @@ const last7Days = computed(() => statsStore.getLast7Days());
 
 // ===== MISE À JOUR DES BADGES =====
 function updateBadges() {
-	// ✅ Utilise les données du store
 	badges.value[0].unlocked = statsStore.totalCompleted >= 1;
 	badges.value[1].unlocked = statsStore.currentStreak >= 3;
 	badges.value[2].unlocked = statsStore.currentStreak >= 7;
@@ -154,7 +173,6 @@ function updateBadges() {
 // ===== CHANGER AVATAR =====
 async function changeAvatar() {
 	try {
-		// ✅ Le store gère tout
 		await userStore.changeAvatar();
 	} catch (error) {
 		console.error("❌ Erreur changeAvatar:", error);
@@ -163,7 +181,6 @@ async function changeAvatar() {
 
 // ===== EVENT HANDLER =====
 async function handleChallengeCompleted() {
-	// ✅ Recharger les stats quand un challenge est complété
 	await statsStore.loadCompletions();
 	updateBadges();
 }
@@ -171,14 +188,9 @@ async function handleChallengeCompleted() {
 // ===== LIFECYCLE =====
 onMounted(async () => {
 	try {
-		// ✅ Charger les données depuis les stores
 		await userStore.loadUser();
 		await statsStore.loadCompletions();
-
-		// Mettre à jour les badges
 		updateBadges();
-
-		// Écouter les événements
 		window.addEventListener("challenge-completed", handleChallengeCompleted);
 	} catch (error) {
 		console.error("❌ Erreur chargement profil:", error);
@@ -312,5 +324,4 @@ onUnmounted(() => {
 		font-size: 10px;
 	}
 }
-
 </style>

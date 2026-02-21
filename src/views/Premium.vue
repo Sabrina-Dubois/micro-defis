@@ -1,5 +1,6 @@
 <template>
 	<div class="premium-page">
+
 		<!-- Hero Section -->
 		<div class="hero-section">
 			<div class="crown-icon">👑</div>
@@ -7,21 +8,96 @@
 			<p class="hero-subtitle">
 				Débloque tous les défis et accélère ta progression
 			</p>
+			<div class="hero-stats">
+				<div class="hero-stat">
+					<span class="stat-val">800+</span>
+					<span class="stat-lbl">Défis</span>
+				</div>
+				<div class="hero-divider"></div>
+				<div class="hero-stat">
+					<span class="stat-val">5</span>
+					<span class="stat-lbl">Niveaux</span>
+				</div>
+				<div class="hero-divider"></div>
+				<div class="hero-stat">
+					<span class="stat-val">∞</span>
+					<span class="stat-lbl">Catégories</span>
+				</div>
+			</div>
 		</div>
+
+		<!-- Pricing Cards -->
+		<v-card class="micro-card pa-5 mb-4">
+			<div class="page-subtitle mb-4 text-center">Choisis ton plan</div>
+			<div class="pricing-cards">
+				<div class="pricing-card" @click="selectPlan('weekly')">
+					<div class="plan-header">
+						<div class="plan-name">Hebdomadaire</div>
+					</div>
+					<div class="plan-price">
+						<span class="price-amount">0,99€</span>
+						<span class="price-period">/semaine</span>
+					</div>
+					<div class="plan-desc">Annule quand tu veux</div>
+				</div>
+
+				<div class="pricing-card popular" @click="selectPlan('monthly')">
+					<div class="popular-badge">⭐ POPULAIRE</div>
+					<div class="plan-header">
+						<div class="plan-name">Mensuel</div>
+						<div class="plan-save">Le plus flexible</div>
+					</div>
+					<div class="plan-price">
+						<span class="price-amount">2,99€</span>
+						<span class="price-period">/mois</span>
+					</div>
+					<div class="plan-desc">Soit 0,10€/jour</div>
+				</div>
+
+				<div class="pricing-card" @click="selectPlan('yearly')">
+					<div class="plan-header">
+						<div class="plan-name">Annuel</div>
+						<div class="plan-save">Meilleur prix</div>
+					</div>
+					<div class="plan-price">
+						<span class="price-amount">19,99€</span>
+						<span class="price-period">/an</span>
+					</div>
+					<div class="plan-desc">Soit 1,67€/mois</div>
+				</div>
+			</div>
+			<div class="trial-notice">
+				🎉 <strong>7 jours d'essai gratuit</strong> sur tous les plans
+			</div>
+		</v-card>
+
+		<!-- CTA Principal -->
+		<v-btn class="btn-primary mb-2" block size="large" @click="startTrial">
+			🚀 Commencer l'essai gratuit
+		</v-btn>
+		<div class="guarantee mb-4">🔒 Sans engagement · Annulation en 1 clic</div>
+
+		<!-- Ce que tu débloque -->
+		<v-card class="micro-card pa-5 mb-4">
+			<div class="page-subtitle mb-4 text-center">Ce que tu débloque</div>
+			<div class="benefits-grid">
+				<div class="benefit-item" v-for="benefit in benefits" :key="benefit.title">
+					<div class="benefit-icon">{{ benefit.icon }}</div>
+					<div class="benefit-title">{{ benefit.title }}</div>
+					<div class="benefit-desc">{{ benefit.desc }}</div>
+				</div>
+			</div>
+		</v-card>
 
 		<!-- Comparaison Table -->
 		<v-card class="micro-card pa-5 mb-4">
-			<div class="page-subtitle mb-4 text-center">
-				Gratuit vs Premium
-			</div>
-
+			<div class="page-subtitle mb-4 text-center">Gratuit vs Premium</div>
 			<div class="comparison-table">
 				<div class="comparison-row header">
 					<div class="feature-name"></div>
 					<div class="plan-col">Gratuit</div>
 					<div class="plan-col premium">Premium</div>
 				</div>
-
 				<div class="comparison-row" v-for="item in comparisonItems" :key="item.feature">
 					<div class="feature-name">{{ item.feature }}</div>
 					<div class="plan-col">
@@ -36,92 +112,9 @@
 			</div>
 		</v-card>
 
-		<!-- Bénéfices -->
-		<v-card class="micro-card pa-5 mb-4">
-			<div class="page-subtitle mb-4 text-center">
-				Pourquoi passer Premium ?
-			</div>
-
-			<div class="benefits-grid">
-				<div class="benefit-item" v-for="benefit in benefits" :key="benefit.title">
-					<div class="benefit-icon">{{ benefit.icon }}</div>
-					<div class="benefit-title">{{ benefit.title }}</div>
-					<div class="benefit-desc">{{ benefit.desc }}</div>
-				</div>
-			</div>
-		</v-card>
-
-		<!-- Pricing Cards -->
-		<v-card class="micro-card pa-5 mb-4">
-			<div class="page-subtitle mb-4 text-center">
-				Choisis ton plan
-			</div>
-
-			<div class="pricing-cards">
-				<!-- Plan Hebdo -->
-				<div class="pricing-card" @click="selectPlan('weekly')">
-					<div class="plan-header">
-						<div class="plan-name">Hebdomadaire</div>
-					</div>
-					<div class="plan-price">
-						<span class="price-amount">0,99€</span>
-						<span class="price-period">/semaine</span>
-					</div>
-					<div class="plan-desc">Annule quand tu veux</div>
-				</div>
-
-
-				<!-- Plan Mensuel (POPULAIRE) -->
-				<div class="pricing-card popular" @click="selectPlan('monthly')">
-					<div class="popular-badge">⭐ POPULAIRE</div>
-					<div class="plan-header">
-						<div class="plan-name">Mois</div>
-						<div class="plan-save">Économise 20€</div>
-					</div>
-					<div class="plan-price">
-						<span class="price-amount">4,99€</span>
-						<span class="price-period">/an</span>
-					</div>
-					<div class="plan-desc">Soit 3,33€/mois</div>
-				</div>
-
-				<!-- Plan Annuel -->
-				<div class="pricing-card" @click="selectPlan('yearly')">
-					<div class="plan-header">
-						<div class="plan-name">Annuel</div>
-						<div class="plan-save">Économise 20€</div>
-					</div>
-					<div class="plan-price">
-						<span class="price-amount">39,99€</span>
-						<span class="price-period">/an</span>
-					</div>
-					<div class="plan-desc">Soit 3,33€/mois</div>
-				</div>
-
-				<!-- Plan Lifetime 
-				<div class="pricing-card" @click="selectPlan('lifetime')">
-					<div class="plan-header">
-						<div class="plan-name">À vie</div>
-					</div>
-					<div class="plan-price">
-						<span class="price-amount">99,99€</span>
-						<span class="price-period">unique</span>
-					</div>
-					<div class="plan-desc">Accès illimité à vie</div>
-				</div>-->
-			</div>
-
-			<div class="trial-notice">
-				🎉 <strong>7 jours d'essai gratuit</strong> sur tous les plans
-			</div>
-		</v-card>
-
 		<!-- Social Proof -->
 		<v-card class="micro-card pa-5 mb-4">
-			<div class="page-subtitle mb-4 text-center">
-				Ils sont déjà Premium
-			</div>
-
+			<div class="page-subtitle mb-4 text-center">Ils sont déjà Premium</div>
 			<div class="testimonials">
 				<div class="testimonial" v-for="(test, i) in testimonials" :key="i">
 					<div class="stars">⭐⭐⭐⭐⭐</div>
@@ -133,27 +126,21 @@
 
 		<!-- FAQ -->
 		<v-card class="micro-card pa-5 mb-4">
-			<div class="page-subtitle mb-4 text-center">
-				Questions fréquentes
-			</div>
-
+			<div class="page-subtitle mb-4 text-center">Questions fréquentes</div>
 			<v-expansion-panels variant="accordion">
 				<v-expansion-panel v-for="(faq, i) in faqs" :key="i">
 					<v-expansion-panel-title>
 						<strong>{{ faq.q }}</strong>
 					</v-expansion-panel-title>
-					<v-expansion-panel-text>
-						{{ faq.a }}
-					</v-expansion-panel-text>
+					<v-expansion-panel-text>{{ faq.a }}</v-expansion-panel-text>
 				</v-expansion-panel>
 			</v-expansion-panels>
 		</v-card>
 
 		<!-- CTA Final -->
 		<v-btn class="btn-primary mb-4" block size="large" @click="startTrial">
-			🚀 Commencer l'essai gratuit
+			👑 Souscrire maintenant
 		</v-btn>
-
 		<div class="guarantee">
 			🔒 Paiement sécurisé · Annulation en 1 clic · Garantie 30 jours
 		</div>
@@ -163,13 +150,8 @@
 			<v-card class="pa-6 text-center">
 				<v-icon color="green" size="64" class="mb-4">mdi-check-circle</v-icon>
 				<div class="text-h5 font-weight-bold mb-2">🎉 Bienvenue Premium !</div>
-				<p class="mb-4">
-					Ton essai gratuit de 7 jours commence maintenant.
-					Profite de tous les défis !
-				</p>
-				<v-btn color="deep-orange" block @click="closeDialog">
-					C'est parti !
-				</v-btn>
+				<p class="mb-4">Ton essai gratuit de 7 jours commence maintenant. Profite de tous les défis !</p>
+				<v-btn color="deep-orange" block @click="closeDialog">C'est parti !</v-btn>
 			</v-card>
 		</v-dialog>
 	</div>
@@ -184,106 +166,48 @@ import { useUserStore } from "@/stores/userStore";
 const router = useRouter();
 const userStore = useUserStore();
 const showDialog = ref(false);
-const selectedPlan = ref("yearly");
+const selectedPlan = ref("monthly");
 
-// Données de comparaison
+const benefits = [
+	{ icon: "🎯", title: "800+ défis", desc: "Tous niveaux, toutes catégories" },
+	{ icon: "⚡", title: "Niveaux Expert", desc: "Intermédiaire, Avancé, Expert" },
+	{ icon: "🛡️", title: "Streak Shield", desc: "Protège ta série en cas d'oubli" },
+	{ icon: "📊", title: "Stats avancées", desc: "Suis ta progression en détail" },
+	{ icon: "🎨", title: "Sans pub", desc: "Expérience 100% propre" },
+	{ icon: "🏆", title: "Badges exclusifs", desc: "Montre ton statut Premium" },
+];
+
 const comparisonItems = [
 	{ feature: "Défis Débutant 🌱", free: true },
 	{ feature: "Tous les niveaux (800+ défis)", free: false },
 	{ feature: "Toutes les catégories", free: false },
-	//{ feature: "Stats avancées", free: false },
+	{ feature: "Streak Shield 🛡️", free: false },
 	{ feature: "Sans publicité", free: false },
 	{ feature: "Badges exclusifs", free: false },
-	{ feature: "Mode sombre", free: true },
+	{ feature: "Stats avancées", free: false },
 ];
 
-// Bénéfices
-const benefits = [
-	{
-		icon: "🔥",
-		title: "Reste motivé",
-		desc: "Accède à 800+ défis variés pour ne jamais t'ennuyer"
-	},
-	{
-		icon: "💪",
-		title: "Progresse vraiment",
-		desc: "Challenges adaptés à ton niveau, du débutant à l'expert"
-	},
-	/*{
-		icon: "📊",
-		title: "Suis tes progrès",
-		desc: "Statistiques détaillées et analyse de tes habitudes"
-	},*/
-	{
-		icon: "🎨",
-		title: "Personnalise",
-		desc: "Choisis exactement les catégories qui t'intéressent"
-	}
-];
-
-// Témoignages
 const testimonials = [
-	{
-		text: "Meilleure app de défis que j'ai testée. Les défis Expert sont top !",
-		author: "Thomas, Premium depuis 1 an"
-	},
-	{
-		text: "J'adore la variété des catégories. Toujours quelque chose de nouveau.",
-		author: "Marie, Premium depuis 6 mois"
-	},
-	{
-		text: "Ça m'a vraiment aidé à créer de nouvelles habitudes positives.",
-		author: "Lucas, Premium depuis 3 mois"
-	}
+	{ text: "Les défis Expert ont complètement changé ma routine. Je ne m'ennuie plus jamais !", author: "Thomas, Premium depuis 1 an" },
+	{ text: "Le Streak Shield m'a sauvé plusieurs fois. Valait largement l'abonnement.", author: "Marie, Premium depuis 6 mois" },
+	{ text: "J'ai créé de vraies nouvelles habitudes grâce à la variété des catégories.", author: "Lucas, Premium depuis 3 mois" },
 ];
 
-// FAQ
 const faqs = [
-	{
-		q: "❓ Puis-je annuler quand je veux ?",
-		a: "Oui, annulation en 1 clic depuis les paramètres. Aucun engagement."
-	},
-	{
-		q: "❓ Que se passe-t-il après l'essai gratuit ?",
-		a: "Tu seras débité uniquement si tu ne résilie pas. Tu recevras un rappel par email avant."
-	},
-	{
-		q: "❓ Mes données sont-elles conservées si j'annule ?",
-		a: "Oui, toutes tes stats et progrès restent sauvegardés. Tu peux réactiver Premium à tout moment."
-	},
-	{
-		q: "❓ Y a-t-il des frais cachés ?",
-		a: "Non, le prix affiché est le prix final. Aucun frais caché."
-	}
+	{ q: "Puis-je annuler quand je veux ?", a: "Oui, annulation en 1 clic depuis les paramètres. Aucun engagement, aucune condition." },
+	{ q: "Que se passe-t-il après l'essai gratuit ?", a: "Tu seras débité uniquement si tu ne résignes pas. Tu recevras un rappel par email 3 jours avant." },
+	{ q: "Mes données sont-elles conservées si j'annule ?", a: "Oui, toutes tes stats et progrès restent sauvegardés. Tu peux réactiver Premium à tout moment." },
+	{ q: "Y a-t-il des frais cachés ?", a: "Non, le prix affiché est le prix final. Aucun frais caché." },
 ];
 
-// Actions
-function selectPlan(plan) {
-	selectedPlan.value = plan;
-}
+function selectPlan(plan) { selectedPlan.value = plan; }
 
 async function startTrial() {
 	try {
-		// ✅ TODO: Appeler ton backend/Stripe pour créer la subscription
-
-		// Pour l'instant, on active juste le premium dans la BDD
-		if (!userStore.userId) {
-			alert("Veuillez vous connecter");
-			router.push("/login");
-			return;
-		}
-
-		// Activer premium dans user_profiles
-		const { error } = await supabase
-			.from("user_profiles")
-			.update({ premium: true })
-			.eq("user_id", userStore.userId);
-
+		if (!userStore.userId) { alert("Veuillez vous connecter"); router.push("/login"); return; }
+		const { error } = await supabase.from("user_profiles").update({ premium: true }).eq("user_id", userStore.userId);
 		if (error) throw error;
-
-		// Recharger le user
 		await userStore.loadUser();
-
 		showDialog.value = true;
 	} catch (error) {
 		console.error("❌ Erreur activation premium:", error);
@@ -291,10 +215,7 @@ async function startTrial() {
 	}
 }
 
-function closeDialog() {
-	showDialog.value = false;
-	router.push("/");
-}
+function closeDialog() { showDialog.value = false; router.push("/"); }
 </script>
 
 <style scoped>
@@ -307,7 +228,7 @@ function closeDialog() {
 /* Hero */
 .hero-section {
 	text-align: center;
-	padding: 15px 15px;
+	padding: 32px 20px;
 	background: linear-gradient(125deg, #ff6b35 0%, #f7931e 100%);
 	border-radius: 24px;
 	margin-bottom: 24px;
@@ -317,6 +238,7 @@ function closeDialog() {
 .crown-icon {
 	font-size: 64px;
 	animation: bounce 2s infinite;
+	display: block;
 }
 
 @keyframes bounce {
@@ -340,77 +262,47 @@ function closeDialog() {
 .hero-subtitle {
 	font-size: 16px;
 	opacity: 0.95;
+	margin-bottom: 20px;
 }
 
-/* Comparison Table */
-.comparison-table {
-	width: 100%;
-}
-
-.comparison-row {
-	display: grid;
-	grid-template-columns: 2fr 1fr 1fr;
-	gap: 12px;
-	padding: 12px 8px;
-	border-bottom: 1px solid #e2e8f0;
+.hero-stats {
+	display: flex;
+	justify-content: center;
 	align-items: center;
+	gap: 20px;
+	background: rgba(255, 255, 255, 0.2);
+	border-radius: 16px;
+	padding: 14px 20px;
+	border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.comparison-row.header {
-	font-weight: 700;
-	background: #f8fafc;
-	border-radius: 8px;
-	border: none;
+.hero-stat {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2px;
 }
 
-.feature-name {
-	font-size: 14px;
-	color: #334155;
+.stat-val {
+	font-size: 22px;
+	font-weight: 800;
 }
 
-.plan-col {
-	text-align: center;
+.stat-lbl {
+	font-size: 11px;
+	opacity: 0.8;
 	font-weight: 600;
-	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
 }
 
-.plan-col.premium {
-	color: #ff6b35;
+.hero-divider {
+	width: 1px;
+	height: 32px;
+	background: rgba(255, 255, 255, 0.35);
 }
 
-/* Benefits Grid */
-.benefits-grid {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 16px;
-}
-
-.benefit-item {
-	text-align: center;
-	padding: 5px 5px;
-	background: #f7e9e4;
-	border-radius: 20px;
-}
-
-.benefit-icon {
-	font-size: 40px;
-	margin-bottom: 8px;
-}
-
-.benefit-title {
-	font-size: 16px;
-	font-weight: 700;
-	color: #0f172a;
-	margin-bottom: 4px;
-}
-
-.benefit-desc {
-	font-size: 12px;
-	color: #64748b;
-	line-height: 1.4;
-}
-
-/* Pricing Cards */
+/* Pricing */
 .pricing-cards {
 	display: flex;
 	flex-direction: column;
@@ -420,7 +312,7 @@ function closeDialog() {
 
 .pricing-card {
 	position: relative;
-	padding: 10px;
+	padding: 16px;
 	border: 2px solid #e2e8f0;
 	border-radius: 16px;
 	cursor: pointer;
@@ -503,6 +395,74 @@ function closeDialog() {
 	color: #0f172a;
 }
 
+/* Benefits — 2 par ligne FORCÉ */
+.benefits-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
+}
+
+.benefit-item {
+	text-align: center;
+	padding: 16px 10px;
+	background: #f7e9e4;
+	border-radius: 16px;
+}
+
+.benefit-icon {
+	font-size: 32px;
+	margin-bottom: 6px;
+}
+
+.benefit-title {
+	font-size: 13px;
+	font-weight: 700;
+	color: #0f172a;
+	margin-bottom: 4px;
+}
+
+.benefit-desc {
+	font-size: 11px;
+	color: #64748b;
+	line-height: 1.4;
+}
+
+/* Comparison Table */
+.comparison-table {
+	width: 100%;
+}
+
+.comparison-row {
+	display: grid;
+	grid-template-columns: 2fr 1fr 1fr;
+	gap: 12px;
+	padding: 12px 8px;
+	border-bottom: 1px solid #e2e8f0;
+	align-items: center;
+}
+
+.comparison-row.header {
+	font-weight: 700;
+	background: #f8fafc;
+	border-radius: 8px;
+	border: none;
+}
+
+.feature-name {
+	font-size: 14px;
+	color: #334155;
+}
+
+.plan-col {
+	text-align: center;
+	font-weight: 600;
+	font-size: 13px;
+}
+
+.plan-col.premium {
+	color: #ff6b35;
+}
+
 /* Testimonials */
 .testimonials {
 	display: flex;
@@ -539,26 +499,7 @@ function closeDialog() {
 .guarantee {
 	text-align: center;
 	font-size: 12px;
-	color: #64748b;
-	margin-top: 16px;
-}
-
-.guarantee {
-	color: white;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-	.benefits-grid {
-		grid-template-columns: 1fr;
-	}
-
-	.comparison-row {
-		font-size: 13px;
-	}
-
-	.hero-title {
-		font-size: 28px;
-	}
+	color: #ffffff;
+	margin-top: 8px;
 }
 </style>

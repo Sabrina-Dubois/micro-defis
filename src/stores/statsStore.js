@@ -14,6 +14,15 @@ export const useStatsStore = defineStore("stats", () => {
   const totalCompleted = ref(0);
   const loading = ref(false);
   const error = ref(null);
+  const levelTitles = [
+    { min: 1, title: "Recrue", icon: "🌱" },
+    { min: 5, title: "Challenger", icon: "⚡" },
+    { min: 10, title: "Explorateur", icon: "🧭" },
+    { min: 20, title: "Aventurier", icon: "🔥" },
+    { min: 35, title: "Expert", icon: "💪" },
+    { min: 50, title: "Maître", icon: "🏆" },
+    { min: 75, title: "Légende", icon: "⭐" },
+  ];
 
   // ─────────────────────────────────────────
   // GETTERS
@@ -23,6 +32,10 @@ export const useStatsStore = defineStore("stats", () => {
   const xpNext = computed(() => 100);
   const xpProgress = computed(() => (xpCurrentDisplay.value / xpNext.value) * 100);
   const xpRemaining = computed(() => xpNext.value - xpCurrentDisplay.value);
+  const userTitle = computed(() => {
+    const level = userLevel.value;
+    return [...levelTitles].reverse().find((t) => level >= t.min) || levelTitles[0];
+  });
 
   // ─────────────────────────────────────────
   // ACTIONS
@@ -158,6 +171,7 @@ export const useStatsStore = defineStore("stats", () => {
     xpNext,
     xpProgress,
     xpRemaining,
+    userTitle,
     loadCompletions,
     calculateStreaks,
     addCompletion,
