@@ -27,6 +27,10 @@ function isWithinWindow(nowHHMM, targetHHMM, windowMinutes = 5) {
   return delta >= 0 && delta < windowMinutes;
 }
 
+function isAfterOrEqualTime(nowHHMM, targetHHMM) {
+  return hhmmToMinutes(nowHHMM) >= hhmmToMinutes(targetHHMM);
+}
+
 function utcNowHHMM() {
   const now = new Date();
   return `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")}`;
@@ -203,6 +207,17 @@ async function fetchJson(url, headers) {
   return res.json();
 }
 
+function chunkArray(items, size = 100) {
+  const out = [];
+  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
+  return out;
+}
+
+function buildInFilter(values) {
+  const escaped = values.map((v) => `"${String(v).replaceAll("\"", "\\\"")}"`);
+  return `in.(${escaped.join(",")})`;
+}
+
 Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
@@ -244,22 +259,40 @@ Deno.serve(async (req) => {
       return jsonResponse({ ok: true, now: nowHHMM, matched: 0, success: 0, failed: 0, sent: [] });
     }
 
-    const userIds = [...new Set(subscriptions.map((s) => s.user_id))];
-    const inUsers = `(${userIds.join(",")})`;
+    const userIds = [...new Set(subscriptions.map((s) => s.user_id).filter(Boolean))];
+    const userIdChunks = chunkArray(userIds, 100);
 
-    const prefUrl = new URL(`${supabaseUrl}/rest/v1/user_preferences`);
-    prefUrl.searchParams.set("select", "user_id,language");
-    prefUrl.searchParams.set("user_id", `in.${inUsers}`);
-    const preferences = await fetchJson(prefUrl.toString(), headers);
+    const preferences = [];
+    for (const ids of userIdChunks) {
+      const prefUrl = new URL(`${supabaseUrl}/rest/v1/user_preferences`);
+      prefUrl.searchParams.set("select", "user_id,language");
+      prefUrl.searchParams.set("user_id", buildInFilter(ids));
+      try {
+        const batch = await fetchJson(prefUrl.toString(), headers);
+        if (Array.isArray(batch)) preferences.push(...batch);
+      } catch (e) {
+        // Keep pushes alive even if preferences fetch fails.
+        console.error("preferences batch fetch failed:", e?.message || e);
+      }
+    }
     const langByUser = new Map(preferences.map((p) => [p.user_id, p.language || "fr"]));
 
     const since = new Date();
     since.setUTCDate(since.getUTCDate() - 14);
-    const completionUrl = new URL(`${supabaseUrl}/rest/v1/daily_completions`);
-    completionUrl.searchParams.set("select", "user_id,day");
-    completionUrl.searchParams.set("user_id", `in.${inUsers}`);
-    completionUrl.searchParams.set("day", `gte.${since.toISOString().slice(0, 10)}`);
-    const completions = await fetchJson(completionUrl.toString(), headers);
+    const completions = [];
+    for (const ids of userIdChunks) {
+      const completionUrl = new URL(`${supabaseUrl}/rest/v1/daily_completions`);
+      completionUrl.searchParams.set("select", "user_id,day");
+      completionUrl.searchParams.set("user_id", buildInFilter(ids));
+      completionUrl.searchParams.set("day", `gte.${since.toISOString().slice(0, 10)}`);
+      try {
+        const batch = await fetchJson(completionUrl.toString(), headers);
+        if (Array.isArray(batch)) completions.push(...batch);
+      } catch (e) {
+        // Keep pushes alive even if completion fetch fails.
+        console.error("completions batch fetch failed:", e?.message || e);
+      }
+    }
 
     const daysByUser = new Map();
     for (const c of completions) {
@@ -280,12 +313,19 @@ Deno.serve(async (req) => {
 
       const isMainSlot = isWithinWindow(currentTimeForUser, activeBaseTime, 1);
       const isRiskSlot = isWithinWindow(currentTimeForUser, addHours(activeBaseTime, 4), 1);
-      const minutesSinceUpdate = row.updated_at
-        ? Math.floor((Date.now() - new Date(row.updated_at).getTime()) / 60000)
+      const msSinceUpdate = row.updated_at
+        ? Date.now() - new Date(row.updated_at).getTime()
         : Number.POSITIVE_INFINITY;
-      // Disabled catch-up: using updated_at as a trigger can generate repeated sends
-      // when reminder settings are refreshed from the app.
-      const shouldCatchUpAfterRecentChange = false;
+      // One-shot catch-up to avoid missing first send for newly enabled reminders,
+      // without spamming multiple pushes in a multi-minute window.
+      const shouldCatchUpAfterRecentChange =
+        !force &&
+        !isMainSlot &&
+        !isRiskSlot &&
+        Number.isFinite(msSinceUpdate) &&
+        msSinceUpdate >= 0 &&
+        msSinceUpdate <= 70 * 1000 &&
+        isAfterOrEqualTime(currentTimeForUser, activeBaseTime);
 
       const doneToday = daysByUser.get(row.user_id)?.has(userToday) ?? false;
 

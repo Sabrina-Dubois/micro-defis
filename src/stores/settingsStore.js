@@ -248,6 +248,8 @@ export const useSettingsStore = defineStore("settings", () => {
 
   async function subscribeToPush() {
     const userStore = useUserStore();
+    if (!userStore.userId) throw new Error("Utilisateur non connecté");
+    if (!("Notification" in window)) throw new Error("Notifications non supportées sur cet appareil");
 
     const permission = await Notification.requestPermission();
     if (permission !== "granted") return null;
@@ -302,18 +304,29 @@ export const useSettingsStore = defineStore("settings", () => {
   }
 
 async function toggleNotifications(value) {
-  await updatePreference("notifications_enabled", value);
+  const userStore = useUserStore();
+  if (!userStore.userId) throw new Error("Utilisateur non connecté");
 
-  if (value) {
-    const sub = await subscribeToPush();
-    if (!sub) {
-      await updatePreference("notifications_enabled", false);
+  try {
+    if (value) {
+      const sub = await subscribeToPush();
+      if (!sub) {
+        await updatePreference("notifications_enabled", false);
+        return false;
+      }
+      await updatePreference("notifications_enabled", true);
+      return true;
     }
-  } else {
-    await unsubscribeFromPush();
-  }
 
-  return value;
+    await unsubscribeFromPush();
+    await updatePreference("notifications_enabled", false);
+    return false;
+  } catch (e) {
+    // Avoid stale "enabled" UI state if subscription/storage failed midway.
+    await updatePreference("notifications_enabled", false).catch(() => {});
+    error.value = e?.message || "Erreur notifications";
+    throw e;
+  }
 }
 
   // ─────────────────────────────────────────

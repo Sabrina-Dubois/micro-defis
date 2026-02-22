@@ -3,65 +3,7 @@ import { ref, computed } from "vue";
 import { getAuthUser, signOut, fetchProfile, upsertProfile } from "@/services/profileService";
 
 const AVATAR_OPTIONS = [
-  "🙂",
-  "😙",
-  "😝",
-  "🤪",
-  "🤓",
-  "😎",
-  "💩",
-  "🦄",
-  "🚀",
-  "⭐",
-  "🔥",
-  "💪",
-  "🌟",
-  "⚡",
-  "🎉",
-  "🎀",
-  "❤️",
-  "🤍",
-  "🤎",
-  "🩷",
-  "💙",
-  "🧡",
-  "💛",
-  "💜",
-  "🖤",
-  "💚",
-  "🩶",
-  "🖕🏼",
-  "🫶🏼",
-  "🩷",
-  "🫦",
-  "🐾",
-  "🐙",
-  "🐣",
-  "🐿️",
-  "🌵",
-  "🌈",
-  "🧠",
-  "🎯",
-  "🎧",
-  "📱",
-  "📸",
-  "🧭",
-  "🪄",
-  "🧇",
-  "🪬",
-  "💫",
-  "🕊️",
-  "☀️",
-  "🌙",
-  "⛰️",
-  "🏝️",
-  "🍀",
-  "🍓",
-  "🍍",
-  "☕",
-  "🍵",
-  "🧋",
-  "🧃",
+  "🙂","😙","😝","🤪","🤓","😎","💩","🦄","🚀","⭐","🔥","💪","⚡","🎉","🎀","❤️","🤍","🤎","🩷","💙","🧡","💛","💜","🖤","💚","🩶","🖕🏼","🫶🏼","🫦","🐾","🐙","🐣","🐿️","🌵","🌈","🧠","🎧","📱","📸","🧇","💫","🕊️","☀️","🌙","⛰️","🏝️","🍀","🍓","🍍","☕","🧋",
 ];
 
 export const useUserStore = defineStore("user", () => {
@@ -69,7 +11,7 @@ export const useUserStore = defineStore("user", () => {
   // STATE
   // ─────────────────────────────────────────
   const authUser = ref(null);
-  const profile = ref({ username: "Username", avatar_emoji: "👤", email: "" });
+  const profile = ref({ username: "Username", avatar_emoji: "👤", email: "", premium: false });
   const memberSince = ref("...");
   const loading = ref(false);
   const error = ref(null);
@@ -82,6 +24,7 @@ export const useUserStore = defineStore("user", () => {
   const userName = computed(() => profile.value.username);
   const userEmail = computed(() => profile.value.email);
   const userAvatar = computed(() => profile.value.avatar_emoji);
+  const isPremium = computed(() => profile.value.premium);
 
   // ─────────────────────────────────────────
   // ACTIONS
@@ -102,6 +45,7 @@ export const useUserStore = defineStore("user", () => {
       if (profileData) {
         profile.value.username = profileData.username || "Username";
         profile.value.avatar_emoji = profileData.avatar_emoji || "👤";
+        profile.value.premium = profileData.premium || false;
       }
 
       return user;
@@ -160,6 +104,7 @@ export const useUserStore = defineStore("user", () => {
     userName,
     userEmail,
     userAvatar,
+    isPremium,
     loadUser,
     updateProfile,
     changeAvatar,
