@@ -1,9 +1,9 @@
-const CACHE = "microdefis-v2";
+const CACHE = "microdefis-v3";
 const PRECACHE_URLS = ["/", "/index.html"];
 
 self.skipWaiting();
 
-self.addEventListener("install", async (event) => {
+self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(PRECACHE_URLS)));
 });
 
@@ -45,7 +45,7 @@ self.addEventListener("notificationclick", (event) => {
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
       for (const client of clientList) {
-        if (client.url.includes(self.location.origin)) {
+        if (client.url.includes(self.location.origin) && "focus" in client) {
           return client.focus();
         }
       }
