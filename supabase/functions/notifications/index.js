@@ -278,14 +278,14 @@ Deno.serve(async (req) => {
       const currentTimeForUser = localReminder ? zonedNowHHMM(timezone) : nowHHMM;
       const userToday = localReminder ? zonedTodayDate(timezone) : today;
 
-      const isMainSlot = isWithinWindow(currentTimeForUser, activeBaseTime, 1);
-      const isRiskSlot = isWithinWindow(currentTimeForUser, addHours(activeBaseTime, 4), 1);
+      const isMainSlot = isWithinWindow(currentTimeForUser, activeBaseTime, 3);
+      const isRiskSlot = isWithinWindow(currentTimeForUser, addHours(activeBaseTime, 4), 3);
       const minutesSinceUpdate = row.updated_at
         ? Math.floor((Date.now() - new Date(row.updated_at).getTime()) / 60000)
         : Number.POSITIVE_INFINITY;
       // Disabled catch-up: using updated_at as a trigger can generate repeated sends
       // when reminder settings are refreshed from the app.
-      const shouldCatchUpAfterRecentChange = false;
+      const shouldCatchUpAfterRecentChange = !force && isAfterOrEqualTime(currentTimeForUser, activeBaseTime);
 
       const doneToday = daysByUser.get(row.user_id)?.has(userToday) ?? false;
 
