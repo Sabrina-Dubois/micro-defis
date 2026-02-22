@@ -226,31 +226,28 @@ export const useSettingsStore = defineStore("settings", () => {
   // ─────────────────────────────────────────
   async function getServiceWorkerRegistration() {
     if (!("serviceWorker" in navigator)) return null;
-    const swUrl = `${import.meta.env.BASE_URL}sw.js`;
 
     // Clean up legacy workers (ex: /sw-push.js) that could duplicate push handling.
     const registrations = await navigator.serviceWorker.getRegistrations();
     for (const reg of registrations) {
       const scriptUrl = reg.active?.scriptURL || reg.waiting?.scriptURL || reg.installing?.scriptURL || "";
-      if (scriptUrl && !scriptUrl.endsWith("/sw.js") && !scriptUrl.endsWith("sw.js")) {
+      if (scriptUrl && !scriptUrl.endsWith("/sw.js")) {
         await reg.unregister();
       }
     }
 
-    let registration = await navigator.serviceWorker.getRegistration(swUrl);
+    let registration = await navigator.serviceWorker.getRegistration("/sw.js");
     if (!registration) {
       registration = await navigator.serviceWorker.getRegistration();
     }
     if (!registration) {
-      registration = await navigator.serviceWorker.register(swUrl);
+      registration = await navigator.serviceWorker.register("/sw.js");
     }
     return registration;
   }
 
   async function subscribeToPush() {
     const userStore = useUserStore();
-    if (!userStore.userId) throw new Error("Utilisateur non connecté");
-    if (!("Notification" in window)) throw new Error("Notifications non supportées sur cet appareil");
 
     const permission = await Notification.requestPermission();
     if (permission !== "granted") return null;
@@ -305,29 +302,18 @@ export const useSettingsStore = defineStore("settings", () => {
   }
 
 async function toggleNotifications(value) {
-  const userStore = useUserStore();
-  if (!userStore.userId) throw new Error("Utilisateur non connecté");
+  await updatePreference("notifications_enabled", value);
 
-  try {
-    if (value) {
-      const sub = await subscribeToPush();
-      if (!sub) {
-        await updatePreference("notifications_enabled", false);
-        return false;
-      }
-      await updatePreference("notifications_enabled", true);
-      return true;
+  if (value) {
+    const sub = await subscribeToPush();
+    if (!sub) {
+      await updatePreference("notifications_enabled", false);
     }
-
+  } else {
     await unsubscribeFromPush();
-    await updatePreference("notifications_enabled", false);
-    return false;
-  } catch (e) {
-    // Avoid stale "enabled" UI state if subscription/storage failed midway.
-    await updatePreference("notifications_enabled", false).catch(() => {});
-    error.value = e?.message || "Erreur notifications";
-    throw e;
   }
+
+  return value;
 }
 
   // ─────────────────────────────────────────
