@@ -103,6 +103,7 @@ export const useSettingsStore = defineStore("settings", () => {
           preferences.value.reminder_time,
           getCurrentTimeZone(),
         );
+        await ensurePushSubscriptionSynced();
       }
 
       return preferences.value;
@@ -249,8 +250,13 @@ export const useSettingsStore = defineStore("settings", () => {
 
   async function subscribeToPush() {
     const userStore = useUserStore();
+    if (!userStore.userId) return null;
+    if (!("Notification" in window)) return null;
 
-    const permission = await Notification.requestPermission();
+    let permission = Notification.permission;
+    if (permission !== "granted") {
+      permission = await Notification.requestPermission();
+    }
     if (permission !== "granted") return null;
 
     const registration = await getServiceWorkerRegistration();
@@ -275,6 +281,43 @@ export const useSettingsStore = defineStore("settings", () => {
       getCurrentTimeZone(),
     );
     return subscription;
+  }
+
+  async function ensurePushSubscriptionSynced() {
+    const userStore = useUserStore();
+    if (!userStore.userId) return null;
+    if (!preferences.value.notifications_enabled) return null;
+    if (!("Notification" in window)) return null;
+    if (Notification.permission !== "granted") return null;
+
+    try {
+      const registration = await getServiceWorkerRegistration();
+      if (!registration) return null;
+
+      const vapidPublicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
+      if (!vapidPublicKey) return null;
+
+      const existingSubscription = await registration.pushManager.getSubscription();
+      const subscription =
+        existingSubscription ||
+        (await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+        }));
+
+      const utcReminderTime = localReminderToUtc(preferences.value.reminder_time);
+      await savePushSubscription(
+        userStore.userId,
+        subscription,
+        utcReminderTime,
+        preferences.value.reminder_time,
+        getCurrentTimeZone(),
+      );
+      return subscription;
+    } catch (e) {
+      console.error("Erreur sync auto subscription push:", e);
+      return null;
+    }
   }
 
   async function sendLocalNotificationTest() {
@@ -374,6 +417,7 @@ async function toggleNotifications(value) {
     setChallengePreferences,
     toggleNotifications,
     subscribeToPush,
+    ensurePushSubscriptionSynced,
     sendLocalNotificationTest,
     unsubscribeFromPush,
     initThemeFromLocalStorage,

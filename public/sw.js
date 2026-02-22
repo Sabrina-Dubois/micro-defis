@@ -1,11 +1,16 @@
 // ─────────────────────────────────────────
 // CACHE PWA
 // ─────────────────────────────────────────
-const CACHE = "microdefis-v1";
+const CACHE = "microdefis-v2";
 const PRECACHE_URLS = ["/", "/index.html"];
 
-self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(PRECACHE_URLS)));
+self.addEventListener("install", (event) => {
+  self.skipWaiting();
+  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(PRECACHE_URLS)));
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(clients.claim());
 });
 
 self.addEventListener("fetch", (e) => {
