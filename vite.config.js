@@ -17,7 +17,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       manifest: true,
       workbox: {
-        importScripts: ['/sw-push.js'],
+        importScripts: ['./sw-push.js'],
       },
     })
   ],
