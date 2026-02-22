@@ -45,24 +45,24 @@ app.mount("#app");
 // 🔥 PWA SERVICE WORKER + DETECT
 if ("serviceWorker" in navigator) {
   const swUrl = `${import.meta.env.BASE_URL}sw.js`;
-  // En dev, /sw.js n'est pas toujours servi de la même façon selon la config PWA.
-  // On évite donc les erreurs "Failed to fetch" liées aux workers obsolètes.
+
   if (import.meta.env.PROD) {
     navigator.serviceWorker
-      .register(swUrl)
-      .then(async () => {
-        // Nettoie les anciens workers pour éviter les conflits de push.
-        const registrations = await navigator.serviceWorker.getRegistrations();
+      .getRegistrations()
+      .then(async (registrations) => {
+        // Supprime les anciens workers incompatibles
         for (const reg of registrations) {
-          const scriptUrl = reg.active?.scriptURL || reg.waiting?.scriptURL || reg.installing?.scriptURL || "";
-          if (scriptUrl && !scriptUrl.endsWith("/sw.js") && !scriptUrl.endsWith("sw.js")) {
+          if (reg.active) {
             await reg.unregister();
           }
         }
+
+        // Re-register proprement
+        await navigator.serviceWorker.register(swUrl, {
+          scope: "/",
+        });
       })
-      .catch((err) => {
-        console.error("Service worker registration failed:", err);
-      });
+      .catch((err) => console.error("SW registration error:", err));
   }
 }
 
