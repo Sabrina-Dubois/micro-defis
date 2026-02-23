@@ -269,6 +269,9 @@ async function logout() {
 		challengeStore.reset();
 		settingsStore.reset();
 		await router.replace("/login");
+		if (router.currentRoute.value.path !== "/login") {
+			window.location.replace(`${import.meta.env.BASE_URL}login`);
+		}
 	}
 }
 
