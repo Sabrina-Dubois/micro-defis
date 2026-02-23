@@ -78,8 +78,11 @@ export const useUserStore = defineStore("user", () => {
   }
 
   async function logout() {
-    await signOut();
-    reset();
+    try {
+      await signOut();
+    } finally {
+      reset();
+    }
   }
 
   function reset() {

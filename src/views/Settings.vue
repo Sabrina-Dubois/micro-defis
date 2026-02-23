@@ -260,11 +260,16 @@ async function changeTheme() {
 }
 
 async function logout() {
-	await userStore.logout();
-	statsStore.reset();
-	challengeStore.reset();
-	settingsStore.reset();
-	router.push("/login");
+	try {
+		await userStore.logout();
+	} catch (e) {
+		console.error("Erreur logout:", e);
+	} finally {
+		statsStore.reset();
+		challengeStore.reset();
+		settingsStore.reset();
+		await router.replace("/login");
+	}
 }
 
 function deleteAccount() {
