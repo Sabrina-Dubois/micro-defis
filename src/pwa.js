@@ -1,5 +1,5 @@
 // src/pwa.js
-export async function registerServiceWorker(vapidPublicKey) {
+export async function registerSW(vapidPublicKey) {
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
 
   const swUrl = `${import.meta.env.BASE_URL}sw.js`;
