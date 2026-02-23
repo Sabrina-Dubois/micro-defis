@@ -16,8 +16,8 @@ import fr from "@/i18n/fr.json";
 
 const i18n = createI18n({
   legacy: false, // API Composition
-  locale: "fr", // valeur par défaut
-  fallbackLocale: "en", // si traduction manquante
+  locale: "fr",
+  fallbackLocale: "en",
   messages: { en, fr },
 });
 
@@ -31,49 +31,28 @@ app.use(pinia);
 app.use(i18n);
 
 // --- Détecter et charger la langue de l'utilisateur ---
-const userLang =
-  localStorage.getItem("lang") || // si sauvegardé
-  navigator.language.slice(0, 2) || // sinon navigateur
-  "fr"; // sinon français par défaut
+const userLang = localStorage.getItem("lang") || navigator.language.slice(0, 2) || "fr";
 
 i18n.global.locale.value = userLang;
 
 // --- Monter l'app ---
 app.mount("#app");
 
-
-// 🔥 PWA SERVICE WORKER + DETECT
-if ("serviceWorker" in navigator) {
-  const swUrl = `${import.meta.env.BASE_URL}sw.js`;
-
-  if (import.meta.env.PROD) {
-    navigator.serviceWorker
-      .getRegistrations()
-      .then(async (registrations) => {
-        // Supprime les anciens workers incompatibles
-        for (const reg of registrations) {
-          if (reg.active) {
-            await reg.unregister();
-          }
-        }
-
-        // Re-register proprement
-        await navigator.serviceWorker.register(swUrl, {
-          scope: "/",
-        });
-      })
-      .catch((err) => console.error("SW registration error:", err));
-  }
+// --- PWA / Service Worker ---
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  import("./pwa.js").then(({ registerServiceWorker }) => {
+    // Ici tu passes ta VAPID key si besoin pour les notifications push
+    registerServiceWorker("<TON_VAPID_PUBLIC_KEY>");
+  });
 }
 
+// --- Installation PWA (pour bouton "Ajouter à l'écran d'accueil") ---
 let deferredPrompt;
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  // Auto-trigger bouton "App mobile" ou popup
 });
 
-// Expose pour composant (ton bouton "App mobile")
 window.installPWA = () => {
   if (deferredPrompt) {
     deferredPrompt.prompt();
