@@ -1,11 +1,13 @@
 const CACHE = "microdefis-v4";
 const PRECACHE_URLS = ["/", "/index.html"];
 
+// INSTALL
 self.addEventListener("install", (event) => {
   self.skipWaiting();
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(PRECACHE_URLS)));
 });
 
+// ACTIVATE
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
@@ -13,9 +15,7 @@ self.addEventListener("activate", (event) => {
       .then((keys) =>
         Promise.all(
           keys.map((key) => {
-            if (key !== CACHE) {
-              return caches.delete(key);
-            }
+            if (key !== CACHE) return caches.delete(key);
           }),
         ),
       )
@@ -23,15 +23,9 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-/*
-==============================
- PUSH NOTIFICATIONS
-==============================
-*/
-
+// PUSH NOTIFICATIONS
 self.addEventListener("push", (event) => {
   let data = {};
-
   try {
     data = event.data ? event.data.json() : {};
   } catch {
@@ -44,13 +38,12 @@ self.addEventListener("push", (event) => {
       icon: "/images/microdefis-logo-192.png",
       badge: "/images/microdefis-logo-192.png",
       data: { url: data.url || "/daily" },
-      //tag: data.tag || "daily",
-      //renotify: false,
       requireInteraction: Boolean(data.requireInteraction),
     }),
   );
 });
 
+// CLICK SUR LA NOTIF
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
@@ -61,7 +54,6 @@ self.addEventListener("notificationclick", (event) => {
           return client.focus();
         }
       }
-
       return clients.openWindow(event.notification.data?.url || "/daily");
     }),
   );

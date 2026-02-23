@@ -1,4 +1,3 @@
-// main.js
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
@@ -15,7 +14,7 @@ import en from "@/i18n/en.json";
 import fr from "@/i18n/fr.json";
 
 const i18n = createI18n({
-  legacy: false, // API Composition
+  legacy: false,
   locale: "fr",
   fallbackLocale: "en",
   messages: { en, fr },
@@ -30,29 +29,27 @@ app.use(vuetify);
 app.use(pinia);
 app.use(i18n);
 
-// --- Détecter et charger la langue de l'utilisateur ---
+// --- Langue utilisateur ---
 const userLang = localStorage.getItem("lang") || navigator.language.slice(0, 2) || "fr";
-
 i18n.global.locale.value = userLang;
 
 // --- Monter l'app ---
 app.mount("#app");
 
 // --- PWA / Service Worker ---
-if (import.meta.env.PROD && "serviceWorker" in navigator) {
-  import("./pwa.js").then(({ registerServiceWorker }) => {
-    // Ici tu passes ta VAPID key si besoin pour les notifications push
-    registerServiceWorker("<TON_VAPID_PUBLIC_KEY>");
-  });
+import { registerSW } from "./pwa.js";
+const VAPID_PUBLIC_KEY = "TA_CLE_PUBLIQUE_VAPID_ICI";
+
+if (import.meta.env.PROD) {
+  registerSW(VAPID_PUBLIC_KEY);
 }
 
-// --- Installation PWA (pour bouton "Ajouter à l'écran d'accueil") ---
+// --- Install PWA bouton ---
 let deferredPrompt;
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
 });
-
 window.installPWA = () => {
   if (deferredPrompt) {
     deferredPrompt.prompt();
