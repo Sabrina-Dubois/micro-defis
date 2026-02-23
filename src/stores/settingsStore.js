@@ -12,6 +12,13 @@ import {
 } from "@/services/settingsService";
 import { fetchPremiumStatus } from "@/services/profileService";
 
+// ─────────────────────────────────────────
+// Bump cette version EN MÊME TEMPS que CACHE dans sw.js
+// sw.js:         const CACHE = "microdefis-v5";
+// settingsStore: const SW_VERSION = "v5";
+// ─────────────────────────────────────────
+const SW_VERSION = "v5";
+
 export const useSettingsStore = defineStore("settings", () => {
   function urlBase64ToUint8Array(base64String) {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -90,11 +97,9 @@ export const useSettingsStore = defineStore("settings", () => {
         };
       }
 
-      // Vérifier le statut premium depuis user_profiles
       const premium = await fetchPremiumStatus(userStore.userId);
       preferences.value.premium_active = premium;
 
-      // Maintient push_subscriptions aligné sur l'UTC courant (timezone/DST).
       if (preferences.value.notifications_enabled) {
         const utcReminderTime = localReminderToUtc(preferences.value.reminder_time);
         await updatePushReminderTime(
@@ -103,6 +108,10 @@ export const useSettingsStore = defineStore("settings", () => {
           preferences.value.reminder_time,
           getCurrentTimeZone(),
         );
+
+        // Si le SW a changé depuis la dernière ouverture → renouveler la subscription
+        // avant de syncer, pour éviter les subscriptions orphelines sur iPhone
+        await checkSubscriptionFresh();
         await ensurePushSubscriptionSynced();
       }
 
@@ -192,22 +201,12 @@ export const useSettingsStore = defineStore("settings", () => {
     const utcReminderTime = localReminderToUtc(time);
     const timezone = getCurrentTimeZone();
 
-    // Keep push_subscriptions synced immediately when reminder time changes,
-    // without forcing users to disable/enable notifications.
     try {
       const registration = await getServiceWorkerRegistration();
-      const existingSubscription = registration
-        ? await registration.pushManager.getSubscription()
-        : null;
+      const existingSubscription = registration ? await registration.pushManager.getSubscription() : null;
 
       if (existingSubscription) {
-        await savePushSubscription(
-          userStore.userId,
-          existingSubscription,
-          utcReminderTime,
-          time,
-          timezone,
-        );
+        await savePushSubscription(userStore.userId, existingSubscription, utcReminderTime, time, timezone);
       } else if (preferences.value.notifications_enabled) {
         await updatePushReminderTime(userStore.userId, utcReminderTime, time, timezone);
       }
@@ -229,7 +228,7 @@ export const useSettingsStore = defineStore("settings", () => {
     if (!("serviceWorker" in navigator)) return null;
     const swUrl = `${import.meta.env.BASE_URL}sw.js`;
 
-    // Clean up legacy workers (ex: /sw-push.js) that could duplicate push handling.
+    // Nettoie les anciens SW (ex: /sw-push.js) qui peuvent dupliquer le push
     const registrations = await navigator.serviceWorker.getRegistrations();
     for (const reg of registrations) {
       const scriptUrl = reg.active?.scriptURL || reg.waiting?.scriptURL || reg.installing?.scriptURL || "";
@@ -246,6 +245,40 @@ export const useSettingsStore = defineStore("settings", () => {
       registration = await navigator.serviceWorker.register(swUrl);
     }
     return registration;
+  }
+
+  /**
+   * Détecte si le SW a changé depuis la dernière ouverture.
+   * Si oui, désabonne + réabonne pour éviter les subscriptions orphelines sur iPhone.
+   * À appeler avant ensurePushSubscriptionSynced() dans loadPreferences().
+   *
+   * RÈGLE : bumper SW_VERSION (en haut du fichier) EN MÊME TEMPS que CACHE dans sw.js.
+   */
+  async function checkSubscriptionFresh() {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+    if (Notification.permission !== "granted") return;
+    if (!preferences.value.notifications_enabled) return;
+
+    const savedVersion = localStorage.getItem("push_sw_version");
+    if (savedVersion === SW_VERSION) return; // déjà à jour
+
+    console.log("[push] SW version changée, renouvellement subscription...");
+
+    try {
+      const registration = await getServiceWorkerRegistration();
+      if (!registration) return;
+
+      const existing = await registration.pushManager.getSubscription();
+      if (existing) {
+        await existing.unsubscribe();
+      }
+
+      await subscribeToPush();
+      localStorage.setItem("push_sw_version", SW_VERSION);
+      console.log("[push] Subscription renouvelée avec succès.");
+    } catch (e) {
+      console.error("[push] Erreur renouvellement subscription SW:", e);
+    }
   }
 
   async function subscribeToPush() {
@@ -272,6 +305,7 @@ export const useSettingsStore = defineStore("settings", () => {
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
       }));
+
     const utcReminderTime = localReminderToUtc(preferences.value.reminder_time);
     await savePushSubscription(
       userStore.userId,
@@ -345,20 +379,24 @@ export const useSettingsStore = defineStore("settings", () => {
     await deletePushSubscription(userStore.userId);
   }
 
-async function toggleNotifications(value) {
-  await updatePreference("notifications_enabled", value);
+  async function toggleNotifications(value) {
+    await updatePreference("notifications_enabled", value);
 
-  if (value) {
-    const sub = await subscribeToPush();
-    if (!sub) {
-      await updatePreference("notifications_enabled", false);
+    if (value) {
+      const sub = await subscribeToPush();
+      if (!sub) {
+        await updatePreference("notifications_enabled", false);
+      } else {
+        // Marquer la version SW au moment de l'abonnement initial
+        localStorage.setItem("push_sw_version", SW_VERSION);
+      }
+    } else {
+      await unsubscribeFromPush();
+      localStorage.removeItem("push_sw_version");
     }
-  } else {
-    await unsubscribeFromPush();
-  }
 
-  return value;
-}
+    return value;
+  }
 
   // ─────────────────────────────────────────
   // THEME LOCAL STORAGE
