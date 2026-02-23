@@ -12,6 +12,7 @@ import "./assets/main.css";
 import { createI18n } from "vue-i18n";
 import en from "@/i18n/en.json";
 import fr from "@/i18n/fr.json";
+import { registerServiceWorker } from "./pwa";
 
 const i18n = createI18n({
   legacy: false,
@@ -42,6 +43,11 @@ const VAPID_PUBLIC_KEY = "TA_CLE_PUBLIQUE_VAPID_ICI";
 
 if (import.meta.env.PROD) {
   registerSW(VAPID_PUBLIC_KEY);
+}
+
+if (import.meta.env.PROD) {
+  const vapidPublicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
+  registerServiceWorker(vapidPublicKey);
 }
 
 // --- Install PWA bouton ---
