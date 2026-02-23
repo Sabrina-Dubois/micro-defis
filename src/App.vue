@@ -41,11 +41,6 @@ const showNav = computed(
 	() => !hiddenRoutes.includes(route.path) && !!session.value,
 );
 
-function forceGoLogin() {
-	const loginPath = `${import.meta.env.BASE_URL}login`;
-	window.location.replace(loginPath);
-}
-
 // ------------------ THEME ------------------
 const vuetifyTheme = useTheme();
 const showConsent = ref(false);
@@ -192,11 +187,7 @@ onMounted(async () => {
 		session.value = newSession;
 		handleAppVisibilityChange();
 		if (!newSession) {
-			router.replace("/login").then(() => {
-				if (router.currentRoute.value.path !== "/login") {
-					forceGoLogin();
-				}
-			});
+			router.replace("/login");
 		}
 	});
 	authSubscription = authListener.subscription;
