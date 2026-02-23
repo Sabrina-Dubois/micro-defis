@@ -186,6 +186,9 @@ onMounted(async () => {
 		}
 		session.value = newSession;
 		handleAppVisibilityChange();
+		if (!newSession && route.path !== "/login") {
+			router.replace("/login");
+		}
 	});
 	authSubscription = authListener.subscription;
 	handleAppVisibilityChange();
