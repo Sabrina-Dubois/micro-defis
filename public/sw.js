@@ -1,14 +1,26 @@
-const CACHE = "microdefis-v3";
+const CACHE = "microdefis-v4";
 const PRECACHE_URLS = ["/", "/index.html"];
 
-self.skipWaiting();
-
 self.addEventListener("install", (event) => {
+  self.skipWaiting();
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(PRECACHE_URLS)));
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(clients.claim());
+  event.waitUntil(
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(
+          keys.map((key) => {
+            if (key !== CACHE) {
+              return caches.delete(key);
+            }
+          }),
+        ),
+      )
+      .then(() => clients.claim()),
+  );
 });
 
 /*
@@ -32,8 +44,8 @@ self.addEventListener("push", (event) => {
       icon: "/images/microdefis-logo-192.png",
       badge: "/images/microdefis-logo-192.png",
       data: { url: data.url || "/daily" },
-      tag: data.tag || "daily",
-      renotify: false,
+      //tag: data.tag || "daily",
+      //renotify: false,
       requireInteraction: Boolean(data.requireInteraction),
     }),
   );
