@@ -80,6 +80,14 @@ export const useChallengeStore = defineStore("challenge", () => {
 
       const statsStore = useStatsStore();
 
+      // Invalidate stale in-memory state as soon as local day changes.
+      if (assignment.value?.day && assignment.value.day !== day) {
+        assignment.value = null;
+        lastChallengeData.value = null;
+        lastChallengeDay.value = "";
+        isDone.value = false;
+      }
+
       if (!force && assignment.value?.day === day && lastChallengeDay.value === day && lastChallengeData.value) {
         applyChallenge(lastChallengeData.value, lang);
         isDone.value = statsStore.isCompletedDay(day);

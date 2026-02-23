@@ -27,6 +27,9 @@ import BottomNav from "./components/BottomNav.vue";
 import ConsentDialog from "./components/ConsentDialog.vue";
 import { useTheme } from "vuetify";
 import { supabase } from "./lib/supabase";
+import { useUserStore } from "@/stores/userStore";
+import { useStatsStore } from "@/stores/statsStore";
+import { useChallengeStore } from "@/stores/challengeStore";
 
 // ------------------ ROUTE & NAV ------------------
 const route = useRoute();
@@ -42,6 +45,12 @@ const showNav = computed(
 const vuetifyTheme = useTheme();
 const showConsent = ref(false);
 let authSubscription = null;
+let appVisibilityRefreshTimer = null;
+let lastAppRefresh = 0;
+const APP_REFRESH_INTERVAL = 30 * 1000;
+const userStore = useUserStore();
+const statsStore = useStatsStore();
+const challengeStore = useChallengeStore();
 
 // ------------------ SWIPE NAVIGATION ------------------
 const touchStartX = ref(0);
@@ -125,6 +134,32 @@ function onTouchEnd(event) {
 	finishSwipe(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
 }
 
+async function refreshDailyDataOnReturn() {
+	if (typeof document === "undefined") return;
+	if (document.visibilityState !== "visible") return;
+	if (!session.value) return;
+	const now = Date.now();
+	if (now - lastAppRefresh < APP_REFRESH_INTERVAL) return;
+	lastAppRefresh = now;
+
+	try {
+		if (!userStore.userId) {
+			await userStore.loadUser();
+		}
+		await statsStore.loadCompletions();
+		await challengeStore.loadTodayChallenge();
+	} catch (e) {
+		console.error("Erreur refresh app visibility:", e);
+	}
+}
+
+function handleAppVisibilityChange() {
+	if (appVisibilityRefreshTimer) {
+		clearTimeout(appVisibilityRefreshTimer);
+	}
+	appVisibilityRefreshTimer = setTimeout(refreshDailyDataOnReturn, 100);
+}
+
 onMounted(async () => {
 	if (
 		!localStorage.getItem("microdefis-consent") &&
@@ -138,6 +173,8 @@ onMounted(async () => {
 	window.addEventListener("touchstart", onTouchStart, { passive: true });
 	window.addEventListener("touchend", onTouchEnd, { passive: true });
 	window.addEventListener("touchcancel", resetTouch, { passive: true });
+	window.addEventListener("focus", handleAppVisibilityChange);
+	document.addEventListener("visibilitychange", handleAppVisibilityChange);
 
 	const { data } = await supabase.auth.getSession();
 	session.value = data.session;
@@ -148,14 +185,22 @@ onMounted(async () => {
 			router.push("/reset-password");
 		}
 		session.value = newSession;
+		handleAppVisibilityChange();
 	});
 	authSubscription = authListener.subscription;
+	handleAppVisibilityChange();
 });
 
 onUnmounted(() => {
 	window.removeEventListener("touchstart", onTouchStart);
 	window.removeEventListener("touchend", onTouchEnd);
 	window.removeEventListener("touchcancel", resetTouch);
+	window.removeEventListener("focus", handleAppVisibilityChange);
+	document.removeEventListener("visibilitychange", handleAppVisibilityChange);
+	if (appVisibilityRefreshTimer) {
+		clearTimeout(appVisibilityRefreshTimer);
+		appVisibilityRefreshTimer = null;
+	}
 	authSubscription?.unsubscribe?.();
 	authSubscription = null;
 });
