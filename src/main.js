@@ -37,16 +37,23 @@ i18n.global.locale.value = userLang;
 app.mount("#app");
 
 // --- PWA / Service Worker ---
-import { registerSW } from "./pwa.js";
-const VAPID_PUBLIC_KEY = "TA_CLE_PUBLIQUE_VAPID_ICI";
-
-if (import.meta.env.PROD) {
-  registerSW(VAPID_PUBLIC_KEY);
-}
-
-if (import.meta.env.PROD) {
-  const vapidPublicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
-  registerSW(vapidPublicKey);
+if ("serviceWorker" in navigator && import.meta.env.PROD) {
+  const swUrl = `${import.meta.env.BASE_URL}sw.js`;
+  navigator.serviceWorker
+    .register(swUrl)
+    .then(async () => {
+      // Keep only the active app worker to avoid multi-worker conflicts.
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const reg of registrations) {
+        const scriptUrl = reg.active?.scriptURL || reg.waiting?.scriptURL || reg.installing?.scriptURL || "";
+        if (scriptUrl && !scriptUrl.endsWith("/sw.js") && !scriptUrl.endsWith("sw.js")) {
+          await reg.unregister();
+        }
+      }
+    })
+    .catch((err) => {
+      console.error("Service worker registration failed:", err);
+    });
 }
 
 // --- Install PWA bouton ---
