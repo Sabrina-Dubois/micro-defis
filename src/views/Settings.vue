@@ -169,7 +169,6 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
 import { useTheme } from "vuetify";
 import { useI18n } from "vue-i18n";
 
@@ -179,7 +178,6 @@ import { useChallengeStore } from "@/stores/challengeStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 import FlameLoader from "@/components/FlameLoader.vue";
 
-const router = useRouter();
 const { t, locale } = useI18n();
 const vuetifyTheme = useTheme();
 
@@ -272,7 +270,7 @@ async function logout() {
 		statsStore.reset();
 		challengeStore.reset();
 		settingsStore.reset();
-		await router.replace({ path: "/login", query: { logged_out: "1" } });
+		window.location.replace("/login?logged_out=1");
 		isLoggingOut.value = false;
 	}
 }
