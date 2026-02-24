@@ -154,8 +154,9 @@
 		<v-btn class="btn-primary mt-2 mb-2" block @click="logout">
 			{{ t("settings.account.logout") }}
 		</v-btn>
-		<v-btn block variant="text" color="error" size="small" @click="deleteAccount">
+		<v-btn block variant="text" color="error" size="small" to="/login" @click="deleteAccount">
 			{{ t("settings.account.delete") }}
+
 		</v-btn>
 		</template>
 
