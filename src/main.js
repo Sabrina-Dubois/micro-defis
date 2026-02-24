@@ -47,7 +47,7 @@ if (import.meta.env.PROD) {
 
 if (import.meta.env.PROD) {
   const vapidPublicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
-  registerServiceWorker(vapidPublicKey);
+  registerSW(vapidPublicKey);
 }
 
 // --- Install PWA bouton ---
