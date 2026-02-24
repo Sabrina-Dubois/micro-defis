@@ -88,9 +88,10 @@ import { supabase } from "../lib/supabase";
 router.beforeEach(async (to) => {
   const { data } = await supabase.auth.getSession();
   const isAuthed = !!data.session;
+  const fromLogout = to.query?.logged_out === "1";
 
   // Si connecté et va sur login → redirige vers daily
-  if (to.path === "/login" && isAuthed) return "/daily";
+  if (to.path === "/login" && isAuthed && !fromLogout) return "/daily";
 
   // Si connecté et va sur "/" → redirige vers daily
   if (to.path === "/" && isAuthed) return "/daily";

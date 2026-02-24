@@ -151,7 +151,7 @@
 		</v-card>
 
 		<!-- Actions compte -->
-		<v-btn class="btn-primary mt-2 mb-2" block @click="logout">
+		<v-btn class="btn-primary mt-2 mb-2" block :loading="isLoggingOut" :disabled="isLoggingOut" @click="logout">
 			{{ t("settings.account.logout") }}
 		</v-btn>
 		<v-btn block variant="text" color="error" size="small" to="/login" @click="deleteAccount">
@@ -192,6 +192,7 @@ const userName = ref("");
 const preferredCategory = ref([]);
 const preferredLevel = ref([]);
 const isPageReady = ref(false);
+const isLoggingOut = ref(false);
 const isNotificationTestMode = import.meta.env.DEV || import.meta.env.VITE_ENABLE_NOTIFICATION_TEST === "true";
 
 // Valeur du slider (0-23) basée sur l'heure stockée
@@ -261,6 +262,8 @@ async function changeTheme() {
 }
 
 async function logout() {
+	if (isLoggingOut.value) return;
+	isLoggingOut.value = true;
 	try {
 		await userStore.logout();
 	} catch (e) {
@@ -269,7 +272,8 @@ async function logout() {
 		statsStore.reset();
 		challengeStore.reset();
 		settingsStore.reset();
-		await router.replace("/login");
+		await router.replace({ path: "/login", query: { logged_out: "1" } });
+		isLoggingOut.value = false;
 	}
 }
 
