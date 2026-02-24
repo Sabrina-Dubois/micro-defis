@@ -27,6 +27,10 @@ function isWithinWindow(nowHHMM, targetHHMM, windowMinutes = 5) {
   return delta >= 0 && delta < windowMinutes;
 }
 
+function isAfterOrEqualTime(nowHHMM, targetHHMM) {
+  return hhmmToMinutes(nowHHMM) >= hhmmToMinutes(targetHHMM);
+}
+
 function utcNowHHMM() {
   const now = new Date();
   return `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")}`;
@@ -278,14 +282,19 @@ Deno.serve(async (req) => {
       const currentTimeForUser = localReminder ? zonedNowHHMM(timezone) : nowHHMM;
       const userToday = localReminder ? zonedTodayDate(timezone) : today;
 
-      const isMainSlot = isWithinWindow(currentTimeForUser, activeBaseTime, 3);
-      const isRiskSlot = isWithinWindow(currentTimeForUser, addHours(activeBaseTime, 4), 3);
+      const isMainSlot = isWithinWindow(currentTimeForUser, activeBaseTime, 1);
+      const isRiskSlot = isWithinWindow(currentTimeForUser, addHours(activeBaseTime, 4), 1);
       const minutesSinceUpdate = row.updated_at
         ? Math.floor((Date.now() - new Date(row.updated_at).getTime()) / 60000)
         : Number.POSITIVE_INFINITY;
-      // Disabled catch-up: using updated_at as a trigger can generate repeated sends
-      // when reminder settings are refreshed from the app.
-      const shouldCatchUpAfterRecentChange = !force && isAfterOrEqualTime(currentTimeForUser, activeBaseTime);
+      // One-shot catch-up for newly updated subscriptions without multi-send spam.
+      const shouldCatchUpAfterRecentChange =
+        !force &&
+        !isMainSlot &&
+        !isRiskSlot &&
+        minutesSinceUpdate >= 0 &&
+        minutesSinceUpdate <= 3 &&
+        isAfterOrEqualTime(currentTimeForUser, activeBaseTime);
 
       const doneToday = daysByUser.get(row.user_id)?.has(userToday) ?? false;
 
@@ -345,6 +354,23 @@ Deno.serve(async (req) => {
         message: reason.message || null,
       };
     });
+
+    const staleUserIds = [
+      ...new Set(
+        sent
+          .filter((s) => s.status === "failed" && (s.statusCode === 404 || s.statusCode === 410))
+          .map((s) => s.user_id),
+      ),
+    ];
+    if (staleUserIds.length) {
+      await Promise.allSettled(
+        staleUserIds.map(async (userId) => {
+          const del = new URL(`${supabaseUrl}/rest/v1/push_subscriptions`);
+          del.searchParams.set("user_id", `eq.${userId}`);
+          await fetch(del.toString(), { method: "DELETE", headers });
+        }),
+      );
+    }
 
     return jsonResponse({ ok: true, now: nowHHMM, matched: jobs.length, success, failed, sent });
   } catch (e) {
