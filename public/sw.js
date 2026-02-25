@@ -39,6 +39,8 @@ self.addEventListener("push", (event) => {
       badge: "/images/microdefis-logo-192.png",
       data: { url: data.url || "/daily" },
       requireInteraction: Boolean(data.requireInteraction),
+      tag: data.tag || "microdefis-daily", // évite les doublons
+      renotify: Boolean(data.renotify), //pas de re-vibration si remplacement
     }),
   );
 });
