@@ -1,163 +1,162 @@
 <template>
 	<div class="settings-page">
 		<template v-if="isPageReady">
-		<div class="page-title mt-4 mb-4 text-h4">
-			{{ t("settings.title") }}
-		</div>
-
-		<!-- Profil -->
-		<v-card class="micro-card fixed-card card-profile pa-4 mb-4">
-			<div class="page-subtitle mb-4">{{ t("settings.profil.title") }}</div>
-			<v-text-field v-model="userName" :label="t('settings.profil.username')" variant="outlined" density="compact"
-				hide-details class="mb-3" />
-			<v-text-field v-model="userStore.userEmail" :label="t('settings.profil.email')" variant="outlined"
-				density="compact" disabled hide-details />
-			<v-btn class="btn-primary mt-4" block variant="flat" @click="saveProfile">
-				{{ t("settings.profil.save") }}
-			</v-btn>
-		</v-card>
-
-		<!-- Préférences Défis -->
-		<v-card class="micro-card fixed-card card-favorite  pa-4 mb-4">
-			<div class="page-subtitle mb-3">{{ t("settings.defis.title") }}</div>
-
-			<div class="mb-4">
-				<div class="mb-2 text-subtitle-2 font-weight-bold">{{ t("settings.defis.category") }}</div>
-				<v-chip-group v-model="preferredCategory" multiple column>
-					<v-chip v-for="cat in categories" :key="cat.id" :value="cat.name"
-						:class="cat.premium ? 'chip-premium' : 'chip-free'"
-						:disabled="cat.premium && !settingsStore.isPremium">
-						{{ cat.name }}
-						<template v-if="cat.premium && !settingsStore.isPremium"> 🔒</template>
-					</v-chip>
-				</v-chip-group>
+			<div class="page-title mt-4 mb-4 text-h4">
+				{{ t("settings.title") }}
 			</div>
 
-			<div class="mb-4">
-				<div class="mb-2 text-subtitle-2 font-weight-bold">{{ t("settings.defis.level") }}</div>
-				<v-chip-group v-model="preferredLevel" multiple column>
-					<v-chip v-for="level in levels" :key="level.id" :value="level.name"
-						:class="level.premium ? 'chip-premium' : 'chip-free'"
-						:disabled="level.premium && !settingsStore.isPremium">
-						{{ level.name }}
-						<template v-if="level.premium && !settingsStore.isPremium"> 🔒</template>
-					</v-chip>
-				</v-chip-group>
-			</div>
+			<!-- Profil -->
+			<v-card class="micro-card fixed-card card-profile pa-4 mb-4">
+				<div class="page-subtitle mb-4">{{ t("settings.profil.title") }}</div>
+				<v-text-field v-model="userName" :label="t('settings.profil.username')" variant="outlined"
+					density="compact" hide-details class="mb-3" />
+				<v-text-field v-model="userStore.userEmail" :label="t('settings.profil.email')" variant="outlined"
+					density="compact" disabled hide-details />
+				<v-btn class="btn-primary mt-4" block variant="flat" @click="saveProfile">
+					{{ t("settings.profil.save") }}
+				</v-btn>
+			</v-card>
 
-			<v-alert v-if="!settingsStore.isPremium" type="info" variant="tonal" density="compact" class="mb-3">
-				<template #prepend><v-icon>mdi-crown</v-icon></template>
-				{{ t("settings.defis.premium") }}
-			</v-alert>
+			<!-- Préférences Défis -->
+			<v-card class="micro-card fixed-card card-favorite pa-4 mb-4">
+				<div class="page-subtitle mb-3">{{ t("settings.defis.title") }}</div>
 
-			<v-btn block class="btn-primary" @click="saveDefiPrefs">
-				{{ t("settings.defis.save") }}
-			</v-btn>
-		</v-card>
+				<div class="mb-4">
+					<div class="mb-2 text-subtitle-2 font-weight-bold">{{ t("settings.defis.category") }}</div>
+					<v-chip-group v-model="preferredCategory" multiple column>
+						<v-chip v-for="cat in categories" :key="cat.id" :value="cat.name"
+							:class="settingsStore.isPremium ? 'chip-active' : 'chip-locked'"
+							:disabled="!settingsStore.isPremium">
+							{{ cat.name }}
+							<template v-if="!settingsStore.isPremium"> 🔒</template>
+						</v-chip>
+					</v-chip-group>
+				</div>
 
-		<!-- Préférences générales -->
-		<v-card class="micro-card pa-4 mb-4">
-			<div class="page-subtitle mb-3">{{ t("settings.preferences.title") }}</div>
+				<div class="mb-4">
+					<div class="mb-2 text-subtitle-2 font-weight-bold">{{ t("settings.defis.level") }}</div>
+					<v-chip-group v-model="preferredLevel" multiple column>
+						<v-chip v-for="level in levels" :key="level.id" :value="level.name"
+							:class="settingsStore.isPremium ? 'chip-active' : (level.premium ? 'chip-locked' : 'chip-active')"
+							:disabled="level.premium && !settingsStore.isPremium">
+							{{ level.name }}
+							<template v-if="level.premium && !settingsStore.isPremium"> 🔒</template>
+						</v-chip>
+					</v-chip-group>
+				</div>
 
-			<v-list bg-color="transparent">
+				<v-alert v-if="!settingsStore.isPremium" type="info" variant="tonal" density="compact" class="mb-3">
+					<template #prepend><v-icon>mdi-crown</v-icon></template>
+					{{ t("settings.defis.premium") }}
+				</v-alert>
 
-				<!-- Notifications -->
-				<v-list-item>
-					<template #prepend><v-icon>mdi-bell</v-icon></template>
-					<v-list-item-title>{{ t("settings.preferences.notifications") }}</v-list-item-title>
-					<template #append>
-						<v-switch :model-value="settingsStore.notificationsEnabled" color="primary" hide-details
-							density="compact" @update:model-value="(val) => toggleNotifications(val)" />
-					</template>
-				</v-list-item>
+				<v-btn block class="btn-primary" @click="saveDefiPrefs">
+					{{ t("settings.defis.save") }}
+				</v-btn>
+			</v-card>
 
-				<!-- Rappel — slider -->
-				<template v-if="settingsStore.notificationsEnabled">
+			<!-- Préférences générales -->
+			<v-card class="micro-card pa-4 mb-4">
+				<div class="page-subtitle mb-3">{{ t("settings.preferences.title") }}</div>
+
+				<v-list bg-color="transparent">
+
+					<!-- Notifications -->
 					<v-list-item>
-						<template #prepend><v-icon>mdi-clock</v-icon></template>
-						<v-list-item-title>
-							{{ t("settings.preferences.reminder") }}
-							<span class="reminder-time-label">{{ settingsStore.reminderTime }}</span>
-						</v-list-item-title>
-					</v-list-item>
-					<div class="px-4 pb-3">
-						<v-slider :model-value="sliderValue" :min="0" :max="23" :step="1" color="#f97922"
-							track-color="rgba(109,40,217,0.2)" thumb-color="#f97922" hide-details
-							:thumb-label="true"
-							@update:model-value="(val) => setReminderTime(String(val).padStart(2, '0') + ':00')">
-							<template #thumb-label="{ modelValue }">
-								{{ String(modelValue).padStart(2, '0') }}h
-							</template>
-						</v-slider>
-					</div>
-				</template>
-
-				<template v-if="settingsStore.notificationsEnabled && isNotificationTestMode">
-					<v-list-item>
-						<template #prepend><v-icon>mdi-flask-outline</v-icon></template>
-						<v-list-item-title>Notification locale (mode test)</v-list-item-title>
+						<template #prepend><v-icon>mdi-bell</v-icon></template>
+						<v-list-item-title>{{ t("settings.preferences.notifications") }}</v-list-item-title>
 						<template #append>
-							<v-btn size="small" variant="tonal" color="primary" @click="runNotificationTest">
-								Tester
-							</v-btn>
+							<v-switch :model-value="settingsStore.notificationsEnabled" color="primary" hide-details
+								density="compact" @update:model-value="(val) => toggleNotifications(val)" />
 						</template>
 					</v-list-item>
-				</template>
 
-				<!-- Langue -->
-				<v-list-item style="cursor: pointer" @click="changeLanguage">
-					<template #prepend><v-icon>mdi-web</v-icon></template>
-					<v-list-item-title>{{ t("settings.preferences.language") }}</v-list-item-title>
-					<template #append>
-						<span class="setting-value">{{ settingsStore.languageLabel }}</span>
+					<!-- Rappel — slider -->
+					<template v-if="settingsStore.notificationsEnabled">
+						<v-list-item>
+							<template #prepend><v-icon>mdi-clock</v-icon></template>
+							<v-list-item-title>
+								{{ t("settings.preferences.reminder") }}
+								<span class="reminder-time-label">{{ settingsStore.reminderTime }}</span>
+							</v-list-item-title>
+						</v-list-item>
+						<div class="px-4 pb-3">
+							<v-slider :model-value="sliderValue" :min="0" :max="23" :step="1" color="#f97922"
+								track-color="rgba(109,40,217,0.2)" thumb-color="#f97922" hide-details
+								:thumb-label="true"
+								@update:model-value="(val) => setReminderTime(String(val).padStart(2, '0') + ':00')">
+								<template #thumb-label="{ modelValue }">
+									{{ String(modelValue).padStart(2, '0') }}h
+								</template>
+							</v-slider>
+						</div>
 					</template>
-				</v-list-item>
 
-				<!-- Thème -->
-				<v-list-item style="cursor: pointer" @click="changeTheme">
-					<template #prepend><v-icon>mdi-palette</v-icon></template>
-					<v-list-item-title>{{ t("settings.preferences.theme") }}</v-list-item-title>
-					<template #append>
-						<span class="setting-value">{{ settingsStore.themeLabel }}</span>
+					<template v-if="settingsStore.notificationsEnabled && isNotificationTestMode">
+						<v-list-item>
+							<template #prepend><v-icon>mdi-flask-outline</v-icon></template>
+							<v-list-item-title>Notification locale (mode test)</v-list-item-title>
+							<template #append>
+								<v-btn size="small" variant="tonal" color="primary" @click="runNotificationTest">
+									Tester
+								</v-btn>
+							</template>
+						</v-list-item>
 					</template>
-				</v-list-item>
 
-			</v-list>
-		</v-card>
+					<!-- Langue -->
+					<v-list-item style="cursor: pointer" @click="changeLanguage">
+						<template #prepend><v-icon>mdi-web</v-icon></template>
+						<v-list-item-title>{{ t("settings.preferences.language") }}</v-list-item-title>
+						<template #append>
+							<span class="setting-value">{{ settingsStore.languageLabel }}</span>
+						</template>
+					</v-list-item>
 
-		<!-- À propos -->
-		<v-card class="micro-card pa-4 mb-4">
-			<div class="page-subtitle mb-2">{{ t("settings.about.title") }}</div>
-			<v-list bg-color="transparent">
-				<v-list-item to="/help">
-					<template #prepend><v-icon>mdi-help-circle</v-icon></template>
-					<v-list-item-title>{{ t("settings.about.help_center") }}</v-list-item-title>
-				</v-list-item>
-				<v-list-item to="/terms">
-					<template #prepend><v-icon>mdi-file-document</v-icon></template>
-					<v-list-item-title>{{ t("settings.about.terms") }}</v-list-item-title>
-				</v-list-item>
-				<v-list-item to="/privacy">
-					<template #prepend><v-icon>mdi-shield</v-icon></template>
-					<v-list-item-title>{{ t("settings.about.privacy_policy") }}</v-list-item-title>
-				</v-list-item>
-				<v-list-item>
-					<v-list-item-title>{{ t("settings.about.version") }}</v-list-item-title>
-					<template #append>
-						<span class="setting-value">1.0.0</span>
-					</template>
-				</v-list-item>
-			</v-list>
-		</v-card>
+					<!-- Thème -->
+					<v-list-item style="cursor: pointer" @click="changeTheme">
+						<template #prepend><v-icon>mdi-palette</v-icon></template>
+						<v-list-item-title>{{ t("settings.preferences.theme") }}</v-list-item-title>
+						<template #append>
+							<span class="setting-value">{{ settingsStore.themeLabel }}</span>
+						</template>
+					</v-list-item>
 
-		<!-- Actions compte -->
-		<v-btn class="btn-primary mt-2 mb-2" block :loading="isLoggingOut" :disabled="isLoggingOut" @click="logout">
-			{{ t("settings.account.logout") }}
-		</v-btn>
-		<v-btn block variant="text" color="error" size="small" to="/login" @click="deleteAccount">
-			{{ t("settings.account.delete") }}
+				</v-list>
+			</v-card>
 
-		</v-btn>
+			<!-- À propos -->
+			<v-card class="micro-card pa-4 mb-4">
+				<div class="page-subtitle mb-2">{{ t("settings.about.title") }}</div>
+				<v-list bg-color="transparent">
+					<v-list-item to="/help">
+						<template #prepend><v-icon>mdi-help-circle</v-icon></template>
+						<v-list-item-title>{{ t("settings.about.help_center") }}</v-list-item-title>
+					</v-list-item>
+					<v-list-item to="/terms">
+						<template #prepend><v-icon>mdi-file-document</v-icon></template>
+						<v-list-item-title>{{ t("settings.about.terms") }}</v-list-item-title>
+					</v-list-item>
+					<v-list-item to="/privacy">
+						<template #prepend><v-icon>mdi-shield</v-icon></template>
+						<v-list-item-title>{{ t("settings.about.privacy_policy") }}</v-list-item-title>
+					</v-list-item>
+					<v-list-item>
+						<v-list-item-title>{{ t("settings.about.version") }}</v-list-item-title>
+						<template #append>
+							<span class="setting-value">1.0.0</span>
+						</template>
+					</v-list-item>
+				</v-list>
+			</v-card>
+
+			<!-- Actions compte -->
+			<v-btn class="btn-primary mt-2 mb-2" block :loading="isLoggingOut" :disabled="isLoggingOut" @click="logout">
+				{{ t("settings.account.logout") }}
+			</v-btn>
+			<v-btn block variant="text" color="error" size="small" to="/login" @click="deleteAccount">
+				{{ t("settings.account.delete") }}
+			</v-btn>
 		</template>
 
 		<template v-else>
@@ -193,7 +192,6 @@ const isPageReady = ref(false);
 const isLoggingOut = ref(false);
 const isNotificationTestMode = import.meta.env.DEV || import.meta.env.VITE_ENABLE_NOTIFICATION_TEST === "true";
 
-// Valeur du slider (0-23) basée sur l'heure stockée
 const sliderValue = computed(() =>
 	parseInt(settingsStore.reminderTime?.split(":")[0] || "20")
 );
@@ -298,14 +296,23 @@ const levels = computed(() => settingsStore.levels);
 	padding-bottom: 8px;
 }
 
-.chip-free {
+/* Chip disponible (premium ou niveau gratuit) — grise par défaut */
+.chip-active {
+	background-color: #e5e7eb !important;
+	color: #64748b !important;
+}
+
+/* Chip disponible — verte quand sélectionnée */
+.chip-active.v-chip--selected {
 	background-color: #3bce71 !important;
 	color: white !important;
 }
 
-.chip-premium:not(.v-chip--selected) {
+/* Chip verrouillée (user gratuit) — grise et non cliquable */
+.chip-locked {
 	background-color: #e5e7eb !important;
 	color: #64748b !important;
+	opacity: 0.6;
 }
 
 .setting-value {
@@ -319,5 +326,4 @@ const levels = computed(() => settingsStore.levels);
 	margin-left: 8px;
 	font-size: 15px;
 }
-
 </style>
