@@ -1,6 +1,6 @@
 import webpush from "npm:web-push@3.6.7";
 
-const VERSION = "notif-v18";
+const VERSION = "notif-v20";
 
 function jsonResponse(payload, status = 200) {
   return new Response(JSON.stringify({ version: VERSION, ...payload }), {
@@ -47,7 +47,6 @@ function zonedNowHHMM(timeZone) {
     minute: "2-digit",
     hour12: false,
   }).formatToParts(new Date());
-
   const hh = parts.find((p) => p.type === "hour")?.value || "00";
   const mm = parts.find((p) => p.type === "minute")?.value || "00";
   return `${hh}:${mm}`;
@@ -60,7 +59,6 @@ function zonedTodayDate(timeZone) {
     month: "2-digit",
     day: "2-digit",
   }).formatToParts(new Date());
-
   const y = parts.find((p) => p.type === "year")?.value || "1970";
   const m = parts.find((p) => p.type === "month")?.value || "01";
   const d = parts.find((p) => p.type === "day")?.value || "01";
@@ -72,7 +70,6 @@ function computeStreak(days, todayKey) {
   const baseDay = todayKey || todayUtcDate();
   const today = new Date(`${baseDay}T00:00:00.000Z`);
   let streak = 0;
-
   while (true) {
     const d = new Date(today);
     d.setUTCDate(today.getUTCDate() - streak);
@@ -80,125 +77,166 @@ function computeStreak(days, todayKey) {
     if (!days.has(key)) break;
     streak += 1;
   }
-
   return streak;
 }
 
 function pickOne(items) {
   if (!items.length) return null;
-  // Vrai aléatoire à chaque envoi
-  const index = Math.floor(Math.random() * items.length);
-  return items[index];
+  return items[Math.floor(Math.random() * items.length)];
 }
 
-function messageFor(type, lang, streak, seed) {
+function messageFor(type, lang, streak, username) {
   const isFr = (lang || "fr").startsWith("fr");
+  const name = username ? ` ${username}` : "";
 
   const frDaily = [
     {
-      title: "⚡ Défi du jour dispo !",
-      body: streak > 0 ? `${streak} jours de série, continue la vibe 💪🔥` : "Petit défi, grosse satisfaction 😎✨",
+      title: `⚡ Hey${name} !`,
+      body: streak > 0 ? `${streak} jours de série, continue la vibe 💪🔥` : "Ton défi du jour t'attend 😎✨",
     },
     {
-      title: "🎯 Challenge prêt à exploser !",
+      title: `🎯 C'est l'heure${name} !`,
       body: streak > 0 ? `${streak} jours en cours, lâche rien 🚀` : "5 minutes et ton défi est bouclé ⚡",
     },
     {
-      title: "🔥 Allume ton flow",
+      title: `🔥 Allume ton flow${name}`,
       body: streak > 0 ? `${streak} jours d'affilée 🔥 T'es chaud !` : "MicroDéfi du jour, go go go 🏃‍♂️💨",
     },
     {
-      title: "✨ Action du jour",
+      title: `✨ Action du jour${name}`,
       body:
         streak > 0 ? `Ton streak: ${streak} jours 💥 Keep it alive` : "Petit pas aujourd'hui, gros boost demain ⚡😎",
     },
     {
-      title: "🚀 C'est parti !",
+      title: `🚀 C'est parti${name} !`,
       body: streak > 0 ? `${streak} jours de suite, t'assures 💪` : "Ton défi t'attend, juste 5 min 🔥",
     },
     {
-      title: "🎉 Boost instantané",
+      title: `🎉 Go${name} !`,
       body: streak > 0 ? `${streak} jours de flow 💫 On continue !` : "Un MicroDéfi et c'est validé ✅",
     },
   ];
 
   const frRisk = [
     {
-      title: "🚨 Danger streak !",
+      title: `🚨 ${name ? name.trim() + ", d" : "D"}anger streak !`,
       body: streak > 0 ? `${streak} jours en jeu 😱 Sauve ta série !` : "Ton défi du jour n'est pas fait 😳 😱",
     },
     {
-      title: "⏳ Dernier rappel",
+      title: `⏳ ${name ? name.trim() + ", t" : "T"}u as encore le temps !`,
       body: streak > 0 ? `${streak} jours peuvent sauter !` : "Fais ton défi maintenant, tu peux encore 😎",
     },
     {
-      title: "🔥 Ne perds pas ta flamme",
+      title: `🔥 Ne perds pas ta flamme${name}`,
       body: streak > 0 ? `${streak} jours en feu 🔥 Un défi suffit` : "Petit défi = streak sauvé ✅",
     },
     {
-      title: "⚡ Alerte MicroDefis",
+      title: `⚡ Alerte MicroDefis${name}`,
       body: streak > 0 ? `Streak ${streak} jours en danger 😱` : "Ton futur toi te dira merci 😎",
     },
     {
-      title: "🏃‍♂️ Action immédiate",
+      title: `🏃 Go${name} !`,
       body: streak > 0 ? `${streak} jours sur la corde raide !` : "5 minutes pour sauver ton streak 🥺",
     },
     {
-      title: "🎯 Streak critique",
+      title: `🎯 Streak critique${name}`,
       body: streak > 0 ? `${streak} jours à protéger ⚡ Go go go !` : "Allez, bouge-toi 😎🔥",
+    },
+  ];
+
+  const fr23h = [
+    {
+      title: `🌙 Dernière chance${name} !`,
+      body:
+        streak > 0 ? `${streak} jours en jeu 😱 Il te reste encore le temps !` : "23h... ton défi t'attend encore 😴",
+    },
+    {
+      title: `🌙 Minuit approche${name}`,
+      body: streak > 0 ? `${streak} jours de streak à sauver !` : "Dernier appel avant minuit 🌙",
+    },
+    {
+      title: `⏰ Il est encore temps${name} !`,
+      body: streak > 0 ? `Ne casse pas ta série de ${streak} jours 😤` : "Un petit défi avant de dormir ? 🛌",
+    },
+    {
+      title: `🌙 23h — Dernier rappel${name}`,
+      body: streak > 0 ? `${streak} jours sur la corde raide 😱 Go !` : "Tu peux encore le faire avant minuit ⚡",
     },
   ];
 
   const enDaily = [
     {
-      title: "⚡ Daily challenge ready!",
-      body: streak > 0 ? `${streak}-day streak 💪 Keep it blazing 🔥` : "Tiny challenge, big vibes 😎✨",
+      title: `⚡ Hey${name}!`,
+      body: streak > 0 ? `${streak}-day streak 💪 Keep it blazing 🔥` : "Your daily challenge is ready 😎✨",
     },
-    { title: "🎯 Challenge unlocked!", body: streak > 0 ? `${streak} days strong 🚀` : "5 minutes max and done ⚡" },
+    { title: `🎯 Time to shine${name}!`, body: streak > 0 ? `${streak} days strong 🚀` : "5 minutes max and done ⚡" },
     {
-      title: "🔥 Time to shine",
-      body: streak > 0 ? `${streak} days in a row 🔥 Let's go!` : "Micro-challenge ready 🏃‍♂️💨",
+      title: `🔥 Let's go${name}!`,
+      body: streak > 0 ? `${streak} days in a row 🔥 Keep going!` : "Micro-challenge ready 🏃‍♂️💨",
     },
     {
-      title: "✨ Action moment",
+      title: `✨ Action time${name}!`,
       body: streak > 0 ? `Your streak: ${streak} days 💥 Keep it alive` : "Small step today, big boost tomorrow ⚡😎",
     },
     {
-      title: "🚀 Let's go!",
+      title: `🚀 Go${name}!`,
       body: streak > 0 ? `${streak} days strong 💪` : "Your challenge is waiting, 5 min tops 🔥",
     },
     {
-      title: "🎉 Instant boost",
+      title: `🎉 Daily boost${name}!`,
       body: streak > 0 ? `${streak} days on fire 💫 Keep rolling!` : "One MicroDefi = ✅",
     },
   ];
 
   const enRisk = [
     {
-      title: "🚨 Streak danger!",
+      title: `🚨 ${name ? name.trim() + ", s" : "S"}treak danger!`,
       body: streak > 0 ? `${streak}-day streak at risk 😱` : "Your daily challenge is still pending 😳 😱",
     },
-    { title: "⏳ Last reminder", body: streak > 0 ? `${streak} days might break!` : "Finish it now, still time 😎" },
     {
-      title: "🔥 Don't lose the streak",
+      title: `⏳ Still time${name}!`,
+      body: streak > 0 ? `${streak} days might break!` : "Finish it now, still time 😎",
+    },
+    {
+      title: `🔥 Don't lose it${name}!`,
       body: streak > 0 ? `${streak} days on fire 🔥 One challenge saves it` : "Tiny challenge = streak saved ✅",
     },
     {
-      title: "⚡ Micro-challenge alert",
+      title: `⚡ Alert${name}!`,
       body: streak > 0 ? `Streak ${streak} days in jeopardy 😱` : "Your future self will thank you 😎",
     },
+    { title: `🏃 Go${name}!`, body: streak > 0 ? `${streak} days on the edge!` : "5 minutes to save your streak 🥺" },
     {
-      title: "🏃‍♂️ Immediate action",
-      body: streak > 0 ? `${streak} days on the edge!` : "5 minutes to save your streak 🥺",
-    },
-    {
-      title: "🎯 Critical streak",
+      title: `🎯 Critical streak${name}!`,
       body: streak > 0 ? `${streak} days to protect ⚡ Go go go!` : "Come on, move it 😎🔥",
     },
   ];
 
-  if (type === "streak_risk") return pickOne(isFr ? frRisk : enRisk, seed) || (isFr ? frRisk[0] : enRisk[0]);
-  return pickOne(isFr ? frDaily : enDaily, seed) || (isFr ? frDaily[0] : enDaily[0]);
+  const en23h = [
+    {
+      title: `🌙 Last chance${name}!`,
+      body:
+        streak > 0
+          ? `${streak}-day streak at stake 😱 You still have time!`
+          : "23:00... your challenge is still waiting 😴",
+    },
+    {
+      title: `🌙 Midnight is near${name}!`,
+      body: streak > 0 ? `${streak} days to save!` : "Last call before midnight 🌙",
+    },
+    {
+      title: `⏰ Still time${name}!`,
+      body: streak > 0 ? `Don't break your ${streak}-day streak 😤` : "One quick challenge before bed? 🛌",
+    },
+    {
+      title: `🌙 11PM reminder${name}!`,
+      body: streak > 0 ? `${streak} days on the edge 😱 Go!` : "You can still do it before midnight ⚡",
+    },
+  ];
+
+  if (type === "streak_risk") return pickOne(isFr ? frRisk : enRisk) || (isFr ? frRisk[0] : enRisk[0]);
+  if (type === "23h_reminder") return pickOne(isFr ? fr23h : en23h) || (isFr ? fr23h[0] : en23h[0]);
+  return pickOne(isFr ? frDaily : enDaily) || (isFr ? frDaily[0] : enDaily[0]);
 }
 
 async function fetchJson(url, headers) {
@@ -231,6 +269,8 @@ Deno.serve(async (req) => {
     const nowHHMM = utcNowHHMM();
     const today = todayUtcDate();
 
+    console.log("=== START ===", { nowHHMM, today, force, targetUserId });
+
     let subscriptions = [];
     try {
       const u = new URL(`${supabaseUrl}/rest/v1/push_subscriptions`);
@@ -244,6 +284,8 @@ Deno.serve(async (req) => {
       subscriptions = await fetchJson(u.toString(), headers);
     }
 
+    console.log("Subscriptions fetched:", subscriptions.length);
+
     if (!subscriptions.length) {
       return jsonResponse({ ok: true, now: nowHHMM, matched: 0, success: 0, failed: 0, sent: [] });
     }
@@ -251,11 +293,19 @@ Deno.serve(async (req) => {
     const userIds = [...new Set(subscriptions.map((s) => s.user_id))];
     const inUsers = `(${userIds.join(",")})`;
 
+    // Récupère langue + username en une seule requête
     const prefUrl = new URL(`${supabaseUrl}/rest/v1/user_preferences`);
     prefUrl.searchParams.set("select", "user_id,language");
     prefUrl.searchParams.set("user_id", `in.${inUsers}`);
     const preferences = await fetchJson(prefUrl.toString(), headers);
     const langByUser = new Map(preferences.map((p) => [p.user_id, p.language || "fr"]));
+
+    // Récupère les usernames depuis user_profiles
+    const profileUrl = new URL(`${supabaseUrl}/rest/v1/user_profiles`);
+    profileUrl.searchParams.set("select", "user_id,username");
+    profileUrl.searchParams.set("user_id", `in.${inUsers}`);
+    const profiles = await fetchJson(profileUrl.toString(), headers);
+    const usernameByUser = new Map(profiles.map((p) => [p.user_id, p.username || null]));
 
     const since = new Date();
     since.setUTCDate(since.getUTCDate() - 14);
@@ -284,27 +334,36 @@ Deno.serve(async (req) => {
 
       const isMainSlot = isWithinWindow(currentTimeForUser, activeBaseTime, 1);
       const isRiskSlot = isWithinWindow(currentTimeForUser, addHours(activeBaseTime, 4), 1);
-      const minutesSinceUpdate = row.updated_at
-        ? Math.floor((Date.now() - new Date(row.updated_at).getTime()) / 60000)
-        : Number.POSITIVE_INFINITY;
-      // One-shot catch-up for newly updated subscriptions without multi-send spam.
-      const shouldCatchUpAfterRecentChange =
-        !force &&
-        !isMainSlot &&
-        !isRiskSlot &&
-        minutesSinceUpdate >= 0 &&
-        minutesSinceUpdate <= 3 &&
-        isAfterOrEqualTime(currentTimeForUser, activeBaseTime);
+      const is23hSlot = isWithinWindow(currentTimeForUser, "23:00", 1);
+
+      // shouldCatchUpAfterRecentChange supprimé — causait des notifs en boucle
+      // car updated_at se met à jour à chaque ouverture de l'app
 
       const doneToday = daysByUser.get(row.user_id)?.has(userToday) ?? false;
 
-      if (!force && !isMainSlot && !isRiskSlot && !shouldCatchUpAfterRecentChange) continue;
-      if (doneToday && !force) continue;
+      console.log("USER CHECK:", row.user_id, {
+        currentTimeForUser,
+        activeBaseTime,
+        isMainSlot,
+        isRiskSlot,
+        is23hSlot,
+        doneToday,
+        force,
+      });
+
+      if (force) {
+        // Force send ignore tous les filtres
+      } else {
+        if (!isMainSlot && !isRiskSlot && !is23hSlot) continue;
+        // Aucune notif si le défi est déjà fait
+        if (doneToday) continue;
+      }
 
       const streak = computeStreak(daysByUser.get(row.user_id) || new Set(), userToday);
       const lang = langByUser.get(row.user_id) || "fr";
-      const type = force ? "manual_test" : isRiskSlot ? "streak_risk" : "daily_reminder";
-      const msg = messageFor(type, lang, streak, `${row.user_id}:${userToday}:${type}`);
+      const username = usernameByUser.get(row.user_id) || null;
+      const type = force ? "manual_test" : is23hSlot ? "23h_reminder" : isRiskSlot ? "streak_risk" : "daily_reminder";
+      const msg = messageFor(type, lang, streak, username);
       const isManualTest = type === "manual_test";
       const tag = isManualTest ? `manual-test-${row.user_id}-${Date.now()}` : `${type}-${today}`;
 
@@ -324,6 +383,8 @@ Deno.serve(async (req) => {
       });
     }
 
+    console.log("Jobs to send:", jobs.length);
+
     if (!jobs.length) {
       return jsonResponse({ ok: true, now: nowHHMM, matched: 0, success: 0, failed: 0, sent: [] });
     }
@@ -340,6 +401,8 @@ Deno.serve(async (req) => {
     let success = 0;
     let failed = 0;
     const sent = results.map((r, idx) => {
+      console.log("PUSH DEBUG RAW RESULT", r);
+      if (r.status === "rejected") console.log("PUSH DEBUG REASON", r.reason);
       const meta = { user_id: jobs[idx].row.user_id, type: jobs[idx].type };
       if (r.status === "fulfilled") {
         success += 1;
@@ -347,33 +410,14 @@ Deno.serve(async (req) => {
       }
       failed += 1;
       const reason = r.reason || {};
-      return {
-        ...meta,
-        status: "failed",
-        statusCode: reason.statusCode || null,
-        message: reason.message || null,
-      };
+      console.log("PUSH RESULT", reason);
+      return { ...meta, status: "failed", statusCode: reason.statusCode || null, message: reason.message || null };
     });
 
-    const staleUserIds = [
-      ...new Set(
-        sent
-          .filter((s) => s.status === "failed" && (s.statusCode === 404 || s.statusCode === 410))
-          .map((s) => s.user_id),
-      ),
-    ];
-    if (staleUserIds.length) {
-      await Promise.allSettled(
-        staleUserIds.map(async (userId) => {
-          const del = new URL(`${supabaseUrl}/rest/v1/push_subscriptions`);
-          del.searchParams.set("user_id", `eq.${userId}`);
-          await fetch(del.toString(), { method: "DELETE", headers });
-        }),
-      );
-    }
-
+    console.log("=== DONE ===", { matched: jobs.length, success, failed });
     return jsonResponse({ ok: true, now: nowHHMM, matched: jobs.length, success, failed, sent });
   } catch (e) {
+    console.error("=== ERROR ===", e?.message);
     return jsonResponse({ ok: false, error: e?.message || "Unknown error" }, 500);
   }
 });
