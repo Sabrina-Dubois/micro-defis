@@ -30,7 +30,8 @@
 		<v-card class="micro-card pa-5 mb-4">
 			<div class="page-subtitle mb-4 text-center">Choisis ton plan</div>
 			<div class="pricing-cards">
-				<div class="pricing-card" @click="selectPlan('weekly')">
+				<div class="pricing-card" :class="{ selected: selectedPlan === 'weekly' }"
+					@click="selectPlan('weekly')">
 					<div class="plan-header">
 						<div class="plan-name">Hebdomadaire</div>
 					</div>
@@ -41,7 +42,8 @@
 					<div class="plan-desc">Annule quand tu veux</div>
 				</div>
 
-				<div class="pricing-card popular" @click="selectPlan('monthly')">
+				<div class="pricing-card popular" :class="{ selected: selectedPlan === 'monthly' }"
+					@click="selectPlan('monthly')">
 					<div class="popular-badge">⭐ POPULAIRE</div>
 					<div class="plan-header">
 						<div class="plan-name">Mensuel</div>
@@ -54,7 +56,8 @@
 					<div class="plan-desc">Soit 0,10€/jour</div>
 				</div>
 
-				<div class="pricing-card" @click="selectPlan('yearly')">
+				<div class="pricing-card" :class="{ selected: selectedPlan === 'yearly' }"
+					@click="selectPlan('yearly')">
 					<div class="plan-header">
 						<div class="plan-name">Annuel</div>
 						<div class="plan-save">Meilleur prix</div>
@@ -72,7 +75,7 @@
 		</v-card>
 
 		<!-- CTA Principal -->
-		<v-btn class="btn-primary mb-2" block size="large" @click="startTrial">
+		<v-btn class="btn-primary mb-2" block size="large" :loading="isLoading" @click="startTrial">
 			🚀 Commencer l'essai gratuit
 		</v-btn>
 		<div class="guarantee mb-4">🔒 Sans engagement · Annulation en 1 clic</div>
@@ -138,22 +141,12 @@
 		</v-card>
 
 		<!-- CTA Final -->
-		<v-btn class="btn-primary mb-4" block size="large" @click="startTrial">
+		<v-btn class="btn-primary mb-4" block size="large" :loading="isLoading" @click="startTrial">
 			👑 Souscrire maintenant
 		</v-btn>
 		<div class="guarantee">
 			🔒 Paiement sécurisé · Annulation en 1 clic · Garantie 30 jours
 		</div>
-
-		<!-- Dialog Confirmation -->
-		<v-dialog v-model="showDialog" max-width="400">
-			<v-card class="pa-6 text-center">
-				<v-icon color="green" size="64" class="mb-4">mdi-check-circle</v-icon>
-				<div class="text-h5 font-weight-bold mb-2">🎉 Bienvenue Premium !</div>
-				<p class="mb-4">Ton essai gratuit de 7 jours commence maintenant. Profite de tous les défis !</p>
-				<v-btn color="deep-orange" block @click="closeDialog">C'est parti !</v-btn>
-			</v-card>
-		</v-dialog>
 	</div>
 </template>
 
@@ -165,8 +158,15 @@ import { useUserStore } from "@/stores/userStore";
 
 const router = useRouter();
 const userStore = useUserStore();
-const showDialog = ref(false);
+const isLoading = ref(false);
 const selectedPlan = ref("monthly");
+
+// IDs des prix Stripe (depuis .env)
+const priceIds = {
+	weekly: import.meta.env.VITE_STRIPE_PRICE_WEEKLY,
+	monthly: import.meta.env.VITE_STRIPE_PRICE_MONTHLY,
+	yearly: import.meta.env.VITE_STRIPE_PRICE_YEARLY,
+};
 
 const benefits = [
 	{ icon: "🎯", title: "800+ défis", desc: "Tous niveaux, toutes catégories" },
@@ -200,22 +200,42 @@ const faqs = [
 	{ q: "Y a-t-il des frais cachés ?", a: "Non, le prix affiché est le prix final. Aucun frais caché." },
 ];
 
-function selectPlan(plan) { selectedPlan.value = plan; }
+function selectPlan(plan) {
+	selectedPlan.value = plan;
+}
 
 async function startTrial() {
 	try {
-		if (!userStore.userId) { alert("Veuillez vous connecter"); router.push("/login"); return; }
-		const { error } = await supabase.from("user_profiles").update({ premium: true }).eq("user_id", userStore.userId);
+		if (!userStore.userId) {
+			alert("Veuillez vous connecter");
+			router.push("/login");
+			return;
+		}
+
+		isLoading.value = true;
+
+		// Appelle l'Edge Function Supabase pour créer la session Stripe
+		const { data, error } = await supabase.functions.invoke("create-checkout-session", {
+			body: {
+				priceId: priceIds[selectedPlan.value],
+				userId: userStore.userId,
+				email: userStore.userEmail,
+			},
+		});
+
 		if (error) throw error;
-		await userStore.loadUser();
-		showDialog.value = true;
+		if (!data?.url) throw new Error("URL de paiement manquante");
+
+		// Redirige vers la page de paiement Stripe
+		window.location.href = data.url;
+
 	} catch (error) {
-		console.error("❌ Erreur activation premium:", error);
-		alert("Erreur lors de l'activation. Réessayez.");
+		console.error("❌ Erreur création session Stripe:", error);
+		alert("Erreur lors de la redirection vers le paiement. Réessayez.");
+	} finally {
+		isLoading.value = false;
 	}
 }
-
-function closeDialog() { showDialog.value = false; router.push("/"); }
 </script>
 
 <style scoped>
@@ -321,14 +341,30 @@ function closeDialog() { showDialog.value = false; router.push("/"); }
 }
 
 .pricing-card:hover {
-	border-color: #ff6b35;
+	border-color: #e2e8f0;
 	transform: translateY(-2px);
-	box-shadow: 0 8px 16px rgba(255, 107, 53, 0.1);
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
 }
 
+/* Card sélectionnée → verte */
+.pricing-card.selected {
+	border-color: #3bce71;
+	background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+	transform: translateY(-2px);
+	box-shadow: 0 8px 16px rgba(59, 206, 113, 0.15);
+}
+
+/* Card populaire → toujours orange, même si sélectionnée */
 .pricing-card.popular {
 	border-color: #ff6b35;
 	background: linear-gradient(135deg, #fff5f2 0%, #ffffff 100%);
+}
+
+/* Card populaire ET sélectionnée → garde le style populaire avec un contour vert en plus */
+.pricing-card.popular.selected {
+	border-color: #ff6b35;
+	background: linear-gradient(135deg, #fff5f2 0%, #ffffff 100%);
+	box-shadow: 0 8px 16px rgba(255, 107, 53, 0.2), 0 0 0 3px rgba(59, 206, 113, 0.4);
 }
 
 .popular-badge {
@@ -395,7 +431,7 @@ function closeDialog() { showDialog.value = false; router.push("/"); }
 	color: #0f172a;
 }
 
-/* Benefits — 2 par ligne FORCÉ */
+/* Benefits */
 .benefits-grid {
 	display: grid;
 	grid-template-columns: 1fr 1fr;

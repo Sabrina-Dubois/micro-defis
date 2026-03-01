@@ -55,6 +55,10 @@ const router = createRouter({
       component: () => import("../views/Premium.vue"),
     },
     {
+      path: "/premium/success",
+      component: () => import("@/views/PremiumSuccess.vue"),
+    },
+    {
       path: "/help",
       name: "help",
       component: () => import("@/views/Help.vue"),
