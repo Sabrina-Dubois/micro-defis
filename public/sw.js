@@ -1,4 +1,4 @@
-const CACHE = "microdefis-v4";
+const CACHE = "microdefis-v5";
 const PRECACHE_URLS = ["/", "/index.html"];
 
 // INSTALL
