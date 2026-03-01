@@ -101,18 +101,27 @@ export const useSettingsStore = defineStore("settings", () => {
       preferences.value.premium_active = premium;
 
       if (preferences.value.notifications_enabled) {
-        const utcReminderTime = localReminderToUtc(preferences.value.reminder_time);
-        await updatePushReminderTime(
-          userStore.userId,
-          utcReminderTime,
-          preferences.value.reminder_time,
-          getCurrentTimeZone(),
-        );
+        const today = new Date().toISOString().slice(0, 10);
+        const lastSyncDate = localStorage.getItem("push_last_sync_date");
 
-        // Si le SW a changé depuis la dernière ouverture → renouveler la subscription
-        // avant de syncer, pour éviter les subscriptions orphelines sur iPhone
-        await checkSubscriptionFresh();
-        await ensurePushSubscriptionSynced();
+        // Ne sync qu'une seule fois par jour pour éviter les notifs parasites
+        // à chaque reconnexion (updated_at déclenche shouldCatchUpAfterRecentChange)
+        if (lastSyncDate !== today) {
+          const utcReminderTime = localReminderToUtc(preferences.value.reminder_time);
+          await updatePushReminderTime(
+            userStore.userId,
+            utcReminderTime,
+            preferences.value.reminder_time,
+            getCurrentTimeZone(),
+          );
+
+          // Si le SW a changé depuis la dernière ouverture → renouveler la subscription
+          // avant de syncer, pour éviter les subscriptions orphelines sur iPhone
+          await checkSubscriptionFresh();
+          await ensurePushSubscriptionSynced();
+
+          localStorage.setItem("push_last_sync_date", today);
+        }
       }
 
       return preferences.value;
@@ -210,6 +219,11 @@ export const useSettingsStore = defineStore("settings", () => {
       } else if (preferences.value.notifications_enabled) {
         await updatePushReminderTime(userStore.userId, utcReminderTime, time, timezone);
       }
+
+      // Force le sync le lendemain même si déjà synced aujourd'hui
+      localStorage.removeItem("push_last_sync_date");
+      // Force un nouveau sync au prochain chargement si l'heure change
+      localStorage.removeItem("push_last_sync_date");
     } catch (e) {
       console.error("Erreur sync reminder_time push_subscriptions:", e);
     }
@@ -389,10 +403,12 @@ export const useSettingsStore = defineStore("settings", () => {
       } else {
         // Marquer la version SW au moment de l'abonnement initial
         localStorage.setItem("push_sw_version", SW_VERSION);
+        localStorage.setItem("push_last_sync_date", new Date().toISOString().slice(0, 10));
       }
     } else {
       await unsubscribeFromPush();
       localStorage.removeItem("push_sw_version");
+      localStorage.removeItem("push_last_sync_date");
     }
 
     return value;
