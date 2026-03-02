@@ -112,7 +112,13 @@ export const useChallengeStore = defineStore("challenge", () => {
         const pick = allChallenges[Math.floor(Math.random() * allChallenges.length)];
         const created = await createDailyAssignment(userStore.userId, day, pick.id);
         assignment.value = created;
-        challengeData = pick;
+        // If another concurrent request already created today's assignment,
+        // always display the challenge actually stored in DB.
+        if (created?.challenge_id && created.challenge_id !== pick.id) {
+          challengeData = await fetchChallengeById(created.challenge_id);
+        } else {
+          challengeData = pick;
+        }
       }
 
       applyChallenge(challengeData, lang);
