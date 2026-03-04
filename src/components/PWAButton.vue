@@ -50,12 +50,19 @@ const showDialog = ref(false);
 const showButton = ref(false);
 let deferredPrompt = null;
 
+function isMobileBrowser() {
+	const ua = navigator.userAgent || "";
+	const byUserAgent = /Android|iPhone|iPad|iPod/i.test(ua);
+	const byPointer = window.matchMedia("(pointer: coarse)").matches;
+	return byUserAgent || byPointer;
+}
+
 function checkPWAState() {
 	const isStandalone =
 		window.matchMedia("(display-mode: standalone)").matches ||
 		window.navigator.standalone === true;
 
-	showButton.value = !isStandalone;
+	showButton.value = !isStandalone && isMobileBrowser();
 }
 
 function onBeforeInstallPrompt(e) {
