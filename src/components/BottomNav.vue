@@ -8,6 +8,10 @@
 			<v-icon size="40">mdi-calendar-month-outline</v-icon>
 		</RouterLink>
 
+		<RouterLink class="item" to="/leaderboard" active-class="active">
+			<v-icon size="40">mdi-trophy-outline</v-icon>
+		</RouterLink>
+
 		<RouterLink class="item" to="/profile" active-class="active">
 			<v-icon size="40">mdi-account-outline</v-icon>
 		</RouterLink>

@@ -1,7 +1,7 @@
 <template>
 	<v-app>
 		<!-- Consent dialog -->
-		<ConsentDialog v-model:show="showConsent" />
+		<ConsentDialog v-if="showConsentRoute" v-model:show="showConsent" />
 
 		<!-- Contenu principal -->
 		<v-main class="page">
@@ -34,12 +34,14 @@ import { useChallengeStore } from "@/stores/challengeStore";
 // ------------------ ROUTE & NAV ------------------
 const route = useRoute();
 const router = useRouter();
-const hiddenRoutes = ["/login", "/auth/callback"];
-const swipeRoutes = ["/daily", "/calendar", "/profile", "/settings"];
+const hiddenRoutes = ["/login", "/auth/callback", "/admin-preview"];
+const consentRoutes = ["/", "/landing", "/daily"];
+const swipeRoutes = ["/daily", "/calendar", "/leaderboard", "/profile", "/settings"];
 const session = ref(null);
 const showNav = computed(
 	() => !hiddenRoutes.includes(route.path) && !!session.value,
 );
+const showConsentRoute = computed(() => consentRoutes.includes(route.path));
 
 // ------------------ THEME ------------------
 const vuetifyTheme = useTheme();
@@ -163,7 +165,7 @@ function handleAppVisibilityChange() {
 onMounted(async () => {
 	if (
 		!localStorage.getItem("microdefis-consent") &&
-		!hiddenRoutes.includes(route.path)
+		showConsentRoute.value
 	) {
 		showConsent.value = true;
 	}
