@@ -18,7 +18,7 @@
 		<div v-if="mode === 'league'" class="league-header mb-3 text-center">
 			<div class="league-title">🏆 Ligue {{ leagueName }}</div>
 			<div class="league-sub">
-				⏳ Reset dans {{ resetTime }} • {{ leagueSubline }}
+				⏳ Reset dans {{ resetTime }} <!--• {{ leagueSubline }} -->
 			</div>
 		</div>
 
@@ -348,16 +348,16 @@ const relegationStartRank = computed(() =>
 const topThree = computed(() => rankedUsers.value.slice(0, 3));
 
 const leagueName = computed(() => leagueContext.value?.leagueName || "Argent");
-const leagueSubline = computed(() => {
-	if (mode.value !== "league") return "";
-	if (leagueName.value === "Or") {
-		return "Top 5 = Or • Flop 5 ⬇️ Argent";
-	}
-	if (leagueName.value === "Bronze") {
-		return "Top 5 ⬆ Argent • Flop 5 = Bronze";
-	}
-	return "Top 5 ⬆ Or • Flop 5 ⬇ Bronze";
-});
+//const leagueSubline = computed(() => {
+	//if (mode.value !== "league") return "";
+	//if (leagueName.value === "Or") {
+		//return "Top 5 = Or • Flop 5 ⬇ Argent";
+	//}
+	//if (leagueName.value === "Bronze") {
+		//return "Top 5 ⬆ Argent • Flop 5 = Bronze";
+	//}
+	//return "Top 5 ⬆ Or • Flop 5 ⬇ Bronze";
+//});
 
 const resetTime = computed(() => {
 	const current = now.value;
