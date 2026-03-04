@@ -38,6 +38,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/leaderboard",
+      name: "leaderboard",
+      component: () => import("../views/Leaderboard.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/profile",
       name: "profile",
       component: () => import("../views/Profile.vue"),
@@ -78,6 +84,11 @@ const router = createRouter({
       name: "resetPassword",
       component: () => import("@/views/ResetPassword.vue"),
       meta: { requiresAuth: false },
+    },
+    {
+      path: "/admin-preview",
+      name: "adminPreview",
+      component: () => import("@/views/AdminDashboardPreview.vue"),
     },
     {
       path: "/:pathMatch(.*)*",
