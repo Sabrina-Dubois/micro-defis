@@ -85,11 +85,11 @@ const router = createRouter({
       component: () => import("@/views/ResetPassword.vue"),
       meta: { requiresAuth: false },
     },
-    {
-      path: "/admin-preview",
-      name: "adminPreview",
-      component: () => import("@/views/AdminDashboardPreview.vue"),
-    },
+    //{
+      //path: "/admin-preview",
+      //name: "adminPreview",
+      //component: () => import("@/views/AdminDashboardPreview.vue"),
+    //},
     {
       path: "/:pathMatch(.*)*",
       name: "not-found",
