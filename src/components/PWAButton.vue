@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 
 
@@ -55,28 +55,37 @@ function checkPWAState() {
 		window.matchMedia("(display-mode: standalone)").matches ||
 		window.navigator.standalone === true;
 
-	const pwaAlreadyShown = localStorage.getItem("pwa-shown") === "true";
+	showButton.value = !isStandalone;
+}
 
-	if (!isStandalone && !pwaAlreadyShown) {
-		showButton.value = true;
-	}
+function onBeforeInstallPrompt(e) {
+	e.preventDefault();
+	deferredPrompt = e;
+	checkPWAState();
+}
+
+function onAppInstalled() {
+	showButton.value = false;
+	deferredPrompt = null;
+}
+
+function onVisibilityOrFocus() {
+	checkPWAState();
 }
 
 onMounted(() => {
 	checkPWAState();
+	window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+	window.addEventListener("appinstalled", onAppInstalled);
+	window.addEventListener("focus", onVisibilityOrFocus);
+	document.addEventListener("visibilitychange", onVisibilityOrFocus);
 });
 
-window.addEventListener("beforeinstallprompt", (e) => {
-	e.preventDefault();
-	deferredPrompt = e;
-
-	const isStandalone =
-		window.matchMedia("(display-mode: standalone)").matches ||
-		window.navigator.standalone === true;
-
-	const pwaAlreadyShown = localStorage.getItem("pwa-shown") === "true";
-
-	showButton.value = !isStandalone && !pwaAlreadyShown;
+onUnmounted(() => {
+	window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+	window.removeEventListener("appinstalled", onAppInstalled);
+	window.removeEventListener("focus", onVisibilityOrFocus);
+	document.removeEventListener("visibilitychange", onVisibilityOrFocus);
 });
 
 function installPWA() {
@@ -84,8 +93,7 @@ function installPWA() {
 		deferredPrompt.prompt();
 		deferredPrompt.userChoice.then(() => {
 			deferredPrompt = null;
-			localStorage.setItem("pwa-shown", "true");
-			showButton.value = false;
+			checkPWAState();
 		});
 	} else {
 		showDialog.value = true;
@@ -94,8 +102,7 @@ function installPWA() {
 
 function confirmInstall() {
 	showDialog.value = false;
-	localStorage.setItem("pwa-shown", "true");
-	showButton.value = false;
+	checkPWAState();
 }
 </script>
 
