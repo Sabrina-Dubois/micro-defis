@@ -35,7 +35,7 @@
 			<!-- Jours de la semaine -->
 			<div class="weekdays-grid mb-2">
 				<div v-for="day in tm('calendar.weekdays')" :key="day" class="weekday-item text-center">
-					<div class="text-h7 font-weight-bold text-grey">{{ day }}</div>
+					<div class="text-h7 font-weight-bold weekday-label">{{ day }}</div>
 				</div>
 			</div>
 
@@ -138,8 +138,8 @@ function getDayColor(day) {
 
 function getDayTextClass(day) {
 	if (day.missed) return "text-white";
-	if (day.isFuture) return "text-grey-lighten-1";
-	return "text-grey-darken-2";
+	if (day.isFuture) return "text-grey-darken-2";
+	return "text-grey-darken-4";
 }
 
 function previousMonth() {
@@ -234,6 +234,10 @@ defineExpose({ loadCalendar });
 	display: grid;
 	grid-template-columns: repeat(7, minmax(0, 1fr));
 	column-gap: 2px;
+}
+
+.weekday-label {
+	color: #334155;
 }
 
 .day-cell {
