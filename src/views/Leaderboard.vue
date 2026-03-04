@@ -351,12 +351,12 @@ const leagueName = computed(() => leagueContext.value?.leagueName || "Argent");
 const leagueSubline = computed(() => {
 	if (mode.value !== "league") return "";
 	if (leagueName.value === "Or") {
-		return "Top 5 restent en Or • Bottom 5 descendent en Argent";
+		return "Top 5 = Or • Flop 5 ⬇️ Argent";
 	}
 	if (leagueName.value === "Bronze") {
-		return "Top 5 montent en Argent • Bottom 5 restent en Bronze";
+		return "Top 5 ⬆ Argent • Flop 5 = Bronze";
 	}
-	return "Top 5 montent en Or • Bottom 5 descendent en Bronze";
+	return "Top 5 ⬆ Or • Flop 5 ⬇ Bronze";
 });
 
 const resetTime = computed(() => {
