@@ -245,6 +245,20 @@ async function fetchJson(url, headers) {
   return res.json();
 }
 
+async function postJson(url, headers, body) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`Supabase REST error (${res.status}): ${await res.text()}`);
+  if (res.status === 204) return null;
+  return res.json();
+}
+
 Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
@@ -332,9 +346,9 @@ Deno.serve(async (req) => {
       const currentTimeForUser = localReminder ? zonedNowHHMM(timezone) : nowHHMM;
       const userToday = localReminder ? zonedTodayDate(timezone) : today;
 
-      const isMainSlot = isWithinWindow(currentTimeForUser, activeBaseTime, 1);
-      const isRiskSlot = isWithinWindow(currentTimeForUser, addHours(activeBaseTime, 4), 1);
-      const is23hSlot = isWithinWindow(currentTimeForUser, "23:00", 1);
+      const isMainSlot = isWithinWindow(currentTimeForUser, activeBaseTime, 5);
+      const isRiskSlot = isWithinWindow(currentTimeForUser, addHours(activeBaseTime, 4), 5);
+      const is23hSlot = isWithinWindow(currentTimeForUser, "23:00", 5);
 
       // shouldCatchUpAfterRecentChange supprimé — causait des notifs en boucle
       // car updated_at se met à jour à chaque ouverture de l'app
@@ -364,8 +378,30 @@ Deno.serve(async (req) => {
       const username = usernameByUser.get(row.user_id) || null;
       const type = force ? "manual_test" : is23hSlot ? "23h_reminder" : isRiskSlot ? "streak_risk" : "daily_reminder";
       const msg = messageFor(type, lang, streak, username);
+
+      // Hard anti-spam: only one send per user+type+local day.
+      if (!force) {
+        try {
+          const lockRaw = await postJson(`${supabaseUrl}/rest/v1/rpc/reserve_notification_send`, headers, {
+            p_user_id: row.user_id,
+            p_notif_type: type,
+            p_day_local: userToday,
+          });
+          const reserved =
+            lockRaw === true ||
+            lockRaw?.reserve_notification_send === true ||
+            (Array.isArray(lockRaw) && lockRaw[0]?.reserve_notification_send === true);
+          if (!reserved) {
+            continue;
+          }
+        } catch (e) {
+          console.error("LOCK ERROR", row.user_id, type, userToday, e?.message || e);
+          continue;
+        }
+      }
+
       const isManualTest = type === "manual_test";
-      const tag = isManualTest ? `manual-test-${row.user_id}-${Date.now()}` : `${type}-${today}`;
+      const tag = isManualTest ? `manual-test-${row.user_id}-${Date.now()}` : `${type}-${userToday}`;
 
       jobs.push({
         row,

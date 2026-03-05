@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     const [key, value] = part.split("=");
     acc[key] = value;
     return acc;
-  }, {} as Record<string, string>);
+  }, {});
 
   const timestamp = parts["t"];
   const expectedSig = parts["v1"];
@@ -31,11 +31,11 @@ Deno.serve(async (req) => {
     new TextEncoder().encode(webhookSecret),
     { name: "HMAC", hash: "SHA-256" },
     false,
-    ["sign"]
+    ["sign"],
   );
   const signatureBytes = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload));
   const computedSig = Array.from(new Uint8Array(signatureBytes))
-    .map(b => b.toString(16).padStart(2, "0"))
+    .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 
   if (computedSig !== expectedSig) {
@@ -52,15 +52,9 @@ Deno.serve(async (req) => {
   }
 
   const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
-  const supabase = createClient(
-    Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-  );
+  const supabase = createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
 
-  if (
-    event.type === "customer.subscription.created" ||
-    event.type === "customer.subscription.updated"
-  ) {
+  if (event.type === "customer.subscription.created" || event.type === "customer.subscription.updated") {
     const isActive = subscription.status === "active" || subscription.status === "trialing";
     await supabase
       .from("user_profiles")
@@ -69,10 +63,7 @@ Deno.serve(async (req) => {
   }
 
   if (event.type === "customer.subscription.deleted") {
-    await supabase
-      .from("user_profiles")
-      .update({ premium: false })
-      .eq("user_id", userId);
+    await supabase.from("user_profiles").update({ premium: false }).eq("user_id", userId);
   }
 
   return new Response(JSON.stringify({ received: true }), {
