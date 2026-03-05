@@ -26,17 +26,17 @@
 				<v-checkbox v-model="acceptPrivacy" :label="t('consent.accept_privacy')" color="primary" hide-details />
 			</v-card-text>
 
-			<!-- Section pubs -->
+			<!-- Section pubs 
 			<v-card-text class="mb-4">
 				<p class="mb-2">
 					{{ t("consent.ads_intro") }}
 				</p>
 
 				<v-checkbox v-model="acceptAds" color="primary" hide-details />
-			</v-card-text>
+			</v-card-text>-->
 
 			<v-card-actions>
-				<v-btn block class="btn-primary variant=flat mt-4" :disabled="!(acceptCgu && acceptPrivacy)" @click="acceptConsent">
+				<v-btn block class="consent-start-btn mt-2 mb-2" :disabled="!(acceptCgu && acceptPrivacy)" @click="acceptConsent">
 					{{ t("consent.start") }}
 				</v-btn>
 			</v-card-actions>
@@ -45,49 +45,65 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
+import { supabase } from "@/lib/supabase";
 
 const { t } = useI18n();
 
 const show = ref(false);
 const acceptCgu = ref(false);
 const acceptPrivacy = ref(false);
-const acceptAds = ref(false);
+// const acceptAds = ref(false); // Pub désactivée temporairement
+const consentKey = ref("microdefis-consent");
+let authSubscription = null;
+
+async function refreshConsentVisibility() {
+	const { data } = await supabase.auth.getSession();
+	const userId = data?.session?.user?.id || "anonymous";
+	consentKey.value = `microdefis-consent:${userId}`;
+	const alreadyShown = localStorage.getItem(consentKey.value) === "true";
+	show.value = !alreadyShown;
+}
 
 onMounted(() => {
-	const alreadyShown =
-		localStorage.getItem("microdefis-consent") === "true";
-	show.value = !alreadyShown;
+	refreshConsentVisibility();
+	const { data } = supabase.auth.onAuthStateChange(() => {
+		refreshConsentVisibility();
+	});
+	authSubscription = data.subscription;
+});
+
+onUnmounted(() => {
+	authSubscription?.unsubscribe?.();
+	authSubscription = null;
 });
 
 function acceptConsent() {
-	localStorage.setItem("microdefis-consent", "true");
+	localStorage.setItem(consentKey.value, "true");
 	localStorage.setItem(
-		"microdefis-consent-date",
+		`${consentKey.value}-date`,
 		new Date().toISOString()
 	);
 
-	// Gestion pubs
-	if (acceptAds.value) {
-		localStorage.setItem("ads-consent", "true");
-
-		if (window.gtag) {
-			window.gtag("consent", "update", {
-				ad_storage: "granted",
-				analytics_storage: "granted",
-			});
-		}
-	} else {
-		localStorage.setItem("ads-consent", "false");
-
-		if (window.gtag) {
-			window.gtag("consent", "update", {
-				ad_storage: "denied",
-				analytics_storage: "denied",
-			});
-		}
-	}
+	// Gestion pubs désactivée temporairement
+	// if (acceptAds.value) {
+	// 	localStorage.setItem("ads-consent", "true");
+	// 	if (window.gtag) {
+	// 		window.gtag("consent", "update", {
+	// 			ad_storage: "granted",
+	// 			analytics_storage: "granted",
+	// 		});
+	// 	}
+	// } else {
+	// 	localStorage.setItem("ads-consent", "false");
+	// 	if (window.gtag) {
+	// 		window.gtag("consent", "update", {
+	// 			ad_storage: "denied",
+	// 			analytics_storage: "denied",
+	// 		});
+	// 	}
+	// }
 
 	show.value = false;
 }
@@ -116,5 +132,15 @@ ul {
 
 .v-card-text {
 	margin-bottom: 16px;
+}
+
+.consent-start-btn {
+	background: #f97316 !important;
+	color: #ffffff !important;
+	font-weight: 800 !important;
+}
+
+.consent-start-btn:deep(.v-btn__content) {
+	color: #ffffff !important;
 }
 </style>
