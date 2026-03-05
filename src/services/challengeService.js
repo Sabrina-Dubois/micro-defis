@@ -69,6 +69,19 @@ export async function createDailyAssignment(userId, day, challengeId) {
   return data;
 }
 
+export async function updateDailyAssignmentChallenge(userId, day, challengeId) {
+  const { data, error } = await supabase
+    .from("daily_assignments")
+    .update({ challenge_id: challengeId })
+    .eq("user_id", userId)
+    .eq("day", day)
+    .select("day, challenge_id")
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
 // ─────────────────────────────────────────
 // COMPLETIONS
 // ─────────────────────────────────────────

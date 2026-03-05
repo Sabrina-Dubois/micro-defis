@@ -8,6 +8,7 @@ import {
   fetchActiveChallenges,
   fetchDailyAssignment,
   createDailyAssignment,
+  updateDailyAssignmentChallenge,
 } from "@/services/challengeService";
 
 export const useChallengeStore = defineStore("challenge", () => {
@@ -56,6 +57,41 @@ export const useChallengeStore = defineStore("challenge", () => {
     challengeLevel.value = extractRelationName(challengeData?.level, "Niveau");
   }
 
+  function relationName(relation) {
+    if (!relation) return "";
+    if (Array.isArray(relation)) return relation[0]?.name || "";
+    if (typeof relation === "object") return relation.name || "";
+    return "";
+  }
+
+  function isRelationPremium(relation) {
+    if (!relation) return false;
+    if (Array.isArray(relation)) return relation[0]?.premium === true;
+    if (typeof relation === "object") return relation.premium === true;
+    return false;
+  }
+
+  function isChallengePremium(challenge) {
+    return isRelationPremium(challenge?.level) || isRelationPremium(challenge?.category);
+  }
+
+  function matchesPreferences(challenge, preferredCategories, preferredLevels) {
+    const categoryName = relationName(challenge?.category);
+    const levelName = relationName(challenge?.level);
+
+    const categoryOk =
+      !preferredCategories?.length || preferredCategories.includes(categoryName);
+    const levelOk =
+      !preferredLevels?.length || preferredLevels.includes(levelName);
+
+    return categoryOk && levelOk;
+  }
+
+  function pickRandom(items) {
+    if (!items?.length) return null;
+    return items[Math.floor(Math.random() * items.length)];
+  }
+
   // ─────────────────────────────────────────
   // ACTIONS
   // ─────────────────────────────────────────
@@ -77,6 +113,8 @@ export const useChallengeStore = defineStore("challenge", () => {
       const day = todayISO.value;
       const lang = settingsStore.language || "fr";
       const isPremium = settingsStore.isPremium;
+      const preferredCategories = settingsStore.preferredCategories || [];
+      const preferredLevels = settingsStore.preferredLevels || [];
 
       const statsStore = useStatsStore();
 
@@ -89,9 +127,19 @@ export const useChallengeStore = defineStore("challenge", () => {
       }
 
       if (!force && assignment.value?.day === day && lastChallengeDay.value === day && lastChallengeData.value) {
-        applyChallenge(lastChallengeData.value, lang);
-        isDone.value = statsStore.isCompletedDay(day);
-        return;
+        const alreadyCompletedToday = statsStore.isCompletedDay(day);
+        const cacheIsPremiumMismatch = !isPremium && isChallengePremium(lastChallengeData.value);
+        const cacheIsPrefsMismatch =
+          !matchesPreferences(lastChallengeData.value, preferredCategories, preferredLevels);
+
+        // Ne pas réutiliser le cache si le défi ne respecte plus l'état/prefs actuels.
+        if (!alreadyCompletedToday && (cacheIsPremiumMismatch || cacheIsPrefsMismatch)) {
+          // continue and recompute assignment below
+        } else {
+          applyChallenge(lastChallengeData.value, lang);
+          isDone.value = alreadyCompletedToday;
+          return;
+        }
       }
 
       // Vérifier si un assignment existe déjà aujourd'hui
@@ -101,15 +149,62 @@ export const useChallengeStore = defineStore("challenge", () => {
       if (existing) {
         assignment.value = existing;
         challengeData = await fetchChallengeById(existing.challenge_id);
+        const alreadyCompletedToday = statsStore.isCompletedDay(day);
+
+        // Si les prefs actuelles ne correspondent plus (ou non-premium avec défi premium),
+        // on remplace l'assignment du jour si le défi n'est pas déjà validé.
+        const mustReplaceForPremium = !isPremium && isChallengePremium(challengeData);
+        const mustReplaceForPrefs =
+          !matchesPreferences(challengeData, preferredCategories, preferredLevels);
+
+        if (!alreadyCompletedToday && (mustReplaceForPremium || mustReplaceForPrefs)) {
+          let candidates = await fetchActiveChallenges();
+          if (!isPremium) {
+            candidates = candidates.filter((c) => !isChallengePremium(c));
+          }
+          candidates = candidates.filter((c) =>
+            matchesPreferences(c, preferredCategories, preferredLevels),
+          );
+
+          // Fallback: si prefs trop strictes, on garde la règle premium uniquement.
+          if (!candidates.length) {
+            candidates = await fetchActiveChallenges();
+            if (!isPremium) {
+              candidates = candidates.filter((c) => !isChallengePremium(c));
+            }
+          }
+          if (!candidates.length) {
+            throw new Error("Aucun defi disponible");
+          }
+
+          const fallback = pickRandom(candidates);
+          const updated = await updateDailyAssignmentChallenge(
+            userStore.userId,
+            day,
+            fallback.id,
+          );
+          assignment.value = updated;
+          challengeData = fallback;
+        }
       } else {
-        // Choisir un défi aléatoire selon le niveau premium
+        // Choisir un défi aléatoire selon premium + préférences
         let allChallenges = await fetchActiveChallenges();
         if (!isPremium) {
-          allChallenges = allChallenges.filter((c) => c.level?.premium === false);
+          allChallenges = allChallenges.filter((c) => !isChallengePremium(c));
+        }
+        allChallenges = allChallenges.filter((c) =>
+          matchesPreferences(c, preferredCategories, preferredLevels),
+        );
+        // Fallback prefs trop strictes
+        if (!allChallenges.length) {
+          allChallenges = await fetchActiveChallenges();
+          if (!isPremium) {
+            allChallenges = allChallenges.filter((c) => !isChallengePremium(c));
+          }
         }
         if (!allChallenges.length) throw new Error("Aucun défi disponible");
 
-        const pick = allChallenges[Math.floor(Math.random() * allChallenges.length)];
+        const pick = pickRandom(allChallenges);
         const created = await createDailyAssignment(userStore.userId, day, pick.id);
         assignment.value = created;
         // If another concurrent request already created today's assignment,
@@ -153,25 +248,29 @@ export const useChallengeStore = defineStore("challenge", () => {
 
       // Filtre premium
       if (!isPremium) {
-        challenges = challenges.filter((c) => c.level?.premium === false);
+        challenges = challenges.filter((c) => !isChallengePremium(c));
       }
 
       // Filtre catégories préférées
       if (settingsStore.preferredCategories?.length > 0) {
-        challenges = challenges.filter((c) => settingsStore.preferredCategories.includes(c.category?.name));
+        challenges = challenges.filter((c) =>
+          settingsStore.preferredCategories.includes(relationName(c.category)),
+        );
       }
 
       // Filtre niveaux préférés
       if (settingsStore.preferredLevels?.length > 0) {
-        challenges = challenges.filter((c) => settingsStore.preferredLevels.includes(c.level?.name));
+        challenges = challenges.filter((c) =>
+          settingsStore.preferredLevels.includes(relationName(c.level)),
+        );
       }
 
       // Fallback si aucun résultat après filtres
       if (!challenges.length) {
-        challenges = (await fetchActiveChallenges()).filter((c) => c.level?.premium === false);
+        challenges = (await fetchActiveChallenges()).filter((c) => !isChallengePremium(c));
       }
 
-      const pick = challenges[Math.floor(Math.random() * challenges.length)];
+      const pick = pickRandom(challenges);
       applyChallenge(pick, lang);
     } catch (e) {
       error.value = e.message;

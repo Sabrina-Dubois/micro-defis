@@ -223,6 +223,7 @@ async function saveProfile() {
 async function saveDefiPrefs() {
 	try {
 		await settingsStore.setChallengePreferences(preferredCategory.value, preferredLevel.value);
+		await challengeStore.loadTodayChallenge(true);
 		alert("Préférences sauvegardées !");
 	} catch (error) {
 		alert("Erreur lors de la sauvegarde");
