@@ -499,10 +499,6 @@ watch(mode, () => {
 	background: transparent !important;
 	box-shadow: none !important;
 	gap: 7px;
-	width: 100%;
-	display: flex !important;
-	flex-wrap: wrap !important;
-	justify-content: center;
 }
 
 .league-switch :deep(.v-btn) {
@@ -510,9 +506,6 @@ watch(mode, () => {
 	text-transform: none;
 	font-weight: 800;
 	color: var(--text-primary);
-	flex: 1 1 110px;
-	max-width: 140px;
-	min-width: 0;
 }
 
 .league-switch :deep(.v-btn--active) {
@@ -537,12 +530,6 @@ watch(mode, () => {
 	font-size: 10px;
 	font-weight: 700;
 	opacity: 0.8;
-}
-
-@media (max-width: 420px) {
-	.my-league-tag {
-		display: none;
-	}
 }
 
 .league-zones {
@@ -573,7 +560,7 @@ watch(mode, () => {
 
 .zone-pill.down {
 	color: #ffffff;
-	background: #dc2626;
+	background:#dc2626;
 }
 
 .podium-grid {
