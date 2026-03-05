@@ -209,8 +209,7 @@ const events = [
 .range-switch {
   display: inline-flex;
   align-self: center;
-  background: rgba(15, 23, 42, 0.4);
-  border: 1px solid rgba(15, 23, 42, 0.55);
+  background: rgba(70, 97, 158, 0.4);
   border-radius: 999px;
   padding: 4px;
   gap: 3px;
