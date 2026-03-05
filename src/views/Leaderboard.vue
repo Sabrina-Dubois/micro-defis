@@ -24,7 +24,12 @@
 
 		<div v-if="mode === 'league'" class="league-switch mb-3">
 			<v-btn-toggle v-model="selectedLeagueIndex" mandatory density="comfortable">
-				<v-btn v-for="(name, idx) in LEAGUES_TOP_TO_BOTTOM" :key="name" :value="idx">
+				<v-btn
+					v-for="(name, idx) in LEAGUES_TOP_TO_BOTTOM"
+					:key="name"
+					:value="idx"
+					:class="`league-chip-${name.toLowerCase()}`"
+				>
 					{{ name }}
 					<span v-if="idx === autoLeagueIndex" class="my-league-tag">• Ma ligue</span>
 				</v-btn>
@@ -493,7 +498,11 @@ watch(mode, () => {
 .league-switch :deep(.v-btn-toggle) {
 	background: transparent !important;
 	box-shadow: none !important;
-	gap: 8px;
+	gap: 7px;
+	width: 100%;
+	display: flex !important;
+	flex-wrap: wrap !important;
+	justify-content: center;
 }
 
 .league-switch :deep(.v-btn) {
@@ -501,6 +510,9 @@ watch(mode, () => {
 	text-transform: none;
 	font-weight: 800;
 	color: var(--text-primary);
+	flex: 1 1 110px;
+	max-width: 140px;
+	min-width: 0;
 }
 
 .league-switch :deep(.v-btn--active) {
@@ -508,11 +520,29 @@ watch(mode, () => {
 	color: var(--primary) !important;
 }
 
+.league-switch :deep(.league-chip-or) {
+	color: #d97706 !important;
+}
+
+.league-switch :deep(.league-chip-argent) {
+	color: #6b7280 !important;
+}
+
+.league-switch :deep(.league-chip-bronze) {
+	color: #b45309 !important;
+}
+
 .my-league-tag {
 	margin-left: 6px;
 	font-size: 10px;
 	font-weight: 700;
 	opacity: 0.8;
+}
+
+@media (max-width: 420px) {
+	.my-league-tag {
+		display: none;
+	}
 }
 
 .league-zones {
@@ -531,7 +561,7 @@ watch(mode, () => {
 
 .zone-pill.up {
 	color: #ffffff;
-	background: #16a34a;
+	background: rgba(22, 163, 74, 0.85);
 
 }
 
