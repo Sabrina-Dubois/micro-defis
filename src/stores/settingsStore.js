@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
+import { supabase } from "@/lib/supabase";
 import { useUserStore } from "./userStore";
 import {
   fetchPreferences,
@@ -58,6 +59,7 @@ export const useSettingsStore = defineStore("settings", () => {
   const categories = ref([]);
   const levels = ref([]);
   const loading = ref(false);
+  const isAdmin = ref(false);
   const error = ref(null);
 
   // ─────────────────────────────────────────
@@ -72,6 +74,7 @@ export const useSettingsStore = defineStore("settings", () => {
   const isPremium = computed(() => preferences.value.premium_active ?? false);
   const languageLabel = computed(() => (preferences.value.language === "fr" ? "Français" : "English"));
   const themeLabel = computed(() => (preferences.value.theme === "dark" ? "Sombre" : "Clair"));
+  const isAdminUser = computed(() => isAdmin.value);
 
   // ─────────────────────────────────────────
   // ACTIONS — CHARGEMENT
@@ -99,6 +102,18 @@ export const useSettingsStore = defineStore("settings", () => {
 
       const premium = await fetchPremiumStatus(userStore.userId);
       preferences.value.premium_active = premium;
+
+      // ─────────────────────────────────────────
+      // CHARGEMENT is_admin — TOUJOURS, à chaque ouverture
+      // (pas dans le if lastSyncDate, sinon ne se charge qu'une fois par jour)
+      // ─────────────────────────────────────────
+      const { data: profileData } = await supabase
+        .from("user_profiles")
+        .select("is_admin")
+        .eq("user_id", userStore.userId)
+        .single();
+
+      isAdmin.value = profileData?.is_admin ?? false;
 
       if (preferences.value.notifications_enabled) {
         const today = new Date().toISOString().slice(0, 10);
@@ -220,9 +235,6 @@ export const useSettingsStore = defineStore("settings", () => {
         await updatePushReminderTime(userStore.userId, utcReminderTime, time, timezone);
       }
 
-      // Force le sync le lendemain même si déjà synced aujourd'hui
-      localStorage.removeItem("push_last_sync_date");
-      // Force un nouveau sync au prochain chargement si l'heure change
       localStorage.removeItem("push_last_sync_date");
     } catch (e) {
       console.error("Erreur sync reminder_time push_subscriptions:", e);
@@ -261,20 +273,13 @@ export const useSettingsStore = defineStore("settings", () => {
     return registration;
   }
 
-  /**
-   * Détecte si le SW a changé depuis la dernière ouverture.
-   * Si oui, désabonne + réabonne pour éviter les subscriptions orphelines sur iPhone.
-   * À appeler avant ensurePushSubscriptionSynced() dans loadPreferences().
-   *
-   * RÈGLE : bumper SW_VERSION (en haut du fichier) EN MÊME TEMPS que CACHE dans sw.js.
-   */
   async function checkSubscriptionFresh() {
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
     if (Notification.permission !== "granted") return;
     if (!preferences.value.notifications_enabled) return;
 
     const savedVersion = localStorage.getItem("push_sw_version");
-    if (savedVersion === SW_VERSION) return; // déjà à jour
+    if (savedVersion === SW_VERSION) return;
 
     console.log("[push] SW version changée, renouvellement subscription...");
 
@@ -401,7 +406,6 @@ export const useSettingsStore = defineStore("settings", () => {
       if (!sub) {
         await updatePreference("notifications_enabled", false);
       } else {
-        // Marquer la version SW au moment de l'abonnement initial
         localStorage.setItem("push_sw_version", SW_VERSION);
         localStorage.setItem("push_last_sync_date", new Date().toISOString().slice(0, 10));
       }
@@ -439,6 +443,7 @@ export const useSettingsStore = defineStore("settings", () => {
     levels.value = [];
     loading.value = false;
     error.value = null;
+    isAdmin.value = false;
   }
 
   // ─────────────────────────────────────────
@@ -459,6 +464,8 @@ export const useSettingsStore = defineStore("settings", () => {
     isPremium,
     languageLabel,
     themeLabel,
+    isAdmin,
+    isAdminUser,
     loadPreferences,
     loadCategories,
     loadLevels,

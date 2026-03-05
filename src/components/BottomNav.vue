@@ -16,11 +16,24 @@
 			<v-icon size="40">mdi-account-outline</v-icon>
 		</RouterLink>
 
+		<RouterLink v-if="isAdmin" class="item" to="/admin" active-class="active">
+			<v-icon size="40">mdi-shield-crown-outline</v-icon>
+		</RouterLink>
+		
 		<RouterLink class="item" to="/settings" active-class="active">
 			<v-icon size="40">mdi-cog-outline</v-icon>
 		</RouterLink>
+
 	</nav>
 </template>
+
+<script setup>
+import { computed } from "vue";
+import { useSettingsStore } from "@/stores/settingsStore";
+
+const settingsStore = useSettingsStore();
+const isAdmin = computed(() => settingsStore.isAdmin);
+</script>
 
 <style>
 .bottom-nav {
@@ -30,9 +43,9 @@
 	bottom: 12px;
 	height: 64px;
 	display: flex;
-	gap: 8px;
+	
 	align-items: center;
-	justify-content: space-between;
+
 	padding: 10px 12px;
 	background: var(--surface);
 	color: var(--text-primary);
