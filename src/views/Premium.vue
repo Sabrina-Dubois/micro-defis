@@ -218,17 +218,24 @@ async function startTrial() {
 		const { data: { session } } = await supabase.auth.getSession();
 		if (!session) throw new Error("Session expirée, veuillez vous reconnecter");
 
-		// Appelle l'Edge Function avec le token dans le header Authorization
-		const { data, error } = await supabase.functions.invoke("create-checkout-session", {
-			body: {
-				priceId: priceIds[selectedPlan.value],
-			},
-			headers: {
-				Authorization: `Bearer ${session.access_token}`,
-			},
-		});
+		// Appel direct avec fetch — évite que Supabase écrase le header Authorization
+		const response = await fetch(
+			"https://odnvnewqvotgddgnlkuj.supabase.co/functions/v1/create-checkout-session",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${session.access_token}`,
+					"apikey": import.meta.env.VITE_SUPABASE_ANON_KEY,
+				},
+				body: JSON.stringify({
+					priceId: priceIds[selectedPlan.value],
+				}),
+			}
+		);
 
-		if (error) throw error;
+		const data = await response.json();
+		if (!response.ok) throw new Error(data.error || "Erreur serveur");
 		if (!data?.url) throw new Error("URL de paiement manquante");
 
 		window.location.href = data.url;
