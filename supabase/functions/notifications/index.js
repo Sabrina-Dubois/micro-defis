@@ -1,4 +1,5 @@
 import webpush from "npm:web-push@3.6.7";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const VERSION = "notif-v20";
 
@@ -270,6 +271,51 @@ Deno.serve(async (req) => {
       return jsonResponse({ ok: false, error: "Missing env secrets" }, 500);
     }
 
+    // ── S-4 : Vérification JWT — doit être un admin ou un appel serveur ────────
+    // Cet endpoint est appelé soit par le cron Supabase (service_role),
+    // soit depuis le dashboard admin (utilisateur avec is_admin = true).
+    // Tout autre appelant reçoit un 401.
+    const authHeader = req.headers.get("authorization") ?? "";
+    const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+
+    if (!token) {
+      return jsonResponse({ ok: false, error: "Unauthorized: missing token" }, 401);
+    }
+
+    // Cas 1 : appel cron/serveur avec la service_role key directement
+    const isServiceRole = token === supabaseKey;
+
+    if (!isServiceRole) {
+      // Cas 2 : appel depuis le dashboard admin — vérifier que l'user est admin
+      const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+      const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: `Bearer ${token}` } },
+      });
+
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+      if (authError || !user) {
+        return jsonResponse({ ok: false, error: "Unauthorized: invalid token" }, 401);
+      }
+
+      // Vérifier is_admin dans user_profiles (même logique que admin-stats)
+      const profileUrl = new URL(`${supabaseUrl}/rest/v1/user_profiles`);
+      profileUrl.searchParams.set("select", "is_admin");
+      profileUrl.searchParams.set("user_id", `eq.${user.id}`);
+      profileUrl.searchParams.set("limit", "1");
+      const profiles = await fetchJson(profileUrl.toString(), {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+      });
+
+      if (!profiles?.[0]?.is_admin) {
+        return jsonResponse({ ok: false, error: "Forbidden: admin only" }, 403);
+      }
+    }
+    // ── Fin du contrôle d'accès ───────────────────────────────────────────────
+
     webpush.setVapidDetails("mailto:contact@microdefis.com", vapidPublic, vapidPrivate);
 
     const headers = {
@@ -307,14 +353,12 @@ Deno.serve(async (req) => {
     const userIds = [...new Set(subscriptions.map((s) => s.user_id))];
     const inUsers = `(${userIds.join(",")})`;
 
-    // Récupère langue + username en une seule requête
     const prefUrl = new URL(`${supabaseUrl}/rest/v1/user_preferences`);
     prefUrl.searchParams.set("select", "user_id,language");
     prefUrl.searchParams.set("user_id", `in.${inUsers}`);
     const preferences = await fetchJson(prefUrl.toString(), headers);
     const langByUser = new Map(preferences.map((p) => [p.user_id, p.language || "fr"]));
 
-    // Récupère les usernames depuis user_profiles
     const profileUrl = new URL(`${supabaseUrl}/rest/v1/user_profiles`);
     profileUrl.searchParams.set("select", "user_id,username");
     profileUrl.searchParams.set("user_id", `in.${inUsers}`);
@@ -350,9 +394,6 @@ Deno.serve(async (req) => {
       const isRiskSlot = isWithinWindow(currentTimeForUser, addHours(activeBaseTime, 4), 5);
       const is23hSlot = isWithinWindow(currentTimeForUser, "23:00", 5);
 
-      // shouldCatchUpAfterRecentChange supprimé — causait des notifs en boucle
-      // car updated_at se met à jour à chaque ouverture de l'app
-
       const doneToday = daysByUser.get(row.user_id)?.has(userToday) ?? false;
 
       console.log("USER CHECK:", row.user_id, {
@@ -369,7 +410,6 @@ Deno.serve(async (req) => {
         // Force send ignore tous les filtres
       } else {
         if (!isMainSlot && !isRiskSlot && !is23hSlot) continue;
-        // Aucune notif si le défi est déjà fait
         if (doneToday) continue;
       }
 
@@ -379,7 +419,6 @@ Deno.serve(async (req) => {
       const type = force ? "manual_test" : is23hSlot ? "23h_reminder" : isRiskSlot ? "streak_risk" : "daily_reminder";
       const msg = messageFor(type, lang, streak, username);
 
-      // Hard anti-spam: only one send per user+type+local day.
       if (!force) {
         try {
           const lockRaw = await postJson(`${supabaseUrl}/rest/v1/rpc/reserve_notification_send`, headers, {
@@ -450,7 +489,6 @@ Deno.serve(async (req) => {
       return { ...meta, status: "failed", statusCode: reason.statusCode || null, message: reason.message || null };
     });
 
-    // Log de la campagne dans activity_logs si des notifs ont été envoyées
     if (success > 0) {
       try {
         const logUrl = new URL(`${supabaseUrl}/rest/v1/activity_logs`);

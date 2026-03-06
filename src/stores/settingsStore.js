@@ -19,8 +19,13 @@ import { fetchPremiumStatus } from "@/services/profileService";
 // settingsStore: const SW_VERSION = "v5";
 // ─────────────────────────────────────────
 const SW_VERSION = "v5";
+const DEBUG_LOGS = import.meta.env.DEV || import.meta.env.VITE_DEBUG_LOGS === "true";
 
 export const useSettingsStore = defineStore("settings", () => {
+  function debugLog(...args) {
+    if (DEBUG_LOGS) console.log(...args);
+  }
+
   function urlBase64ToUint8Array(base64String) {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
@@ -281,7 +286,7 @@ export const useSettingsStore = defineStore("settings", () => {
     const savedVersion = localStorage.getItem("push_sw_version");
     if (savedVersion === SW_VERSION) return;
 
-    console.log("[push] SW version changée, renouvellement subscription...");
+    debugLog("[push] SW version changee, renouvellement subscription...");
 
     try {
       const registration = await getServiceWorkerRegistration();
@@ -294,7 +299,7 @@ export const useSettingsStore = defineStore("settings", () => {
 
       await subscribeToPush();
       localStorage.setItem("push_sw_version", SW_VERSION);
-      console.log("[push] Subscription renouvelée avec succès.");
+      debugLog("[push] Subscription renouvelee avec succes.");
     } catch (e) {
       console.error("[push] Erreur renouvellement subscription SW:", e);
     }
