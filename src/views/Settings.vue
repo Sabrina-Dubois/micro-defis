@@ -117,6 +117,7 @@
 
 				</v-list>
 			</v-card>
+
 			<!-- Abonnement Premium -->
 			<v-card class="micro-card pa-4 mb-4">
 				<div class="page-subtitle mb-3">
@@ -128,7 +129,7 @@
 						Votre abonnement Premium est actif
 					</v-alert>
 
-					<v-btn block class="btn-primary" @click="manageSubscription">
+					<v-btn block class="btn-primary" :loading="isPortalLoading" @click="manageSubscription">
 						Gérer mon abonnement
 					</v-btn>
 				</div>
@@ -196,8 +197,8 @@ import { ref, computed, onMounted } from "vue";
 import { useTheme } from "vuetify";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { supabase } from "@/lib/supabase";
 
+import { supabase } from "@/lib/supabase";
 import { useUserStore } from "@/stores/userStore";
 import { useStatsStore } from "@/stores/statsStore";
 import { useChallengeStore } from "@/stores/challengeStore";
@@ -218,6 +219,7 @@ const preferredCategory = ref([]);
 const preferredLevel = ref([]);
 const isPageReady = ref(false);
 const isLoggingOut = ref(false);
+const isPortalLoading = ref(false);
 const isNotificationTestMode = import.meta.env.DEV || import.meta.env.VITE_ENABLE_NOTIFICATION_TEST === "true";
 
 const sliderValue = computed(() =>
@@ -288,14 +290,36 @@ async function changeTheme() {
 
 async function manageSubscription() {
 	try {
-		const { data, error } = await supabase.functions.invoke("create-customer-portal-session");
-		if (error) throw error;
-		if (!data?.url) throw new Error("URL portail abonnement manquante");
+		isPortalLoading.value = true;
+
+		// Récupère le token JWT de l'utilisateur connecté
+		const { data: { session } } = await supabase.auth.getSession();
+		if (!session) throw new Error("Session expirée, veuillez vous reconnecter");
+
+		// Appel direct avec fetch — évite que Supabase écrase le header Authorization
+		const response = await fetch(
+			"https://odnvnewqvotgddgnlkuj.supabase.co/functions/v1/customer-portal",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${session.access_token}`,
+					"apikey": import.meta.env.VITE_SUPABASE_ANON_KEY,
+				},
+			}
+		);
+
+		const data = await response.json();
+		if (!data?.url) throw new Error("URL portail manquante");
+
+		// Redirige vers le portail Stripe pour gérer l'abonnement
 		window.location.href = data.url;
-	} catch (e) {
-		console.error("Erreur ouverture portail abonnement:", e);
-		alert("Le portail abonnement n'est pas encore configuré. Redirection vers Premium.");
-		router.push("/premium");
+
+	} catch (err) {
+		console.error("Erreur ouverture portail abonnement:", err);
+		alert("Erreur lors de l'ouverture du portail. Réessayez.");
+	} finally {
+		isPortalLoading.value = false;
 	}
 }
 
