@@ -22,7 +22,7 @@ export async function signOut() {
 export async function fetchProfile(userId) {
   const { data, error } = await supabase
     .from("user_profiles")
-    .select("username, avatar_emoji, premium")
+    .select("username, avatar_emoji, premium, streak_shields")
     .eq("user_id", userId)
     .maybeSingle();
 

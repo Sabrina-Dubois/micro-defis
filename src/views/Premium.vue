@@ -171,20 +171,20 @@ const priceIds = {
 const benefits = [
 	{ icon: "🎯", title: "800+ défis", desc: "Tous niveaux, toutes catégories" },
 	{ icon: "⚡", title: "Niveaux Expert", desc: "Intermédiaire, Avancé, Expert" },
-	{ icon: "🛡️", title: "Streak Shield", desc: "Protège ta série en cas d'oubli" },
-	{ icon: "📊", title: "Stats avancées", desc: "Suis ta progression en détail" },
-	{ icon: "🎨", title: "Sans pub", desc: "Expérience 100% propre" },
-	{ icon: "🏆", title: "Badges exclusifs", desc: "Montre ton statut Premium" },
+	{ icon: "🛡️", title: "Streak Shield", desc: "Bientôt disponible 🚧"}, //desc: "Protège ta série en cas d'oubli" },
+	{ icon: "📊", title: "Stats avancées", desc: "Bientôt disponible 🚧" }, //desc: "Suis ta progression en détail" },
+	//{ icon: "🎨", title: "Sans pub", desc: "Expérience 100% propre" },
+	{ icon: "🏆", title: "Badges exclusifs", desc: "Bientôt disponible 🚧" }, //desc: "Montre ton statut Premium" },
 ];
 
 const comparisonItems = [
 	{ feature: "Défis Débutant 🌱", free: true },
-	{ feature: "Tous les niveaux (800+ défis)", free: false },
+	{ feature: "Tous les niveaux (500+ défis)", free: false },
 	{ feature: "Toutes les catégories", free: false },
-	{ feature: "Streak Shield 🛡️", free: false },
-	{ feature: "Sans publicité", free: false },
-	{ feature: "Badges exclusifs", free: false },
-	{ feature: "Stats avancées", free: false },
+	{ feature: "Streak Shield 🛡️ (bientôt)", free: false },
+	//{ feature: "Sans publicité", free: false },
+	{ feature: "Badges exclusifs (bientôt)", free: false },
+	{ feature: "Stats avancées (bientôt)", free: false },
 ];
 
 const testimonials = [

@@ -11,7 +11,7 @@ export const useUserStore = defineStore("user", () => {
   // STATE
   // ─────────────────────────────────────────
   const authUser = ref(null);
-  const profile = ref({ username: "Username", avatar_emoji: "👤", email: "", premium: false });
+  const profile = ref({ username: "Username", avatar_emoji: "👤", email: "", premium: false, streak_shields: 0 });
   const memberSince = ref("...");
   const loading = ref(false);
   const error = ref(null);
@@ -25,6 +25,7 @@ export const useUserStore = defineStore("user", () => {
   const userEmail = computed(() => profile.value.email);
   const userAvatar = computed(() => profile.value.avatar_emoji);
   const isPremium = computed(() => profile.value.premium);
+  const streakShields = computed(() => profile.value.streak_shields);
 
   // ─────────────────────────────────────────
   // ACTIONS
@@ -46,6 +47,7 @@ export const useUserStore = defineStore("user", () => {
         profile.value.username = profileData.username || "Username";
         profile.value.avatar_emoji = profileData.avatar_emoji || "👤";
         profile.value.premium = profileData.premium || false;
+        profile.value.streak_shields = profileData.streak_shields ?? 0; 
       }
 
       return user;
@@ -87,7 +89,7 @@ export const useUserStore = defineStore("user", () => {
 
   function reset() {
     authUser.value = null;
-    profile.value = { username: "Username", avatar_emoji: "👤", email: "" };
+    profile.value = { username: "Username", avatar_emoji: "👤", email: "", premium: false, streak_shields: 0 };
     memberSince.value = "...";
     loading.value = false;
     error.value = null;
@@ -108,6 +110,7 @@ export const useUserStore = defineStore("user", () => {
     userEmail,
     userAvatar,
     isPremium,
+    streakShields,
     loadUser,
     updateProfile,
     changeAvatar,

@@ -79,10 +79,8 @@ export const useChallengeStore = defineStore("challenge", () => {
     const categoryName = relationName(challenge?.category);
     const levelName = relationName(challenge?.level);
 
-    const categoryOk =
-      !preferredCategories?.length || preferredCategories.includes(categoryName);
-    const levelOk =
-      !preferredLevels?.length || preferredLevels.includes(levelName);
+    const categoryOk = !preferredCategories?.length || preferredCategories.includes(categoryName);
+    const levelOk = !preferredLevels?.length || preferredLevels.includes(levelName);
 
     return categoryOk && levelOk;
   }
@@ -129,8 +127,7 @@ export const useChallengeStore = defineStore("challenge", () => {
       if (!force && assignment.value?.day === day && lastChallengeDay.value === day && lastChallengeData.value) {
         const alreadyCompletedToday = statsStore.isCompletedDay(day);
         const cacheIsPremiumMismatch = !isPremium && isChallengePremium(lastChallengeData.value);
-        const cacheIsPrefsMismatch =
-          !matchesPreferences(lastChallengeData.value, preferredCategories, preferredLevels);
+        const cacheIsPrefsMismatch = !matchesPreferences(lastChallengeData.value, preferredCategories, preferredLevels);
 
         // Ne pas réutiliser le cache si le défi ne respecte plus l'état/prefs actuels.
         if (!alreadyCompletedToday && (cacheIsPremiumMismatch || cacheIsPrefsMismatch)) {
@@ -154,17 +151,14 @@ export const useChallengeStore = defineStore("challenge", () => {
         // Si les prefs actuelles ne correspondent plus (ou non-premium avec défi premium),
         // on remplace l'assignment du jour si le défi n'est pas déjà validé.
         const mustReplaceForPremium = !isPremium && isChallengePremium(challengeData);
-        const mustReplaceForPrefs =
-          !matchesPreferences(challengeData, preferredCategories, preferredLevels);
+        const mustReplaceForPrefs = !matchesPreferences(challengeData, preferredCategories, preferredLevels);
 
         if (!alreadyCompletedToday && (mustReplaceForPremium || mustReplaceForPrefs)) {
           let candidates = await fetchActiveChallenges();
           if (!isPremium) {
             candidates = candidates.filter((c) => !isChallengePremium(c));
           }
-          candidates = candidates.filter((c) =>
-            matchesPreferences(c, preferredCategories, preferredLevels),
-          );
+          candidates = candidates.filter((c) => matchesPreferences(c, preferredCategories, preferredLevels));
 
           // Fallback: si prefs trop strictes, on garde la règle premium uniquement.
           if (!candidates.length) {
@@ -178,11 +172,7 @@ export const useChallengeStore = defineStore("challenge", () => {
           }
 
           const fallback = pickRandom(candidates);
-          const updated = await updateDailyAssignmentChallenge(
-            userStore.userId,
-            day,
-            fallback.id,
-          );
+          const updated = await updateDailyAssignmentChallenge(userStore.userId, day, fallback.id);
           assignment.value = updated;
           challengeData = fallback;
         }
@@ -192,9 +182,7 @@ export const useChallengeStore = defineStore("challenge", () => {
         if (!isPremium) {
           allChallenges = allChallenges.filter((c) => !isChallengePremium(c));
         }
-        allChallenges = allChallenges.filter((c) =>
-          matchesPreferences(c, preferredCategories, preferredLevels),
-        );
+        allChallenges = allChallenges.filter((c) => matchesPreferences(c, preferredCategories, preferredLevels));
         // Fallback prefs trop strictes
         if (!allChallenges.length) {
           allChallenges = await fetchActiveChallenges();
@@ -253,16 +241,12 @@ export const useChallengeStore = defineStore("challenge", () => {
 
       // Filtre catégories préférées
       if (settingsStore.preferredCategories?.length > 0) {
-        challenges = challenges.filter((c) =>
-          settingsStore.preferredCategories.includes(relationName(c.category)),
-        );
+        challenges = challenges.filter((c) => settingsStore.preferredCategories.includes(relationName(c.category)));
       }
 
       // Filtre niveaux préférés
       if (settingsStore.preferredLevels?.length > 0) {
-        challenges = challenges.filter((c) =>
-          settingsStore.preferredLevels.includes(relationName(c.level)),
-        );
+        challenges = challenges.filter((c) => settingsStore.preferredLevels.includes(relationName(c.level)));
       }
 
       // Fallback si aucun résultat après filtres
@@ -290,6 +274,10 @@ export const useChallengeStore = defineStore("challenge", () => {
     try {
       await statsStore.addCompletion(assignment.value.day, assignment.value.challenge_id);
       isDone.value = true;
+
+      // 🛡️ Vérifie si un shield doit être attribué (géré côté Supabase via trigger)
+      // On recharge juste le profil pour avoir le nombre de shields à jour
+      await userStore.loadUser();
     } catch (e) {
       error.value = e.message;
       console.error("Erreur markAsCompleted:", e);
