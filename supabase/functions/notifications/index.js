@@ -450,6 +450,27 @@ Deno.serve(async (req) => {
       return { ...meta, status: "failed", statusCode: reason.statusCode || null, message: reason.message || null };
     });
 
+    // Log de la campagne dans activity_logs si des notifs ont été envoyées
+    if (success > 0) {
+      try {
+        const logUrl = new URL(`${supabaseUrl}/rest/v1/activity_logs`);
+        await fetch(logUrl.toString(), {
+          method: "POST",
+          headers: {
+            ...headers,
+            "Content-Type": "application/json",
+            Prefer: "return=minimal",
+          },
+          body: JSON.stringify({
+            type: "PUSH",
+            text: `Campagne notif ${nowHHMM} envoyée à ${success} utilisateur${success > 1 ? "s" : ""}`,
+          }),
+        });
+      } catch (e) {
+        console.error("Erreur log campagne push:", e?.message);
+      }
+    }
+
     console.log("=== DONE ===", { matched: jobs.length, success, failed });
     return jsonResponse({ ok: true, now: nowHHMM, matched: jobs.length, success, failed, sent });
   } catch (e) {

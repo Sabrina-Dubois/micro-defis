@@ -6,122 +6,121 @@
         <p class="admin-subtitle">Suivi des inscriptions, abonnements et activite.</p>
       </div>
       <div class="range-switch" role="group" aria-label="Periode">
-        <button
-          v-for="range in ranges"
-          :key="range.value"
-          class="range-btn"
-          :class="{ active: selectedRange === range.value }"
-          type="button"
-          @click="selectedRange = range.value"
-        >
+        <button v-for="range in ranges" :key="range.value" class="range-btn"
+          :class="{ active: selectedRange === range.value }" type="button" @click="selectedRange = range.value">
           {{ range.label }}
         </button>
       </div>
     </header>
 
-    <div class="kpi-grid">
-      <article
-        v-for="card in kpiCards"
-        :key="card.id"
-        class="kpi-card micro-card"
-        :style="{ '--card-accent': card.accent }"
-      >
-        <p class="kpi-label">{{ card.label }}</p>
-        <p class="kpi-value">{{ card.value }}</p>
-        <p class="kpi-delta" :class="card.direction">
-          <span class="delta-arrow">{{ card.direction === 'up' ? '▲' : '▼' }}</span>
-          <span>{{ card.delta }}</span>
-          <span class="kpi-period">vs periode prec.</span>
-        </p>
-      </article>
-    </div>
+    <div v-if="loading" class="loading">Chargement...</div>
+    <div v-else-if="error" class="error">Erreur : {{ error }}</div>
 
-    <div class="panel-grid">
-      <article class="micro-card panel">
-        <header class="panel-head">
-          <h2>Repartition utilisateurs</h2>
-          <span class="panel-meta">30 derniers jours</span>
-        </header>
-        <div class="split-list">
-          <div v-for="segment in userSegments" :key="segment.label" class="split-row">
-            <div class="split-top">
-              <span class="split-label">
-                <span class="split-dot" :style="{ background: segment.color }"></span>
-                {{ segment.label }}
-              </span>
-              <span class="split-right">
-                <strong>{{ segment.value }}</strong>
-                <span class="split-pct">{{ segment.pct }}%</span>
-              </span>
-            </div>
-            <div class="progress-track">
-              <div class="progress-fill" :style="{ width: segment.pct + '%', background: segment.color }"></div>
+    <template v-else>
+      <div class="kpi-grid">
+        <article v-for="card in kpiCards" :key="card.id" class="kpi-card micro-card"
+          :style="{ '--card-accent': card.accent }">
+          <p class="kpi-label">{{ card.label }}</p>
+          <p class="kpi-value">{{ card.value }}</p>
+          <p class="kpi-delta" :class="card.direction">
+            <span class="delta-arrow">{{ card.direction === 'up' ? '▲' : '▼' }}</span>
+            <span>{{ card.delta }}</span>
+            <span class="kpi-period">vs periode prec.</span>
+          </p>
+        </article>
+      </div>
+
+      <div class="panel-grid">
+        <article class="micro-card panel">
+          <header class="panel-head">
+            <h2>Repartition utilisateurs</h2>
+            <span class="panel-meta">Ce mois</span>
+          </header>
+          <div class="split-list">
+            <div v-for="segment in userSegments" :key="segment.label" class="split-row">
+              <div class="split-top">
+                <span class="split-label">
+                  <span class="split-dot" :style="{ background: segment.color }"></span>
+                  {{ segment.label }}
+                </span>
+                <span class="split-right">
+                  <strong>{{ segment.value }}</strong>
+                  <span class="split-pct">{{ segment.pct }}%</span>
+                </span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" :style="{ width: segment.pct + '%', background: segment.color }"></div>
+              </div>
             </div>
           </div>
-        </div>
-      </article>
+        </article>
 
-      <article class="micro-card panel">
-        <header class="panel-head">
-          <h2>Inscriptions hebdo</h2>
-          <span class="panel-meta">Mois en cours</span>
-        </header>
-        <div class="bars">
-          <div v-for="week in weeklySignups" :key="week.label" class="bar-row">
-            <span class="bar-label">{{ week.label }}</span>
-            <div class="bar-track">
-              <div class="bar-fill" :style="{ width: `${week.percent}%` }">{{ week.value }}</div>
+        <article class="micro-card panel">
+          <header class="panel-head">
+            <h2>Inscriptions hebdo</h2>
+            <span class="panel-meta">4 dernieres semaines</span>
+          </header>
+          <div class="bars">
+            <div v-for="week in weeklySignups" :key="week.label" class="bar-row">
+              <span class="bar-label">{{ week.label }}</span>
+              <div class="bar-track">
+                <div class="bar-fill" :style="{ width: `${week.percent}%` }">{{ week.value }}</div>
+              </div>
             </div>
           </div>
-        </div>
-      </article>
-    </div>
+        </article>
+      </div>
 
-    <div class="bottom-grid">
-      <article class="micro-card panel push-panel">
-        <header class="panel-head">
-          <h2>
-            <span class="push-icon">🔔</span>
-            Push Notifications
-          </h2>
-          <span class="panel-meta">Dernieres 24h</span>
-        </header>
-        <div class="push-grid">
-          <div v-for="stat in pushStats" :key="stat.label" class="push-stat">
-            <div class="push-stat-head">
-              <span class="push-stat-label">{{ stat.label }}</span>
-              <span class="push-stat-value" :style="{ color: stat.color }">{{ stat.value }}</span>
-            </div>
-            <div class="progress-track">
-              <div class="progress-fill" :style="{ width: stat.pct + '%', background: stat.color }"></div>
+      <div class="bottom-grid">
+        <article class="micro-card panel push-panel">
+          <header class="panel-head">
+            <h2><span class="push-icon">🔔</span> Push Notifications</h2>
+            <span class="panel-meta">En temps réel</span>
+          </header>
+          <div class="push-grid">
+            <div v-for="stat in pushStats" :key="stat.label" class="push-stat">
+              <div class="push-stat-head">
+                <span class="push-stat-label">{{ stat.label }}</span>
+                <span class="push-stat-value" :style="{ color: stat.color }">{{ stat.value }}</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" :style="{ width: stat.pct + '%', background: stat.color }"></div>
+              </div>
             </div>
           </div>
-        </div>
-      </article>
+        </article>
 
-      <article class="micro-card panel">
-        <header class="panel-head">
-          <h2>Activite recente</h2>
-          <span class="panel-meta">Temps reel</span>
-        </header>
-        <ul class="activity-list">
-          <li v-for="event in events" :key="event.id" class="activity-item">
-            <span class="event-badge" :class="event.type.toLowerCase()">{{ event.type }}</span>
-            <div class="event-body">
-              <p class="event-main">{{ event.text }}</p>
-              <p class="event-time">{{ event.time }}</p>
-            </div>
-          </li>
-        </ul>
-      </article>
-    </div>
+        <!-- Activité récente hardcodée pour l'instant -->
+        <article class="micro-card panel">
+          <header class="panel-head">
+            <h2>Activite recente</h2>
+            <span class="panel-meta">Temps reel</span>
+          </header>
+          <ul class="activity-list">
+            <li v-for="event in events" :key="event.id" class="activity-item">
+              <span class="event-badge" :class="event.type.toLowerCase()">{{ event.type }}</span>
+              <div class="event-body">
+                <p class="event-main">{{ event.text }}</p>
+                <p class="event-time">{{ event.time }}</p>
+              </div>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </template>
   </section>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { supabase } from "@/lib/supabase";
 
+// ─────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────
 const selectedRange = ref("30d");
+const loading = ref(true);
+const error = ref(null);
 
 const ranges = [
   { label: "7j", value: "7d" },
@@ -130,40 +129,97 @@ const ranges = [
   { label: "1a", value: "1y" },
 ];
 
-const kpiCards = [
-  { id: "new", label: "Nouveaux inscrits", value: "247", delta: "+18%", direction: "up", accent: "#F97316" },
-  { id: "subs", label: "Nouveaux premium", value: "59", delta: "+11%", direction: "up", accent: "#6D28D9" },
-  { id: "active", label: "Actifs semaine", value: "1 842", delta: "+7%", direction: "up", accent: "#0EA5E9" },
-  { id: "inactive", label: "Inactifs ce mois", value: "1 449", delta: "-3%", direction: "down", accent: "#64748B" },
-];
+const kpiCards = ref([]);
+const userSegments = ref([]);
+const weeklySignups = ref([]);
+const pushStats = ref([]);
 
-const userSegments = [
-  { label: "Free actifs", value: "1 524", pct: 46, color: "#0EA5E9" },
-  { label: "Premium actifs", value: "318", pct: 10, color: "#F97316" },
-  { label: "Inactifs", value: "1 449", pct: 44, color: "#94A3B8" },
-];
+// Activité récente hardcodée — nécessite une table de logs pour être dynamique
+const events = ref([
+  { id: 1, type: "NEW", text: "Nouvel utilisateur inscrit", time: "Il y a 2 min" },
+  { id: 2, type: "PREM", text: "Nouvel abonnement premium", time: "Il y a 8 min" },
+  { id: 3, type: "PUSH", text: "Campagne notif 20:00 envoyee", time: "Il y a 14 min" },
+  { id: 4, type: "UNSUB", text: "Desabonnement notifications", time: "Il y a 35 min" },
+]);
 
-const weeklySignups = [
-  { label: "S-4", value: 48, percent: 48 },
-  { label: "S-3", value: 62, percent: 62 },
-  { label: "S-2", value: 55, percent: 55 },
-  { label: "S-1", value: 82, percent: 82 },
-];
+// ─────────────────────────────────────────
+// CHARGEMENT
+// On appelle l'Edge Function "admin-stats" qui a accès à toutes
+// les données (bypass RLS grâce à la service_role_key côté serveur).
+// C'est le même principe que ton Edge Function "notifications".
+// ─────────────────────────────────────────
+async function loadDashboard() {
+  loading.value = true;
+  error.value = null;
 
-const pushStats = [
-  { label: "Taux d'abonnement global", value: "73%", pct: 73, color: "#0EA5E9" },
-  { label: "Notifications envoyees", value: "1 204", pct: 100, color: "#10B981" },
-  { label: "Taux de succes", value: "96%", pct: 96, color: "#10B981" },
-  { label: "Erreurs 410 (expirees)", value: "47", pct: 4, color: "#EF4444" },
-  { label: "Premium abonnes push", value: "89%", pct: 89, color: "#F97316" },
-];
+  try {
+    // Appel de l'Edge Function Supabase
+    const { data, error: fnError } = await supabase.functions.invoke("admin-stats");
+    if (fnError) throw fnError;
 
-const events = [
-  { id: 1, type: "NEW", text: "user_4821 vient de s'inscrire", time: "Il y a 2 min" },
-  { id: 2, type: "PREM", text: "marie_d est passee premium", time: "Il y a 8 min" },
-  { id: 3, type: "PUSH", text: "Campagne notif 20:00 envoyee a 1 204 utilisateurs", time: "Il y a 14 min" },
-  { id: 4, type: "UNSUB", text: "user_3102 s'est desabonne des notifications", time: "Il y a 35 min" },
-];
+    const { kpi, segments, weeklySignups: weekly, pushStats: push, events: logs } = data;
+
+    // Calcul de la tendance des nouveaux inscrits (▲ ou ▼)
+    const diff = kpi.newUsers30d - kpi.newUsersPrev;
+    const pct = kpi.newUsersPrev > 0
+      ? Math.round((diff / kpi.newUsersPrev) * 100)
+      : 0;
+
+    // Construction des 4 cartes KPI avec les vraies données
+    kpiCards.value = [
+      {
+        id: "new",
+        label: "Nouveaux inscrits",
+        value: kpi.newUsers30d.toLocaleString("fr-FR"),
+        delta: `${pct >= 0 ? "+" : ""}${pct}%`,
+        direction: pct >= 0 ? "up" : "down",
+        accent: "#F97316",
+      },
+      {
+        id: "subs",
+        label: "Abonnés premium",
+        value: kpi.totalPremium.toLocaleString("fr-FR"),
+        delta: "+0%",
+        direction: "up",
+        accent: "#6D28D9",
+      },
+      {
+        id: "active",
+        label: "Actifs semaine",
+        value: kpi.activeWeek.toLocaleString("fr-FR"),
+        delta: "+0%",
+        direction: "up",
+        accent: "#0EA5E9",
+      },
+      {
+        id: "inactive",
+        label: "Inactifs ce mois",
+        value: kpi.inactive.toLocaleString("fr-FR"),
+        delta: "0%",
+        direction: "down",
+        accent: "#64748B",
+      },
+    ];
+
+    events.value = logs ?? [];
+
+    // Les autres données viennent directement de l'Edge Function
+    userSegments.value = segments;
+    weeklySignups.value = weekly;
+    pushStats.value = push;
+
+  } catch (e) {
+    error.value = e.message;
+    console.error("Erreur dashboard admin:", e);
+  } finally {
+    loading.value = false;
+  }
+}
+
+// S'exécute quand la page s'affiche
+onMounted(() => {
+  loadDashboard();
+});
 </script>
 
 <style scoped>
@@ -172,6 +228,20 @@ const events = [
   gap: 16px;
   width: 100%;
   padding-top: 16px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.error {
+  text-align: center;
+  padding: 40px;
+  color: #ef4444;
+  font-weight: 600;
 }
 
 .admin-header {
