@@ -214,19 +214,23 @@ async function startTrial() {
 
 		isLoading.value = true;
 
-		// Appelle l'Edge Function Supabase pour créer la session Stripe
+		// Récupère le token JWT de l'utilisateur connecté
+		const { data: { session } } = await supabase.auth.getSession();
+		if (!session) throw new Error("Session expirée, veuillez vous reconnecter");
+
+		// Appelle l'Edge Function avec le token dans le header Authorization
 		const { data, error } = await supabase.functions.invoke("create-checkout-session", {
 			body: {
 				priceId: priceIds[selectedPlan.value],
-				userId: userStore.userId,
-				email: userStore.userEmail,
+			},
+			headers: {
+				Authorization: `Bearer ${session.access_token}`,
 			},
 		});
 
 		if (error) throw error;
 		if (!data?.url) throw new Error("URL de paiement manquante");
 
-		// Redirige vers la page de paiement Stripe
 		window.location.href = data.url;
 
 	} catch (error) {
