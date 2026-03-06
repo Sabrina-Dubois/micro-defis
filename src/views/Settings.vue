@@ -8,14 +8,18 @@
 			<!-- Profil -->
 			<v-card class="micro-card fixed-card card-profile pa-4 mb-4">
 				<div class="page-subtitle mb-4">{{ t("settings.profil.title") }}</div>
+
 				<v-text-field v-model="userName" :label="t('settings.profil.username')" variant="outlined"
 					density="compact" hide-details class="mb-3" />
+
 				<v-text-field v-model="userStore.userEmail" :label="t('settings.profil.email')" variant="outlined"
 					density="compact" disabled hide-details />
+
 				<v-btn class="btn-primary mt-4" block variant="flat" @click="saveProfile">
 					{{ t("settings.profil.save") }}
 				</v-btn>
 			</v-card>
+
 
 			<!-- Préférences Défis -->
 			<v-card class="micro-card fixed-card card-favorite pa-4 mb-4">
@@ -80,6 +84,7 @@
 								<span class="reminder-time-label">{{ settingsStore.reminderTime }}</span>
 							</v-list-item-title>
 						</v-list-item>
+
 						<div class="px-4 pb-3">
 							<v-slider :model-value="sliderValue" :min="0" :max="23" :step="1" color="#f97922"
 								track-color="rgba(109,40,217,0.2)" thumb-color="#f97922" hide-details
@@ -90,18 +95,6 @@
 								</template>
 							</v-slider>
 						</div>
-					</template>
-
-					<template v-if="settingsStore.notificationsEnabled && isNotificationTestMode">
-						<v-list-item>
-							<template #prepend><v-icon>mdi-flask-outline</v-icon></template>
-							<v-list-item-title>Notification locale (mode test)</v-list-item-title>
-							<template #append>
-								<v-btn size="small" variant="tonal" color="primary" @click="runNotificationTest">
-									Tester
-								</v-btn>
-							</template>
-						</v-list-item>
 					</template>
 
 					<!-- Langue -->
@@ -124,6 +117,32 @@
 
 				</v-list>
 			</v-card>
+			<!-- Abonnement Premium -->
+			<v-card class="micro-card pa-4 mb-4">
+				<div class="page-subtitle mb-3">
+					👑 Abonnement Premium
+				</div>
+
+				<div v-if="settingsStore.isPremium">
+					<v-alert type="success" variant="tonal" class="mb-3">
+						Votre abonnement Premium est actif
+					</v-alert>
+
+					<v-btn block class="btn-primary" @click="manageSubscription">
+						Gérer mon abonnement
+					</v-btn>
+				</div>
+
+				<div v-else>
+					<v-alert type="info" variant="tonal" class="mb-3">
+						Vous utilisez la version gratuite
+					</v-alert>
+
+					<v-btn block color="primary" to="/premium">
+						Passer au Premium
+					</v-btn>
+				</div>
+			</v-card>
 
 			<!-- À propos -->
 			<v-card class="micro-card pa-4 mb-4">
@@ -133,14 +152,17 @@
 						<template #prepend><v-icon>mdi-help-circle</v-icon></template>
 						<v-list-item-title>{{ t("settings.about.help_center") }}</v-list-item-title>
 					</v-list-item>
+
 					<v-list-item to="/terms">
 						<template #prepend><v-icon>mdi-file-document</v-icon></template>
 						<v-list-item-title>{{ t("settings.about.terms") }}</v-list-item-title>
 					</v-list-item>
+
 					<v-list-item to="/privacy">
 						<template #prepend><v-icon>mdi-shield</v-icon></template>
 						<v-list-item-title>{{ t("settings.about.privacy_policy") }}</v-list-item-title>
 					</v-list-item>
+
 					<v-list-item>
 						<v-list-item-title>{{ t("settings.about.version") }}</v-list-item-title>
 						<template #append>
@@ -154,22 +176,27 @@
 			<v-btn class="btn-primary mt-2 mb-2" block :loading="isLoggingOut" :disabled="isLoggingOut" @click="logout">
 				{{ t("settings.account.logout") }}
 			</v-btn>
+
 			<v-btn block variant="text" color="error" size="small" to="/login" @click="deleteAccount">
 				{{ t("settings.account.delete") }}
 			</v-btn>
+
+			<div class="text-center mt-4 text-caption opacity-50">MicroDéfis v1.0.0</div>
 		</template>
 
 		<template v-else>
 			<FlameLoader />
 		</template>
-
 	</div>
 </template>
+
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useTheme } from "vuetify";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import { supabase } from "@/lib/supabase";
 
 import { useUserStore } from "@/stores/userStore";
 import { useStatsStore } from "@/stores/statsStore";
@@ -179,6 +206,7 @@ import FlameLoader from "@/components/FlameLoader.vue";
 
 const { t, locale } = useI18n();
 const vuetifyTheme = useTheme();
+const router = useRouter();
 
 const userStore = useUserStore();
 const statsStore = useStatsStore();
@@ -256,6 +284,19 @@ async function changeLanguage() {
 async function changeTheme() {
 	const newTheme = await settingsStore.toggleTheme();
 	vuetifyTheme.change(newTheme);
+}
+
+async function manageSubscription() {
+	try {
+		const { data, error } = await supabase.functions.invoke("create-customer-portal-session");
+		if (error) throw error;
+		if (!data?.url) throw new Error("URL portail abonnement manquante");
+		window.location.href = data.url;
+	} catch (e) {
+		console.error("Erreur ouverture portail abonnement:", e);
+		alert("Le portail abonnement n'est pas encore configuré. Redirection vers Premium.");
+		router.push("/premium");
+	}
 }
 
 async function logout() {
