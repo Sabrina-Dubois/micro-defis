@@ -1,18 +1,99 @@
-Copyright (c) 2026 Sabrina Dubois. Tous droits réservés.
+/*
+ * Copyright © 2026 MicroDéfis. Tous droits réservés.
+ *
+ * Ce logiciel et l’ensemble de ses composants (code source, design,
+ * documentation, bases de données ou concepts associés) (ci-après
+ * le « Logiciel ») sont la propriété exclusive de MicroDéfis.
+ *
+ * En installant, copiant, téléchargeant ou utilisant ce logiciel,
+ * vous acceptez d’être lié(e) par les termes de cette licence.
+ *
+ * ---------------------------------------------------------------------
+ * VERSION FRANÇAISE
+ * ---------------------------------------------------------------------
+ *
+ * 1. DÉFINITIONS
+ * « Licencié » désigne toute personne ou entité autorisée à utiliser
+ * le Logiciel. « Licence » désigne les droits concédés par cette autorisation.
+ *
+ * 2. OBJET
+ * MicroDéfis accorde au Licencié un droit limité, personnel,
+ * non exclusif et non transférable d’utiliser le Logiciel conformément
+ * aux conditions définies ci-dessous.
+ *
+ * 3. DROITS ACCORDÉS
+ * Le Licencié est autorisé à :
+ *   a) installer et utiliser le Logiciel uniquement pour un usage
+ *      personnel ou professionnel non redistributif ;
+ *   b) exécuter le Logiciel sur les appareils ou comptes autorisés.
+ *
+ * 4. RESTRICTIONS
+ * Sauf autorisation écrite préalable de MicroDéfis :
+ *   a) il est interdit de copier, modifier, décompiler, désassembler,
+ *      adapter ou créer des œuvres dérivées du Logiciel ;
+ *   b) il est interdit de distribuer, vendre, louer, sous-licencier,
+ *      transférer ou exploiter commercialement tout ou partie du Logiciel ;
+ *   c) il est interdit de retirer ou altérer toute mention de propriété
+ *      intellectuelle figurant dans le Logiciel.
+ *
+ * 5. PROPRIÉTÉ
+ * Le Logiciel reste la propriété exclusive de MicroDéfis. Aucune cession
+ * de droits de propriété intellectuelle n’est accordée par cette Licence.
+ *
+ * 6. LIMITATION DE RESPONSABILITÉ
+ * Dans toute la mesure permise par la loi, MicroDéfis ne sera pas tenu
+ * responsable des dommages directs, indirects, accessoires, spéciaux ou
+ * consécutifs découlant de l’utilisation ou de l’incapacité à utiliser
+ * le Logiciel.
+ *
+ * 7. LOI APPLICABLE
+ * Cette Licence est régie par le droit français. En cas de litige,
+ * les tribunaux compétents seront ceux du **Tribunal judiciaire de Melun**
+ * (Seine-et-Marne, France), même en cas de référé, de pluralité de défendeurs
+ * ou d’appel en garantie.
 
-LOGICIEL PROPRIÉTAIRE ET CONFIDENTIEL
-
-Ce logiciel, incluant l'ensemble du code source, du design, des concepts et de la
-documentation associée (le "Logiciel"), est la propriété exclusive de Sabrina Dubois.
-
-IL EST STRICTEMENT INTERDIT DE :
-- Utiliser, copier, modifier ou distribuer le Logiciel
-- Utiliser le nom "MicroDéfis" ou toute marque associée
-- Reproduire ou réutiliser tout concept, design ou idée issu du Logiciel
-- Sous-licencier, vendre ou transférer tout droit sur le Logiciel
-
-Le Logiciel est mis à disposition uniquement à titre de consultation sur un dépôt public.
-Toute utilisation, reproduction ou distribution non autorisée, en tout ou en partie,
-est formellement interdite et peut faire l'objet de poursuites judiciaires.
-
-Pour toute demande de licence, contacter l'auteure directement.
+ 
+ *
+ * ---------------------------------------------------------------------
+ * ENGLISH VERSION
+ * ---------------------------------------------------------------------
+ *
+ * 1. DEFINITIONS
+ * “Licensee” means any person or entity authorized to use the Software.
+ * “License” means the rights granted by this authorization.
+ *
+ * 2. PURPOSE
+ * MicroDéfis hereby grants the Licensee a limited, personal,
+ * non-exclusive, non-transferable right to use the Software in
+ * accordance with the terms below.
+ *
+ * 3. GRANTED RIGHTS
+ * The Licensee is permitted to:
+ *   a) install and use the Software solely for personal or
+ *      professional use without redistribution;
+ *   b) run the Software on authorized devices or accounts.
+ *
+ * 4. RESTRICTIONS
+ * Unless expressly authorized in writing by MicroDéfis:
+ *   a) it is prohibited to copy, modify, decompile, disassemble,
+ *      adapt, or create derivative works of the Software;
+ *   b) it is prohibited to distribute, sell, lease, sublicense,
+ *      transfer, or commercially exploit any part of the Software;
+ *   c) it is prohibited to remove or alter any intellectual property
+ *      notices contained in the Software.
+ *
+ * 5. OWNERSHIP
+ * The Software remains the sole property of MicroDéfis. No transfer
+ * of intellectual property rights is granted under this License.
+ *
+ * 6. LIMITATION OF LIABILITY
+ * To the fullest extent permitted by law, MicroDéfis shall not be
+ * liable for direct, indirect, incidental, special or consequential
+ * damages arising out of the use or inability to use the Software.
+ *
+ * 7. GOVERNING LAW
+ * This License is governed by French law. In the event of a dispute,
+ * the competent courts shall be those of the **Tribunal judiciaire de Melun**
+ * (Seine-et-Marne, France), including for interim proceedings or multiple
+ * defendants.
+ */
