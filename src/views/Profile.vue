@@ -7,33 +7,24 @@
 				<div class="page-title">
 					{{ userStore.userName }}
 				</div>
-
-				<!-- Option B — Badge pill -->
-				<div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">
-					<span style="font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 600;">
-						Rang
-					</span>
-					<div style="
-    background: rgba(255, 107, 53, 0.15);
-    border: 1px solid rgba(255, 107, 53, 0.5);
-    border-radius: 999px;
-    padding: 3px 12px;
-    font-size: 12px;
-    font-weight: 700;
-    color: #ff6b35;
-  ">
-						{{ statsStore.userTitle.icon }} {{ statsStore.userTitle.title }}
+					<div class="header-badges-row">
+						<span class="rank-label">Rang</span>
+						<div class="rank-pill">
+							{{ statsStore.userTitle.icon }} {{ statsStore.userTitle.title }}
+						</div>
+						<div v-if="userStore.isPremium" class="premium-badge">
+							👑 Premium
+						</div>
 					</div>
-				</div>
 
-				<div style="
+				<!--<div style="
 					color: rgba(255, 255, 255, 0.85);
 					font-weight: 700;
 					font-size: 13px;
 					margin-top: 6px;
 				">
 					{{ userStore.userEmail }}
-				</div>
+				</div>-->
 				<div style="
 					color: rgba(255, 255, 255, 0.7);
 					font-weight: 600;
@@ -110,9 +101,13 @@
 			</v-card>
 
 			<!-- Bouton Premium -->
-			<v-btn class="btn-primary mt-4" block to="/premium">
+			<v-btn v-if="!userStore.isPremium" class="btn-primary mt-4" block to="/premium">
 				{{ t("profil.premium.title") }}
 			</v-btn>
+
+			<div v-else class="premium-active">
+				👑 Abonnement Premium actif
+			</div>
 		</template>
 
 		<template v-else>
@@ -323,5 +318,47 @@ onUnmounted(() => {
 	.badge-name {
 		font-size: 10px;
 	}
+}
+
+.premium-active {
+	margin-top: 16px;
+	text-align: center;
+	font-weight: 700;
+	color: #ff6b35;
+}
+
+.header-badges-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 6px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.rank-label {
+	font-size: 11px;
+	color: rgba(255, 255, 255, 0.55);
+	font-weight: 600;
+}
+
+.rank-pill {
+	background: rgba(255, 107, 53, 0.15);
+	border: 1px solid rgba(255, 107, 53, 0.5);
+	border-radius: 999px;
+	padding: 3px 12px;
+	font-size: 12px;
+	font-weight: 700;
+	color: #ff6b35;
+}
+
+.premium-badge {
+	padding: 3px 10px;
+	border-radius: 999px;
+	background: rgba(255, 215, 0, 0.15);
+	border: 1px solid rgba(255, 215, 0, 0.4);
+	font-size: 12px;
+	font-weight: 700;
+	color: #ffd700;
 }
 </style>
