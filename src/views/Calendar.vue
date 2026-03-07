@@ -39,28 +39,34 @@
 				</div>
 			</div>
 
-			<!-- Grille des jours -->
-			<div class="days-grid">
-				<div v-for="(day, dayIndex) in calendarDays" :key="dayIndex" class="day-col d-flex justify-center mb-2">
+				<!-- Grille des jours -->
+				<div class="days-grid">
+					<div v-for="(day, dayIndex) in calendarDays" :key="dayIndex" class="day-col d-flex justify-center mb-2">
 					<!-- Jour vide -->
 					<div v-if="!day.inMonth" class="empty-day"></div>
 
 					<!-- Jour avec contenu -->
-					<v-sheet v-else :color="getDayColor(day)"
-						class="day-cell d-flex align-center justify-center position-relative" rounded="circle"
-						:elevation="day.done ? 2 : 0">
-						<!-- V VERT pour jour validé -->
-						<v-icon v-if="day.done" color="green" size="24"> mdi-check </v-icon>
+						<v-sheet v-else :color="getDayColor(day)"
+							class="day-cell d-flex align-center justify-center position-relative" rounded="circle"
+							:elevation="day.done ? 2 : 0">
+							<span v-if="day.protected" class="torch-icon">🕯️</span>
+							<!-- V VERT pour jour validé -->
+							<v-icon v-else-if="day.done" color="green" size="24"> mdi-check </v-icon>
 
 						<!-- Numéro pour les autres jours -->
 						<span v-else class="text-body-2 font-weight-medium" :class="getDayTextClass(day)">
 							{{ day.label }}
 						</span>
-					</v-sheet>
+						</v-sheet>
+					</div>
 				</div>
-			</div>
-		</v-card>
-	</div>
+				<div class="calendar-legend mt-3">
+					<span><span class="legend-dot done"></span> Complété</span>
+					<span><span class="legend-dot protected"></span> Protégé par torche</span>
+					<span><span class="legend-dot missed"></span> Manqué</span>
+				</div>
+			</v-card>
+		</div>
 </template>
 
 <script setup>
@@ -114,23 +120,26 @@ const calendarDays = computed(() => {
 		const isFuture = iso > today;
 
 		// ✅ Utilise le store pour savoir si le jour est complété
-		const isDone = statsStore.isCompletedDay(iso);
+			const isDone = statsStore.isCompletedDay(iso);
+			const isProtected = statsStore.isShieldProtectedDay(iso);
 
-		days.push({
-			label: d,
-			date: iso,
-			inMonth: true,
-			done: isDone,
-			missed: isPast && !isDone,
-			isToday: iso === today,
-			isFuture,
-		});
+			days.push({
+				label: d,
+				date: iso,
+				inMonth: true,
+				done: isDone,
+				protected: isProtected,
+				missed: isPast && !isDone,
+				isToday: iso === today,
+				isFuture,
+			});
 	}
 	return days;
 });
 
 // ===== FONCTIONS UI =====
 function getDayColor(day) {
+	if (day.protected) return "amber-lighten-3";
 	if (day.done) return "green-lighten-3";
 	if (day.missed) return "grey";
 	return "grey-lighten-3";
@@ -251,5 +260,40 @@ defineExpose({ loadCalendar });
 .empty-day {
 	width: 40px;
 	height: 40px;
+}
+
+.torch-icon {
+	font-size: 20px;
+	line-height: 1;
+}
+
+.calendar-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px 14px;
+	font-size: 12px;
+	color: #475569;
+	font-weight: 600;
+}
+
+.legend-dot {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	margin-right: 6px;
+	vertical-align: -1px;
+}
+
+.legend-dot.done {
+	background: #86efac;
+}
+
+.legend-dot.protected {
+	background: #fcd34d;
+}
+
+.legend-dot.missed {
+	background: #94a3b8;
 }
 </style>

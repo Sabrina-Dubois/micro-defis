@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase";
 export async function fetchAllCompletions(userId) {
   const { data, error } = await supabase
     .from("daily_completions")
-    .select("day, challenge_id")
+    .select("day, challenge_id, completed_at")
     .eq("user_id", userId)
     .order("day", { ascending: false });
 

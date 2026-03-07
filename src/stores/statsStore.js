@@ -10,6 +10,7 @@ export const useStatsStore = defineStore("stats", () => {
   // ─────────────────────────────────────────
   const completions = ref([]);
   const completedDaysSet = ref(new Set());
+  const shieldProtectedDaysSet = ref(new Set());
   const currentStreak = ref(0);
   const bestStreak = ref(0);
   const totalCompleted = ref(0);
@@ -95,6 +96,14 @@ export const useStatsStore = defineStore("stats", () => {
       completions.value = data;
       totalCompleted.value = data.length;
       completedDaysSet.value = new Set(data.map((c) => c.day));
+      shieldProtectedDaysSet.value = new Set(
+        data
+          .filter((c) => {
+            const completedDate = c.completed_at?.slice(0, 10);
+            return completedDate && completedDate > c.day;
+          })
+          .map((c) => c.day),
+      );
       calculateStreaks();
       return data;
     } catch (e) {
@@ -174,18 +183,34 @@ export const useStatsStore = defineStore("stats", () => {
 
       if (data === true) {
         const yesterday = getLocalISODate(-1);
+        const today = getLocalISODate(0);
 
-        // Récupère un challenge_id valide pour boucher le trou
-        const { data: challenge } = await supabase.from("challenges").select("id").limit(1).single();
+        // Récupère le challenge assigné hier si possible
+        const { data: assignment } = await supabase
+          .from("daily_assignments")
+          .select("challenge_id")
+          .eq("user_id", userStore.userId)
+          .eq("day", yesterday)
+          .maybeSingle();
 
-        if (challenge?.id) {
+        // Fallback : premier challenge dispo
+        let challengeId = assignment?.challenge_id;
+        if (!challengeId) {
+          const { data: challenge } = await supabase.from("challenges").select("id").limit(1).single();
+          challengeId = challenge?.id;
+        }
+
+        if (challengeId) {
           await supabase.from("daily_completions").upsert({
             user_id: userStore.userId,
             day: yesterday,
-            challenge_id: challenge.id,
+            challenge_id: challengeId,
+            completed_at: today + "T00:00:00.000Z", // ← clé : completed_at > day = bougie 🕯️
           });
         }
 
+        // Recharge tout pour mettre à jour l'UI
+        await loadCompletions();
         await userStore.loadUser();
         return true;
       }
@@ -215,6 +240,10 @@ export const useStatsStore = defineStore("stats", () => {
     return completedDaysSet.value.has(day);
   }
 
+  function isShieldProtectedDay(day) {
+    return shieldProtectedDaysSet.value.has(day);
+  }
+
   function getLast7Days() {
     const labelMap = ["D", "L", "M", "M", "J", "V", "S"];
     return Array.from({ length: 7 }, (_, i) => {
@@ -228,6 +257,7 @@ export const useStatsStore = defineStore("stats", () => {
   function reset() {
     completions.value = [];
     completedDaysSet.value = new Set();
+    shieldProtectedDaysSet.value = new Set();
     currentStreak.value = 0;
     bestStreak.value = 0;
     totalCompleted.value = 0;
@@ -241,6 +271,7 @@ export const useStatsStore = defineStore("stats", () => {
   return {
     completions,
     completedDaysSet,
+    shieldProtectedDaysSet,
     currentStreak,
     bestStreak,
     totalCompleted,
@@ -259,6 +290,7 @@ export const useStatsStore = defineStore("stats", () => {
     markDeclinedToday,
     addCompletion,
     isCompletedDay,
+    isShieldProtectedDay,
     getLast7Days,
     reset,
   };
