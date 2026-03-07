@@ -3,19 +3,27 @@
 		<template v-if="isPageReady">
 			<!-- Header Profil -->
 			<div class="center">
-				<div class="avatar" @click="changeAvatar">{{ userStore.userAvatar }}</div>
+				<button
+					type="button"
+					class="avatar avatar-btn"
+					aria-label="Changer l'avatar"
+					title="Changer l'avatar"
+					@click="changeAvatar"
+				>
+					{{ userStore.userAvatar }}
+				</button>
 				<div class="page-title">
 					{{ userStore.userName }}
 				</div>
-					<div class="header-badges-row">
-						<span class="rank-label">Rang</span>
-						<div class="rank-pill">
-							{{ statsStore.userTitle.icon }} {{ statsStore.userTitle.title }}
-						</div>
-						<div v-if="userStore.isPremium" class="premium-badge">
-							👑 Premium
-						</div>
+				<div class="header-badges-row">
+					<span class="rank-label">Rang</span>
+					<div class="rank-pill">
+						{{ statsStore.userTitle.icon }} {{ statsStore.userTitle.title }}
 					</div>
+					<div v-if="userStore.isPremium" class="premium-badge">
+						👑 Premium
+					</div>
+				</div>
 
 				<!--<div style="
 					color: rgba(255, 255, 255, 0.85);
@@ -75,11 +83,17 @@
 				<div class="page-subtitle">
 					{{ t("profil.badges.title") }} ({{ unlockedBadges }}/{{ totalBadges }})
 				</div>
-				<div class="badges-grid">
-					<div v-for="badge in badges" :key="badge.id" class="badge-item"
-						:class="{ locked: !badge.unlocked }">
-						<div class="badge-icon">{{ badge.icon }}</div>
-						<div class="badge-name">{{ t(badge.key) }}</div>
+				<div class="badges-scroll">
+					<div class="badges-grid">
+						<div v-for="badge in badges" :key="badge.id" class="badge-item"
+							:class="{ locked: !badge.unlocked, premium: badge.premiumOnly }">
+							<span v-if="badge.premiumOnly" class="badge-crown">👑</span>
+							<div class="badge-icon">{{ badge.icon }}</div>
+							<div class="badge-name">{{ badge.label || t(badge.key) }}</div>
+							<div class="badge-desc">{{ badge.description }}</div>
+							<div v-if="badge.premiumOnly && !userStore.isPremium" class="badge-premium-lock">🔒 Premium
+							</div>
+						</div>
 					</div>
 				</div>
 			</v-card>
@@ -136,18 +150,37 @@ const isPageReady = ref(false);
 
 // ===== BADGES (logique locale) =====
 const badges = ref([
-	{ id: 1, key: "profil.badges.badges_first", icon: "⭐️", unlocked: false },
-	{ id: 2, key: "profil.badges.badges_3days", icon: "🥉", unlocked: false },
-	{ id: 3, key: "profil.badges.badges_7days", icon: "🔥", unlocked: false },
-	{ id: 4, key: "profil.badges.badges_30days", icon: "⚡", unlocked: false },
-	{ id: 5, key: "profil.badges.badges_100", icon: "💯", unlocked: false },
-	{ id: 6, key: "profil.badges.badges_regular", icon: "📅", unlocked: false },
-	{ id: 7, key: "profil.badges.badges_champion", icon: "🏆", unlocked: false },
+	{ id: 1, key: "profil.badges.badges_first", icon: "⭐️", description: "Valider ton 1er défi", unlocked: false, premiumOnly: false },
+	{ id: 2, key: "profil.badges.badges_3days", icon: "🥉", description: "Série de 3 jours", unlocked: false, premiumOnly: false },
+	{ id: 3, key: "profil.badges.badges_7days", icon: "⓻", description: "Série de 7 jours", unlocked: false, premiumOnly: false },
+	{ id: 4, key: "profil.badges.badges_30days", icon: "⚡", description: "Série de 30 jours", unlocked: false, premiumOnly: false },
+	{ id: 5, key: "profil.badges.badges_100", icon: "💯", description: "Atteindre 100 défis validés", unlocked: false, premiumOnly: false },
+	{ id: 6, key: "profil.badges.badges_regular", icon: "📅", description: "Meilleure série de 14 jours", unlocked: false, premiumOnly: false },
+	{ id: 7, key: "profil.badges.badges_champion", icon: "🏆", description: "Meilleure série de 50 jours", unlocked: false, premiumOnly: false },
+	{ id: 8, key: "", label: "Inarrêtable", icon: "🔥", description: "Série de 100 jours", unlocked: false, premiumOnly: false },
+	{ id: 9, key: "", label: "Marathon", icon: "🧱", description: "200 défis validés", unlocked: false, premiumOnly: false },
+	{ id: 10, key: "", label: "Retour", icon: "🚀", description: "Revenir après 7 jours d’inactivité.", unlocked: false, premiumOnly: false },
+	{ id: 11, key: "", label: "Noctambule", icon: "🌙", description: "Valider un défi tard le soir", unlocked: false, premiumOnly: false },
+	{ id: 12, key: "", label: "Lève-tôt", icon: "⏰", description: "Valider un défi tôt le matin", unlocked: false, premiumOnly: false },
+	{ id: 13, key: "", label: "Sauvé", icon: "🛟", description: "1 jour protégé par torche", unlocked: false, premiumOnly: true },
+	{ id: 14, key: "", label: "Fidèle", icon: "👑", description: "Premium depuis 30 jours", unlocked: false, premiumOnly: true },
+	{ id: 15, key: "", label: "Elite", icon: "🧠", description: "Premium depuis 60 jours", unlocked: false, premiumOnly: true },
+	{ id: 16, key: "", label: "Gardien", icon: "🛡️", description: "Premium depuis 100 jours", unlocked: false, premiumOnly: true },
+	{ id: 17, key: "", label: "Légende", icon: "🌟", description: "Premium depuis 200 jours", unlocked: false, premiumOnly: true },
 ]);
 
 const unlockedBadges = computed(
 	() => badges.value.filter((b) => b.unlocked).length
 );
+
+const premiumDays = computed(() => {
+	if (!userStore.premiumSince) return 0
+
+	const start = new Date(userStore.premiumSince)
+	const now = new Date()
+
+	return Math.floor((now - start) / (1000 * 60 * 60 * 24))
+})
 
 const totalBadges = computed(() => badges.value.length);
 
@@ -156,13 +189,24 @@ const last7Days = computed(() => statsStore.getLast7Days());
 
 // ===== MISE À JOUR DES BADGES =====
 function updateBadges() {
-	badges.value[0].unlocked = statsStore.totalCompleted >= 1;
-	badges.value[1].unlocked = statsStore.currentStreak >= 3;
-	badges.value[2].unlocked = statsStore.currentStreak >= 7;
-	badges.value[3].unlocked = statsStore.currentStreak >= 30;
-	badges.value[4].unlocked = statsStore.totalCompleted >= 100;
-	badges.value[5].unlocked = statsStore.bestStreak >= 14;
-	badges.value[6].unlocked = statsStore.bestStreak >= 50;
+	const byId = (id) => badges.value.find((b) => b.id === id);
+	byId(1).unlocked = statsStore.totalCompleted >= 1;
+	byId(2).unlocked = statsStore.currentStreak >= 3;
+	byId(3).unlocked = statsStore.currentStreak >= 7;
+	byId(4).unlocked = statsStore.currentStreak >= 30;
+	byId(5).unlocked = statsStore.totalCompleted >= 100;
+	byId(6).unlocked = statsStore.bestStreak >= 14;
+	byId(7).unlocked = statsStore.bestStreak >= 50;
+	byId(8).unlocked = statsStore.bestStreak >= 100;
+	byId(9).unlocked = statsStore.totalCompleted >= 200;
+	byId(10).unlocked = statsStore.totalCompleted >= 25 && statsStore.currentStreak <= 2;
+	byId(11).unlocked = statsStore.totalCompleted >= 10;
+	byId(12).unlocked = statsStore.totalCompleted >= 10;
+	byId(13).unlocked = userStore.isPremium && statsStore.shieldProtectedDaysSet.size > 0;
+	byId(14).unlocked = userStore.isPremium && premiumDays.value >= 30
+	byId(15).unlocked = userStore.isPremium && premiumDays.value >= 60
+	byId(16).unlocked = userStore.isPremium && premiumDays.value >= 100
+	byId(17).unlocked = userStore.isPremium && premiumDays.value >= 200
 }
 
 // ===== CHANGER AVATAR =====
@@ -227,6 +271,10 @@ onUnmounted(() => {
 	transition: transform 0.2s;
 }
 
+.avatar-btn {
+	padding: 0;
+}
+
 .avatar:hover {
 	transform: scale(1.05);
 }
@@ -235,17 +283,37 @@ onUnmounted(() => {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 12px;
-	margin-top: 12px;
+	margin-top: 8px;
+}
+
+.badges-scroll {
+	max-height: 360px;
+	overflow-y: auto;
+	padding-right: 4px;
 }
 
 .badge-item {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	padding: 12px;
 	border-radius: 12px;
-	background: rgba(255, 107, 53, 0.1);
+	background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(147, 51, 234, 0.16));
+	border: 1px solid rgba(245, 158, 11, 0.25);
 	transition: all 0.2s;
+}
+
+.badge-item.premium {
+	border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.badge-crown {
+	position: absolute;
+	top: 4px;
+	left: 6px;
+	font-size: 12px;
+	line-height: 1;
 }
 
 .badge-item.locked {
@@ -263,6 +331,22 @@ onUnmounted(() => {
 	font-weight: 700;
 	text-align: center;
 	color: #334155;
+}
+
+.badge-desc {
+	margin-top: 4px;
+	font-size: 10px;
+	font-weight: 600;
+	text-align: center;
+	color: #64748b;
+	line-height: 1.25;
+}
+
+.badge-premium-lock {
+	margin-top: 4px;
+	font-size: 10px;
+	font-weight: 700;
+	color: #f59e0b;
 }
 
 .activity-chart {

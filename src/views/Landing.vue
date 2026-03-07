@@ -62,9 +62,9 @@
             <v-btn class="btn-primary mt-2" block @click="$router.push('/login')">
                 {{ t('landing.cta.button') }}
             </v-btn>
-            <div class="login-link" @click="$router.push('/login')">
+            <router-link class="login-link" to="/login">
                 {{ t('landing.cta.login') }}
-            </div>
+            </router-link>
         </v-card>
 
         <!-- Footer links -->
@@ -261,12 +261,13 @@ const categories = [
 
 /* CTA */
 .login-link {
+    display: inline-block;
     text-align: center;
     margin-top: 12px;
     font-size: 13px;
     color: #7c3aed;
     font-weight: 600;
-    cursor: pointer;
+    text-decoration: none;
 }
 
 /* Footer */

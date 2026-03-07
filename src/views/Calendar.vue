@@ -23,13 +23,25 @@
 
 			<!-- Navigation mois -->
 			<div class="d-flex justify-space-between align-center mb-3">
-				<v-btn icon="mdi-chevron-left" size="small" variant="text" @click="previousMonth"></v-btn>
+					<v-btn
+						icon="mdi-chevron-left"
+						size="small"
+						variant="text"
+						aria-label="Mois précédent"
+						@click="previousMonth"
+					></v-btn>
 
 				<div class="text-h7 font-weight-black text-capitalize">
 					{{ monthLabel }}
 				</div>
 
-				<v-btn icon="mdi-chevron-right" size="small" variant="text" @click="nextMonth"></v-btn>
+					<v-btn
+						icon="mdi-chevron-right"
+						size="small"
+						variant="text"
+						aria-label="Mois suivant"
+						@click="nextMonth"
+					></v-btn>
 			</div>
 
 			<!-- Jours de la semaine -->

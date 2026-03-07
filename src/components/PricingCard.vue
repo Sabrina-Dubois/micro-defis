@@ -1,5 +1,12 @@
 <template>
-    <div class="pricing-card" :class="{ selected: isSelected, popular: popular }" @click="$emit('select', id)">
+    <button
+        type="button"
+        class="pricing-card"
+        :class="{ selected: isSelected, popular: popular }"
+        :aria-pressed="isSelected"
+        :aria-label="`Choisir ${name}`"
+        @click="$emit('select', id)"
+    >
         <div v-if="popular" class="popular-badge">⭐ POPULAIRE</div>
         <div class="plan-header">
             <div class="plan-name">{{ name }}</div>
@@ -10,7 +17,7 @@
             <span class="price-period">{{ pricePeriod }}</span>
         </div>
         <div class="plan-desc">{{ desc }}</div>
-    </div>
+    </button>
 </template>
 
 <script setup>
@@ -39,12 +46,14 @@ const props = defineProps({
 
 .pricing-card {
 	position: relative;
+	width: 100%;
 	padding: 16px;
 	border: 2px solid #e2e8f0;
 	border-radius: 16px;
 	cursor: pointer;
 	transition: all 0.3s;
 	background: white;
+	text-align: left;
 }
 
 .pricing-card:hover {

@@ -11,34 +11,32 @@
 
 			<v-card-text class="pa-0">
 				<!-- Username seulement pour signup -->
-				<v-text-field v-if="!isLogin" v-model="username" :placeholder="t('auth.signup.username')"
+				<v-text-field v-if="!isLogin" v-model="username" :label="t('auth.signup.username')"
+					:placeholder="t('auth.signup.username')"
 					prepend-inner-icon="mdi-account-outline" class="mb-4" hide-details />
 
 				<!-- Email -->
-				<v-text-field v-model="email" :placeholder="t('auth.login.email')" type="email"
+				<v-text-field v-model="email" :label="t('auth.login.email')" :placeholder="t('auth.login.email')" type="email"
 					prepend-inner-icon="mdi-email-outline" class="mb-4" hide-details />
 
 				<!-- Password -->
 				<v-text-field v-model="password" prepend-inner-icon="mdi-lock-outline"
-					:placeholder="t('auth.login.password')" :type="showPassword ? 'text' : 'password'"
+					:label="t('auth.login.password')" :placeholder="t('auth.login.password')"
+					:type="showPassword ? 'text' : 'password'"
 					:append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" @click:append-inner="togglePassword"
 					class="mb-4" hide-details />
 
 				<!-- Confirm password seulement pour signup -->
 				<v-text-field v-if="!isLogin" v-model="confirmPassword" prepend-inner-icon="mdi-lock-outline"
-					:placeholder="t('auth.signup.confirm_password')" :type="showPassword ? 'text' : 'password'"
+					:label="t('auth.signup.confirm_password')" :placeholder="t('auth.signup.confirm_password')"
+					:type="showPassword ? 'text' : 'password'"
 					:append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" @click:append-inner="togglePassword"
 					class="mb-4" hide-details />
 
 				<!-- Mot de passe oublié -->
-				<div v-if="isLogin" class="text-center mb-4" style="
-						font-size: 13px;
-						font-weight: 600;
-						color: #6366f1;
-						cursor: pointer;
-					" @click="resetPassword">
+				<v-btn v-if="isLogin" variant="text" class="forgot-password-btn mb-4" @click="resetPassword">
 					{{ t("auth.login.forgot_password") }}
-				</div>
+				</v-btn>
 
 				<!-- Bouton principal -->
 				<v-btn class="btn-primary mt-2" block :loading="loading" @click="handleAuth">
@@ -49,11 +47,11 @@
 
 				<!-- Toggle login/signup -->
 				<div class="text-center mt-4">
-					<a @click.prevent="isLogin = !isLogin" style="color: #6366f1; cursor: pointer">
+					<button type="button" class="auth-toggle-btn" @click="isLogin = !isLogin">
 						{{
 							isLogin ? t("auth.signup.create_account") : t("auth.login.switch_to_login")
 						}}
-					</a>
+					</button>
 				</div>
 
 				<!-- Erreurs -->
@@ -174,5 +172,23 @@ const resetPassword = async () => {
 	text-align: center;
 	color: rgba(255, 255, 255, 0.85);
 	font-size: 13px;
+}
+
+.forgot-password-btn {
+	font-size: 13px;
+	font-weight: 600;
+	color: #4f46e5;
+	text-transform: none;
+	letter-spacing: 0;
+}
+
+.auth-toggle-btn {
+	background: transparent;
+	border: 0;
+	padding: 0;
+	color: #4f46e5;
+	font-weight: 600;
+	font-size: 14px;
+	cursor: pointer;
 }
 </style>

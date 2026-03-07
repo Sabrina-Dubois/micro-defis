@@ -55,16 +55,3 @@ if ("serviceWorker" in navigator && import.meta.env.PROD) {
       console.error("Service worker registration failed:", err);
     });
 }
-
-// --- Install PWA bouton ---
-let deferredPrompt;
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-});
-window.installPWA = () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(() => (deferredPrompt = null));
-  }
-};

@@ -1,7 +1,15 @@
 <template>
 	<div v-if="showButton" class="pwa-hint">
-		<v-btn fab color="#FF6B35" size="56" elevation="12" @click="installPWA">
-			<v-icon color="white" size="28">mdi-cellphone</v-icon>
+		<v-btn
+			fab
+			color="#FF6B35"
+			size="56"
+			elevation="12"
+			aria-label="Installer l'application"
+			title="Installer l'application"
+			@click="installPWA"
+		>
+			<v-icon color="white" size="28" aria-hidden="true">mdi-cellphone</v-icon>
 		</v-btn>
 		<div class="hint-text">{{ t("pwa.button") }}</div>
 

@@ -4,14 +4,14 @@ import vue from "@vitejs/plugin-vue";
 import vuetify from "vite-plugin-vuetify";
 import vueDevTools from "vite-plugin-vue-devtools";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     vue(),
     vuetify({
       // Importe automatiquement les composants Vuetify utilisés dans le code
       autoImport: true,
     }),
-    vueDevTools(),
+    ...(mode === "development" ? [vueDevTools()] : []),
   ],
 
   resolve: {
@@ -33,10 +33,15 @@ export default defineConfig({
         // Avantage : si tu modifies ton code, le navigateur re-télécharge
         // uniquement ton code — pas Vuetify/Supabase qui n'ont pas changé
         manualChunks(id) {
+          if (id.includes("node_modules/vue")) return "vue-vendor";
+          if (id.includes("node_modules/vue-router")) return "vue-vendor";
+          if (id.includes("node_modules/pinia")) return "vue-vendor";
+          if (id.includes("node_modules/vue-i18n")) return "vue-vendor";
           if (id.includes("node_modules/vuetify")) return "vuetify";
-          if (id.includes("node_modules/supabase")) return "supabase";
-          if (id.includes("node_modules/lodash")) return "lodash";
+          if (id.includes("node_modules/@supabase/supabase-js")) return "supabase";
+          if (id.includes("node_modules/@supabase/")) return "supabase";
           if (id.includes("html-to-image")) return "html-to-image";
+          if (id.includes("node_modules/qrcode")) return "qrcode";
         },
       },
     },
@@ -50,6 +55,12 @@ export default defineConfig({
 
     // Compresse et réduit la taille du bundle avec Terser
     minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
   },
 
   optimizeDeps: {
@@ -59,4 +70,4 @@ export default defineConfig({
 
   // Types de fichiers images reconnus comme assets statiques par Vite
   assetsInclude: ["**/*.png", "**/*.jpg", "**/*.webp"],
-});
+}));

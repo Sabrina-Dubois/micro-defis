@@ -1,8 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Login from "../views/Login.vue";
-import AuthCallback from "../views/AuthCallback.vue";
-
 
 // DÉFINITION DES ROUTES
 // meta.requiresAuth = true  → l'utilisateur DOIT être connecté
@@ -25,11 +22,11 @@ const router = createRouter({
     {
       path: "/login",
       name: "login",
-      component: Login,
+      component: () => import("../views/Login.vue"),
     },
     {
       path: "/auth/callback",
-      component: AuthCallback,
+      component: () => import("../views/AuthCallback.vue"),
     },
     {
       path: "/premium",

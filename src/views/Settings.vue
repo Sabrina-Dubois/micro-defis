@@ -370,8 +370,8 @@ const levels = computed(() => settingsStore.levels);
 
 /* Chip disponible — verte quand sélectionnée */
 .chip-active.v-chip--selected {
-	background-color: #3bce71 !important;
-	color: white !important;
+	background-color: #166534 !important;
+	color: #ffffff !important;
 }
 
 /* Chip verrouillée (user gratuit) — grise et non cliquable */
