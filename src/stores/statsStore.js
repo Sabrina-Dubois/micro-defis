@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref, computed, watch } from "vue";
 import { useUserStore } from "./userStore";
 import { fetchAllCompletions, insertCompletion } from "@/services/statsService";
+import { supabase } from "@/lib/supabase";
 
 export const useStatsStore = defineStore("stats", () => {
   // ─────────────────────────────────────────
@@ -14,6 +15,7 @@ export const useStatsStore = defineStore("stats", () => {
   const totalCompleted = ref(0);
   const loading = ref(false);
   const error = ref(null);
+
   const levelTitles = [
     { min: 1, title: "Recrue", icon: "🌱" },
     { min: 5, title: "Challenger", icon: "⚡" },
@@ -38,12 +40,39 @@ export const useStatsStore = defineStore("stats", () => {
   });
 
   // ─────────────────────────────────────────
+  // HELPERS
+  // ─────────────────────────────────────────
+  function getLocalISODate(offset = 0) {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+
+  // 🛡️ Gestion du déclin — persisté en localStorage pour survivre aux rechargements
+  function getDeclinedKey(userId) {
+    return `shield_declined_${userId}`;
+  }
+
+  function hasDeclinedToday(userId) {
+    if (!userId) return false;
+    const stored = localStorage.getItem(getDeclinedKey(userId));
+    return stored === getLocalISODate(0);
+  }
+
+  function markDeclinedToday(userId) {
+    if (!userId) return;
+    localStorage.setItem(getDeclinedKey(userId), getLocalISODate(0));
+  }
+
+  // ─────────────────────────────────────────
   // ACTIONS
   // ─────────────────────────────────────────
   async function loadCompletions() {
     const userStore = useUserStore();
 
-    // Attendre que l'utilisateur soit chargé si besoin
     if (!userStore.userId) {
       await new Promise((resolve) => {
         const stop = watch(
@@ -63,11 +92,9 @@ export const useStatsStore = defineStore("stats", () => {
 
     try {
       const data = await fetchAllCompletions(userStore.userId);
-
       completions.value = data;
       totalCompleted.value = data.length;
       completedDaysSet.value = new Set(data.map((c) => c.day));
-
       calculateStreaks();
       return data;
     } catch (e) {
@@ -87,7 +114,6 @@ export const useStatsStore = defineStore("stats", () => {
 
     const days = completions.value.map((c) => new Date(c.day)).sort((a, b) => b - a);
 
-    // Streak actuel
     let streak = 0;
     let previousDate = null;
     for (const d of days) {
@@ -104,7 +130,6 @@ export const useStatsStore = defineStore("stats", () => {
     }
     currentStreak.value = streak;
 
-    // Meilleur streak
     let maxStreak = 0;
     let tempStreak = 1;
     for (let i = 0; i < days.length - 1; i++) {
@@ -114,6 +139,61 @@ export const useStatsStore = defineStore("stats", () => {
       maxStreak = Math.max(maxStreak, tempStreak);
     }
     bestStreak.value = Math.max(maxStreak, currentStreak.value);
+  }
+
+  /**
+   * 🛡️ Vérifie si on doit proposer la modale torche.
+   * Retourne true si hier raté + avant-hier complété + pas déjà décliné aujourd'hui.
+   */
+  function checkMissedDay() {
+    const userStore = useUserStore();
+    if (hasDeclinedToday(userStore.userId)) return false;
+
+    const yesterday = getLocalISODate(-1);
+    const dayBefore = getLocalISODate(-2);
+
+    const missedYesterday = !completedDaysSet.value.has(yesterday);
+    const hadStreakBefore = completedDaysSet.value.has(dayBefore);
+
+    return missedYesterday && hadStreakBefore;
+  }
+
+  /**
+   * 🛡️ Utilise une torche — consomme en DB et bouche le trou de hier.
+   */
+  async function useShield() {
+    const userStore = useUserStore();
+    if (!userStore.userId) return false;
+
+    try {
+      const { data, error: fnError } = await supabase.rpc("use_shield", {
+        p_user_id: userStore.userId,
+      });
+
+      if (fnError) throw fnError;
+
+      if (data === true) {
+        const yesterday = getLocalISODate(-1);
+
+        // Récupère un challenge_id valide pour boucher le trou
+        const { data: challenge } = await supabase.from("challenges").select("id").limit(1).single();
+
+        if (challenge?.id) {
+          await supabase.from("daily_completions").upsert({
+            user_id: userStore.userId,
+            day: yesterday,
+            challenge_id: challenge.id,
+          });
+        }
+
+        await userStore.loadUser();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      console.error("❌ Erreur use_shield:", e);
+      return false;
+    }
   }
 
   async function addCompletion(day, challengeId) {
@@ -174,6 +254,9 @@ export const useStatsStore = defineStore("stats", () => {
     userTitle,
     loadCompletions,
     calculateStreaks,
+    checkMissedDay,
+    useShield,
+    markDeclinedToday,
     addCompletion,
     isCompletedDay,
     getLast7Days,

@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
 
   const timestamp = parts["t"];
   const expectedSig = parts["v1"];
-  const payload = `${timestamp}.${body}`;
+  const signedPayload = `${timestamp}.${body}`;
 
   // Import crypto pour vérifier la signature
   const key = await crypto.subtle.importKey(
@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     false,
     ["sign"],
   );
-  const signatureBytes = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload));
+  const signatureBytes = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signedPayload));
   const computedSig = Array.from(new Uint8Array(signatureBytes))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
@@ -43,27 +43,74 @@ Deno.serve(async (req) => {
   }
 
   const event = JSON.parse(body);
-  const subscription = event.data.object;
-  const userId = subscription.metadata?.user_id;
-  const customerId = subscription.customer;
-
-  if (!userId) {
-    return new Response("No user_id in metadata", { status: 400 });
-  }
+  const payload = event.data.object;
 
   const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
   const supabase = createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
 
+  // Mapping initial fiable: checkout session
+  if (event.type === "checkout.session.completed") {
+    const userId =
+      payload.metadata?.user_id ??
+      payload.client_reference_id ??
+      null;
+    const customerId = payload.customer ?? null;
+    if (userId && customerId) {
+      await supabase
+        .from("user_profiles")
+        .update({ premium: true, stripe_customer_id: customerId })
+        .eq("user_id", userId);
+    }
+  }
+
   if (event.type === "customer.subscription.created" || event.type === "customer.subscription.updated") {
-    const isActive = subscription.status === "active" || subscription.status === "trialing";
-    await supabase
-      .from("user_profiles")
-      .update({ premium: isActive, stripe_customer_id: customerId })
-      .eq("user_id", userId);
+    const userId = payload.metadata?.user_id ?? null;
+    const customerId = payload.customer ?? null;
+    const isActive = payload.status === "active" || payload.status === "trialing";
+
+    if (userId) {
+      await supabase
+        .from("user_profiles")
+        .update({ premium: isActive, stripe_customer_id: customerId })
+        .eq("user_id", userId);
+    } else if (customerId) {
+      await supabase
+        .from("user_profiles")
+        .update({ premium: isActive })
+        .eq("stripe_customer_id", customerId);
+    }
   }
 
   if (event.type === "customer.subscription.deleted") {
-    await supabase.from("user_profiles").update({ premium: false }).eq("user_id", userId);
+    const userId = payload.metadata?.user_id ?? null;
+    const customerId = payload.customer ?? null;
+    if (userId) {
+      await supabase.from("user_profiles").update({ premium: false }).eq("user_id", userId);
+    } else if (customerId) {
+      await supabase.from("user_profiles").update({ premium: false }).eq("stripe_customer_id", customerId);
+    }
+  }
+
+  // Fallback important: certains flux passent par invoice.paid avec user_id dans les lignes/parent.
+  if (event.type === "invoice.paid") {
+    const customerId = payload.customer ?? null;
+    const userId =
+      payload.parent?.subscription_details?.metadata?.user_id ??
+      payload.lines?.data?.[0]?.metadata?.user_id ??
+      payload.metadata?.user_id ??
+      null;
+
+    if (userId) {
+      await supabase
+        .from("user_profiles")
+        .update({ premium: true, stripe_customer_id: customerId })
+        .eq("user_id", userId);
+    } else if (customerId) {
+      await supabase
+        .from("user_profiles")
+        .update({ premium: true })
+        .eq("stripe_customer_id", customerId);
+    }
   }
 
   return new Response(JSON.stringify({ received: true }), {

@@ -127,6 +127,8 @@ Deno.serve(async (req) => {
         "line_items[0][quantity]": "1",
         "subscription_data[trial_period_days]": "7",
         "subscription_data[metadata][user_id]": userId,
+        "metadata[user_id]": userId,
+        client_reference_id: userId,
         customer_email: email,
         success_url: `${safeOrigin}/premium/success`,
         cancel_url: `${safeOrigin}/premium`,

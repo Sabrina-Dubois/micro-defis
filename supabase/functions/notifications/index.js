@@ -329,8 +329,6 @@ Deno.serve(async (req) => {
     const nowHHMM = utcNowHHMM();
     const today = todayUtcDate();
 
-    console.log("=== START ===", { nowHHMM, today, force, targetUserId });
-
     let subscriptions = [];
     try {
       const u = new URL(`${supabaseUrl}/rest/v1/push_subscriptions`);
@@ -343,8 +341,6 @@ Deno.serve(async (req) => {
       if (targetUserId) u.searchParams.set("user_id", `eq.${targetUserId}`);
       subscriptions = await fetchJson(u.toString(), headers);
     }
-
-    console.log("Subscriptions fetched:", subscriptions.length);
 
     if (!subscriptions.length) {
       return jsonResponse({ ok: true, now: nowHHMM, matched: 0, success: 0, failed: 0, sent: [] });
@@ -395,16 +391,6 @@ Deno.serve(async (req) => {
       const is23hSlot = isWithinWindow(currentTimeForUser, "23:00", 5);
 
       const doneToday = daysByUser.get(row.user_id)?.has(userToday) ?? false;
-
-      console.log("USER CHECK:", row.user_id, {
-        currentTimeForUser,
-        activeBaseTime,
-        isMainSlot,
-        isRiskSlot,
-        is23hSlot,
-        doneToday,
-        force,
-      });
 
       if (force) {
         // Force send ignore tous les filtres
@@ -458,8 +444,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    console.log("Jobs to send:", jobs.length);
-
     if (!jobs.length) {
       return jsonResponse({ ok: true, now: nowHHMM, matched: 0, success: 0, failed: 0, sent: [] });
     }
@@ -476,7 +460,6 @@ Deno.serve(async (req) => {
     let success = 0;
     let failed = 0;
     const sent = results.map((r, idx) => {
-      console.log("PUSH DEBUG RAW RESULT", r);
       if (r.status === "rejected") console.log("PUSH DEBUG REASON", r.reason);
       const meta = { user_id: jobs[idx].row.user_id, type: jobs[idx].type };
       if (r.status === "fulfilled") {
@@ -485,7 +468,6 @@ Deno.serve(async (req) => {
       }
       failed += 1;
       const reason = r.reason || {};
-      console.log("PUSH RESULT", reason);
       return { ...meta, status: "failed", statusCode: reason.statusCode || null, message: reason.message || null };
     });
 
@@ -509,7 +491,6 @@ Deno.serve(async (req) => {
       }
     }
 
-    console.log("=== DONE ===", { matched: jobs.length, success, failed });
     return jsonResponse({ ok: true, now: nowHHMM, matched: jobs.length, success, failed, sent });
   } catch (e) {
     console.error("=== ERROR ===", e?.message);

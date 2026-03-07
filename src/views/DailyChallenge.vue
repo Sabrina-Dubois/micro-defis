@@ -1,6 +1,35 @@
 <template>
   <div class="daily-page">
     <template v-if="isPageReady">
+
+      <!-- 🛡️ Modale torche -->
+      <v-dialog v-model="showShieldModal" max-width="340" persistent>
+        <v-card class="shield-modal pa-6 text-center">
+          <div class="modal-fire">🔥</div>
+          <div class="modal-title">Ta flamme est en danger !</div>
+          <div class="modal-desc">
+            Tu as raté hier et ta série de
+            <strong>{{ statsStore.currentStreak }} jour{{ statsStore.currentStreak > 1 ? 's' : '' }}</strong>
+            est menacée.
+          </div>
+          <div class="modal-torch-info">
+            🕯️ Tu as <strong>{{ streakShields }} torche{{ streakShields > 1 ? 's' : '' }}</strong> disponible{{
+              streakShields > 1 ? 's' : '' }}
+          </div>
+          <v-btn class="btn-primary mt-4" block :loading="shieldLoading" @click="activateShield">
+            🕯️ Utiliser une torche
+          </v-btn>
+          <v-btn variant="text" block class="mt-2 btn-decline" @click="declineShield">
+            Laisser mourir ma flamme
+          </v-btn>
+        </v-card>
+      </v-dialog>
+
+      <!-- Toast confirmation -->
+      <v-snackbar v-model="showShieldToast" color="deep-orange" timeout="3000" location="top">
+        🕯️ Une torche a protégé ta flamme !
+      </v-snackbar>
+
       <!-- Top -->
       <div class="top">
         <div class="page-title">
@@ -15,7 +44,6 @@
           {{ t("daily.challenge") }}
         </div>
 
-        <!-- Chips niveau + catégorie -->
         <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 10px;">
           <v-chip color="primary" variant="flat" size="small">
             {{ t("daily.level") }} {{ challengeStore.challengeLevel }}
@@ -25,12 +53,10 @@
           </v-chip>
         </div>
 
-        <!-- Erreur -->
         <div v-if="challengeStore.error" style="color: #ef4444; font-weight: 700">
           {{ challengeStore.error }}
         </div>
 
-        <!-- Contenu -->
         <div v-else class="challenge-content">
           <div class="challenge-title">
             <template v-if="challengeStore.loading">
@@ -54,7 +80,6 @@
           </template>
         </div>
 
-        <!-- Bouton action -->
         <v-btn block class="mt-2 challenge-action-btn" :class="challengeStore.isDone ? 'btn-success' : 'btn-primary'"
           :disabled="challengeStore.loading" @click="markDone">
           <template v-if="challengeStore.isDone">
@@ -64,16 +89,14 @@
         </v-btn>
       </v-card>
 
-      <!-- Carte des flammes / shields / partage -->
+      <!-- Carte flammes + torches -->
       <v-card class="micro-card pa-5 mt-4">
         <div class="share-visual">
 
-          <!-- Flammes -->
           <div class="flames-display">
             🔥 {{ statsStore.currentStreak }}
           </div>
 
-          <!-- 🕯️ Torches (Premium uniquement) -->
           <div class="shields-display" :class="{ locked: !isPremium }">
             <div class="shields-icons">
               <span v-for="i in 3" :key="i" class="shield-icon" :class="{ empty: i > streakShields }">
@@ -85,8 +108,8 @@
                 🔒 Torches réservées au Premium
               </template>
               <template v-else-if="streakShields > 0">
-                {{ streakShields }} torche{{ streakShields > 1 ? 's' : '' }} disponible{{
-                  streakShields > 1 ? 's' : '' }}
+                {{ streakShields }} torche{{ streakShields > 1 ? 's' : '' }} disponible{{ streakShields > 1 ? 's' : ''
+                }}
               </template>
               <template v-else>
                 Plus de torches · complète des défis pour en gagner
@@ -100,9 +123,6 @@
         </v-btn>
       </v-card>
 
-      <div>Torches affichées dans le store : {{ streakShields }}</div>
-
-      <!-- Bouton PWA -->
       <PWAButton />
     </template>
     <template v-else>
@@ -125,12 +145,8 @@ import { useSettingsStore } from "@/stores/settingsStore";
 
 const { t } = useI18n();
 
-// ─────────────────────────────────────────
-// STORES
-// ─────────────────────────────────────────
 const userStore = useUserStore();
 const { streakShields, isPremium, userName } = storeToRefs(userStore);
-// → On utilise storeToRefs pour avoir une vraie réactivité
 
 const statsStore = useStatsStore();
 const challengeStore = useChallengeStore();
@@ -146,6 +162,14 @@ let visibilityRefreshTimer = null;
 let lastVisibilityRefresh = 0;
 const VISIBILITY_REFRESH_INTERVAL = 30 * 1000;
 
+// 🛡️ Shield modal
+const showShieldModal = ref(false);
+const showShieldToast = ref(false);
+const shieldLoading = ref(false);
+
+// ─────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────
 function getLocalISODate() {
   const d = new Date();
   const y = d.getFullYear();
@@ -155,7 +179,37 @@ function getLocalISODate() {
 }
 
 // ─────────────────────────────────────────
-// ACTIONS
+// SHIELD LOGIC
+// ─────────────────────────────────────────
+function checkShieldOffer() {
+  if (!isPremium.value) return;
+  if (streakShields.value <= 0) return;
+  if (statsStore.checkMissedDay()) {
+    showShieldModal.value = true;
+  }
+}
+
+async function activateShield() {
+  shieldLoading.value = true;
+  try {
+    const success = await statsStore.useShield();
+    if (success) {
+      showShieldModal.value = false;
+      showShieldToast.value = true;
+      await statsStore.loadCompletions();
+    }
+  } finally {
+    shieldLoading.value = false;
+  }
+}
+
+function declineShield() {
+  statsStore.markDeclinedToday(userStore.userId); // 👈 ajoute cette ligne
+  showShieldModal.value = false;
+}
+
+// ─────────────────────────────────────────
+// REFRESH LOGIC
 // ─────────────────────────────────────────
 async function refreshForNewDayIfNeeded() {
   const nowDay = getLocalISODate();
@@ -191,7 +245,6 @@ async function markDone() {
   if (challengeStore.isDone) return;
   try {
     await challengeStore.markAsCompleted();
-    // 🆕 on recharge le profil après la complétion
     await userStore.loadUser();
   } catch (e) {
     console.error("❌ Erreur markDone:", e);
@@ -199,15 +252,19 @@ async function markDone() {
 }
 
 // ─────────────────────────────────────────
-// MOUNT / UNMOUNT
+// LIFECYCLE
 // ─────────────────────────────────────────
 onMounted(async () => {
   try {
-    await userStore.loadUser();  // charge bien le profil avec streak_shields
+    await userStore.loadUser();
     await statsStore.loadCompletions();
     await settingsStore.loadPreferences();
     await challengeStore.loadTodayChallenge();
     currentLocalDay.value = getLocalISODate();
+
+    // 🛡️ Vérifie si on doit proposer une torche
+    checkShieldOffer();
+
     dayWatcherTimer = setInterval(refreshForNewDayIfNeeded, 60000);
     document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("focus", handleVisibilityChange);
@@ -224,6 +281,7 @@ onUnmounted(() => {
   if (visibilityRefreshTimer) clearTimeout(visibilityRefreshTimer);
   document.removeEventListener("visibilitychange", handleVisibilityChange);
   window.removeEventListener("focus", handleVisibilityChange);
+  
 });
 </script>
 
@@ -311,7 +369,6 @@ onUnmounted(() => {
   transition: opacity 0.3s, filter 0.3s;
 }
 
-/* Slot vide : extincteur lisible */
 .shield-icon.empty {
   opacity: 0.95;
   filter: grayscale(0.1);
@@ -321,6 +378,57 @@ onUnmounted(() => {
   font-size: 12px;
   color: var(--text-secondary);
   font-weight: 600;
+}
+
+/* Modale */
+.shield-modal {
+  border-radius: 24px !important;
+}
+
+.modal-fire {
+  font-size: 56px;
+  margin-bottom: 12px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.modal-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.modal-torch-info {
+  font-size: 14px;
+  padding: 10px;
+  background: rgba(245, 158, 11, 0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.btn-decline {
+  font-size: 12px;
+  color: var(--text-secondary) !important;
+  opacity: 0.7;
 }
 
 /* Skeletons */
