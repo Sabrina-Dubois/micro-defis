@@ -196,7 +196,7 @@ async function activateShield() {
     if (success) {
       showShieldModal.value = false;
       showShieldToast.value = true;
-      await statsStore.loadCompletions();
+      await statsStore.loadCompletions(); // ← est-ce que cette ligne est bien là ?
     }
   } finally {
     shieldLoading.value = false;
