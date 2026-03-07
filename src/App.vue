@@ -6,17 +6,12 @@
 		<!-- Contenu principal -->
 		<v-main class="page">
 			<div class="main-content">
-				<!-- On affiche RouterView uniquement quand la session a été vérifiée -->
-				<RouterView v-if="authChecked" />
-				<div v-else class="loading-container">
-					<!-- loader simple pendant que Supabase récupère la session -->
-					Loading...
-				</div>
+				<RouterView />
 			</div>
 		</v-main>
 
 		<!-- Bottom Nav -->
-		<BottomNav v-if="showNav && authChecked" />
+		<BottomNav v-if="showNav" />
 	</v-app>
 </template>
 
@@ -180,7 +175,6 @@ onMounted(async () => {
 
 	const { data } = await supabase.auth.getSession();
 	session.value = data.session;
-	authChecked.value = true;
 
 	const { data: authListener } = supabase.auth.onAuthStateChange((event, newSession) => {
 		if (event === "PASSWORD_RECOVERY") {
@@ -188,7 +182,7 @@ onMounted(async () => {
 		}
 		session.value = newSession;
 		handleAppVisibilityChange();
-		if (!newSession) {
+		if (!newSession && route.meta.requiresAuth) {
 			router.replace("/login");
 		}
 	});
@@ -225,23 +219,10 @@ watch(
 	}
 );
 
-// ------------------ AUTH ------------------
-const authChecked = ref(false);
-
-defineExpose({ toggleTheme, session, authChecked });
+defineExpose({ toggleTheme, session });
 </script>
 
 <style scoped>
-.loading-container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100%;
-	color: var(--text-primary);
-	font-weight: 700;
-	font-size: 18px;
-}
-
 .page {
 	overscroll-behavior-x: none;
 }
