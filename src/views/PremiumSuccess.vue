@@ -2,10 +2,10 @@
     <div class="success-page">
         <div class="success-card">
             <div class="crown-anim">👑</div>
-            <h1 class="success-title">Bienvenue Premium !</h1>
+            <h1 class="success-title">{{ t("premium_success.title") }}</h1>
             <p class="success-subtitle">
-                Ton essai gratuit de 7 jours commence maintenant.<br />
-                Profite de tous les défis sans limite !
+                {{ t("premium_success.subtitle_line1") }}<br />
+                {{ t("premium_success.subtitle_line2") }}
             </p>
 
             <div class="benefits-recap">
@@ -16,28 +16,28 @@
             </div>
 
             <v-btn class="btn-primary mt-6" block size="large" @click="goHome">
-                🚀 Découvrir mes défis
+                🚀 {{ t("premium_success.cta") }}
             </v-btn>
         </div>
     </div>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore";
 import { useSettingsStore } from "@/stores/settingsStore";
+import { useI18n } from "vue-i18n";
 
 const router = useRouter();
 const userStore = useUserStore();
 const settingsStore = useSettingsStore();
+const { t, tm } = useI18n();
 
-const benefits = [
-    "800+ défis débloqués",
-    "Tous les niveaux accessibles",
-    "Toutes les catégories disponibles",
-    "7 jours d'essai gratuit",
-];
+const benefits = computed(() => {
+    const items = tm("premium_success.benefits");
+    return Array.isArray(items) ? items : [];
+});
 
 onMounted(async () => {
     // Recharge le profil pour mettre à jour le statut premium

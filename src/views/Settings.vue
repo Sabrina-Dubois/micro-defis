@@ -121,26 +121,26 @@
 			<!-- Abonnement Premium -->
 			<v-card class="micro-card pa-4 mb-4">
 				<div class="page-subtitle mb-3">
-					👑 Abonnement Premium
+					{{ t("settings.premium.title") }}
 				</div>
 
 				<div v-if="settingsStore.isPremium">
 					<v-alert type="success" variant="tonal" class="mb-3">
-						Votre abonnement Premium est actif
+						{{ t("settings.premium.active_message") }}
 					</v-alert>
 
 					<v-btn block class="btn-primary" :loading="isPortalLoading" @click="manageSubscription">
-						Gérer mon abonnement
+						{{ t("settings.premium.manage_button") }}
 					</v-btn>
 				</div>
 
 				<div v-else>
 					<v-alert type="info" variant="tonal" class="mb-3">
-						Vous utilisez la version gratuite
+						{{ t("settings.premium.free_message") }}
 					</v-alert>
 
 					<v-btn block color="primary" to="/premium">
-						Passer au Premium
+						{{ t("settings.premium.upgrade_button") }}
 					</v-btn>
 				</div>
 			</v-card>
@@ -167,7 +167,7 @@
 					<v-list-item>
 						<v-list-item-title>{{ t("settings.about.version") }}</v-list-item-title>
 						<template #append>
-							<span class="setting-value">1.0.0</span>
+							<span class="setting-value">{{ t("app.version") }}</span>
 						</template>
 					</v-list-item>
 				</v-list>
@@ -182,7 +182,9 @@
 				{{ t("settings.account.delete") }}
 			</v-btn>
 
-			<div class="text-center mt-4 text-caption opacity-50">MicroDéfis v1.0.0</div>
+			<div class="text-center mt-4 text-caption opacity-50">
+				{{ t("settings.version_footer", { version: t("app.version") }) }}
+			</div>
 		</template>
 
 		<template v-else>
@@ -244,9 +246,9 @@ async function loadSettings() {
 async function saveProfile() {
 	try {
 		await userStore.updateProfile({ username: userName.value });
-		alert("Profil enregistré !");
+		alert(t("settings.alerts.profile_saved"));
 	} catch (error) {
-		alert("Erreur lors de la sauvegarde");
+		alert(t("settings.alerts.profile_error"));
 	}
 }
 
@@ -254,9 +256,9 @@ async function saveDefiPrefs() {
 	try {
 		await settingsStore.setChallengePreferences(preferredCategory.value, preferredLevel.value);
 		await challengeStore.loadTodayChallenge(true);
-		alert("Préférences sauvegardées !");
+		alert(t("settings.alerts.preferences_saved"));
 	} catch (error) {
-		alert("Erreur lors de la sauvegarde");
+		alert(t("settings.alerts.preferences_error"));
 	}
 }
 
@@ -271,9 +273,9 @@ async function setReminderTime(time) {
 async function runNotificationTest() {
 	try {
 		await settingsStore.sendLocalNotificationTest();
-		alert("Notification locale de test envoyée.");
+		alert(t("settings.alerts.notification_sent"));
 	} catch (error) {
-		alert("Impossible d'envoyer la notification de test.");
+		alert(t("settings.alerts.notification_error"));
 	}
 }
 
@@ -317,7 +319,7 @@ async function manageSubscription() {
 
 	} catch (err) {
 		console.error("Erreur ouverture portail abonnement:", err);
-		alert("Erreur lors de l'ouverture du portail. Réessayez.");
+		alert(t("settings.alerts.portal_error"));
 	} finally {
 		isPortalLoading.value = false;
 	}
@@ -340,7 +342,7 @@ async function logout() {
 }
 
 function deleteAccount() {
-	if (confirm("Êtes-vous sûr ?")) alert("À implémenter");
+	if (confirm(t("common.confirm"))) alert(t("common.not_implemented"));
 }
 
 onMounted(async () => {

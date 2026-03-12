@@ -6,8 +6,8 @@
 				<button
 					type="button"
 					class="avatar avatar-btn"
-					aria-label="Changer l'avatar"
-					title="Changer l'avatar"
+					:aria-label="t('profil.avatar_change')"
+					:title="t('profil.avatar_change')"
 					@click="changeAvatar"
 				>
 					{{ userStore.userAvatar }}
@@ -16,12 +16,12 @@
 					{{ userStore.userName }}
 				</div>
 				<div class="header-badges-row">
-					<span class="rank-label">Rang</span>
+					<span class="rank-label">{{ t("profil.rank_label") }}</span>
 					<div class="rank-pill">
 						{{ statsStore.userTitle.icon }} {{ statsStore.userTitle.title }}
 					</div>
 					<div v-if="userStore.isPremium" class="premium-badge">
-						👑 Premium
+						{{ t("profil.premium_badge") }}
 					</div>
 				</div>
 
@@ -89,9 +89,10 @@
 							:class="{ locked: !badge.unlocked, premium: badge.premiumOnly }">
 							<span v-if="badge.premiumOnly" class="badge-crown">👑</span>
 							<div class="badge-icon">{{ badge.icon }}</div>
-							<div class="badge-name">{{ badge.label || t(badge.key) }}</div>
-							<div class="badge-desc">{{ badge.description }}</div>
-							<div v-if="badge.premiumOnly && !userStore.isPremium" class="badge-premium-lock">🔒 Premium
+							<div class="badge-name">{{ t(badge.labelKey) }}</div>
+							<div class="badge-desc">{{ t(badge.descKey) }}</div>
+							<div v-if="badge.premiumOnly && !userStore.isPremium" class="badge-premium-lock">
+								{{ t("profil.premium_lock") }}
 							</div>
 						</div>
 					</div>
@@ -120,7 +121,7 @@
 			</v-btn>
 
 			<div v-else class="premium-active">
-				👑 Abonnement Premium actif
+				{{ t("profil.premium_active") }}
 			</div>
 		</template>
 
@@ -150,23 +151,23 @@ const isPageReady = ref(false);
 
 // ===== BADGES (logique locale) =====
 const badges = ref([
-	{ id: 1, key: "profil.badges.badges_first", icon: "⭐️", description: "Valider ton 1er défi", unlocked: false, premiumOnly: false },
-	{ id: 2, key: "profil.badges.badges_3days", icon: "🥉", description: "Série de 3 jours", unlocked: false, premiumOnly: false },
-	{ id: 3, key: "profil.badges.badges_7days", icon: "⓻", description: "Série de 7 jours", unlocked: false, premiumOnly: false },
-	{ id: 4, key: "profil.badges.badges_30days", icon: "⚡", description: "Série de 30 jours", unlocked: false, premiumOnly: false },
-	{ id: 5, key: "profil.badges.badges_100", icon: "💯", description: "Atteindre 100 défis validés", unlocked: false, premiumOnly: false },
-	{ id: 6, key: "profil.badges.badges_regular", icon: "📅", description: "Meilleure série de 14 jours", unlocked: false, premiumOnly: false },
-	{ id: 7, key: "profil.badges.badges_champion", icon: "🏆", description: "Meilleure série de 50 jours", unlocked: false, premiumOnly: false },
-	{ id: 8, key: "", label: "Inarrêtable", icon: "🔥", description: "Série de 100 jours", unlocked: false, premiumOnly: false },
-	{ id: 9, key: "", label: "Marathon", icon: "🧱", description: "200 défis validés", unlocked: false, premiumOnly: false },
-	{ id: 10, key: "", label: "Retour", icon: "🚀", description: "Revenir après 7 jours d’inactivité.", unlocked: false, premiumOnly: false },
-	{ id: 11, key: "", label: "Noctambule", icon: "🌙", description: "Valider un défi tard le soir", unlocked: false, premiumOnly: false },
-	{ id: 12, key: "", label: "Lève-tôt", icon: "⏰", description: "Valider un défi tôt le matin", unlocked: false, premiumOnly: false },
-	{ id: 13, key: "", label: "Sauvé", icon: "🛟", description: "1 jour protégé par torche", unlocked: false, premiumOnly: true },
-	{ id: 14, key: "", label: "Fidèle", icon: "👑", description: "Premium depuis 30 jours", unlocked: false, premiumOnly: true },
-	{ id: 15, key: "", label: "Elite", icon: "🧠", description: "Premium depuis 60 jours", unlocked: false, premiumOnly: true },
-	{ id: 16, key: "", label: "Gardien", icon: "🛡️", description: "Premium depuis 100 jours", unlocked: false, premiumOnly: true },
-	{ id: 17, key: "", label: "Légende", icon: "🌟", description: "Premium depuis 200 jours", unlocked: false, premiumOnly: true },
+	{ id: 1, labelKey: "profil.badges.badges_first", descKey: "profil.badges.desc_first", icon: "⭐️", unlocked: false, premiumOnly: false },
+	{ id: 2, labelKey: "profil.badges.badges_3days", descKey: "profil.badges.desc_3days", icon: "🥉", unlocked: false, premiumOnly: false },
+	{ id: 3, labelKey: "profil.badges.badges_7days", descKey: "profil.badges.desc_7days", icon: "⓻", unlocked: false, premiumOnly: false },
+	{ id: 4, labelKey: "profil.badges.badges_30days", descKey: "profil.badges.desc_30days", icon: "⚡", unlocked: false, premiumOnly: false },
+	{ id: 5, labelKey: "profil.badges.badges_100", descKey: "profil.badges.desc_100", icon: "💯", unlocked: false, premiumOnly: false },
+	{ id: 6, labelKey: "profil.badges.badges_regular", descKey: "profil.badges.desc_regular", icon: "📅", unlocked: false, premiumOnly: false },
+	{ id: 7, labelKey: "profil.badges.badges_champion", descKey: "profil.badges.desc_champion", icon: "🏆", unlocked: false, premiumOnly: false },
+	{ id: 8, labelKey: "profil.badges.badges_unstoppable", descKey: "profil.badges.desc_unstoppable", icon: "🔥", unlocked: false, premiumOnly: false },
+	{ id: 9, labelKey: "profil.badges.badges_marathon", descKey: "profil.badges.desc_marathon", icon: "🧱", unlocked: false, premiumOnly: false },
+	{ id: 10, labelKey: "profil.badges.badges_comeback", descKey: "profil.badges.desc_comeback", icon: "🚀", unlocked: false, premiumOnly: false },
+	{ id: 11, labelKey: "profil.badges.badges_nightowl", descKey: "profil.badges.desc_nightowl", icon: "🌙", unlocked: false, premiumOnly: false },
+	{ id: 12, labelKey: "profil.badges.badges_earlybird", descKey: "profil.badges.desc_earlybird", icon: "⏰", unlocked: false, premiumOnly: false },
+	{ id: 13, labelKey: "profil.badges.badges_saved", descKey: "profil.badges.desc_saved", icon: "🛟", unlocked: false, premiumOnly: true },
+	{ id: 14, labelKey: "profil.badges.badges_loyal", descKey: "profil.badges.desc_loyal", icon: "👑", unlocked: false, premiumOnly: true },
+	{ id: 15, labelKey: "profil.badges.badges_elite", descKey: "profil.badges.desc_elite", icon: "🧠", unlocked: false, premiumOnly: true },
+	{ id: 16, labelKey: "profil.badges.badges_guardian", descKey: "profil.badges.desc_guardian", icon: "🛡️", unlocked: false, premiumOnly: true },
+	{ id: 17, labelKey: "profil.badges.badges_legend", descKey: "profil.badges.desc_legend", icon: "🌟", unlocked: false, premiumOnly: true },
 ]);
 
 const unlockedBadges = computed(

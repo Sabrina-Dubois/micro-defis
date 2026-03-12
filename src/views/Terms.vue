@@ -4,7 +4,7 @@
 		<!-- Header -->
 		<div class="page-header">
 			<div class="page-title">{{ t("terms.title") }}</div>
-			<div class="last-updated">Mis à jour le 1er février 2026</div>
+			<div class="last-updated">{{ t("terms.last_updated") }}</div>
 		</div>
 
 		<!-- Navigation rapide -->

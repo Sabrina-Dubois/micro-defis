@@ -27,7 +27,7 @@
 						icon="mdi-chevron-left"
 						size="small"
 						variant="text"
-						aria-label="Mois précédent"
+						:aria-label="t('calendar.prev_month')"
 						@click="previousMonth"
 					></v-btn>
 
@@ -39,7 +39,7 @@
 						icon="mdi-chevron-right"
 						size="small"
 						variant="text"
-						aria-label="Mois suivant"
+						:aria-label="t('calendar.next_month')"
 						@click="nextMonth"
 					></v-btn>
 			</div>
@@ -73,9 +73,9 @@
 					</div>
 				</div>
 				<div class="calendar-legend mt-3">
-					<span><span class="legend-dot done"></span> Complété</span>
-					<span><span class="legend-dot protected"></span> Protégé par torche</span>
-					<span><span class="legend-dot missed"></span> Manqué</span>
+					<span><span class="legend-dot done"></span> {{ t("calendar.legend.completed") }}</span>
+					<span><span class="legend-dot protected"></span> {{ t("calendar.legend.protected") }}</span>
+					<span><span class="legend-dot missed"></span> {{ t("calendar.legend.missed") }}</span>
 				</div>
 			</v-card>
 		</div>

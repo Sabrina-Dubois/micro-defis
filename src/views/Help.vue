@@ -28,14 +28,14 @@
 			<!-- Si vide -->
 			<div v-if="filteredFaqs.length === 0" class="no-results">
 				<v-icon size="48" color="grey">mdi-help-circle-outline</v-icon>
-				<div>{{ searchQuery ? 'Aucun résultat' : 'Chargement...' }}</div>
+				<div>{{ searchQuery ? t("help.no_results") : t("help.loading") }}</div>
 			</div>
 		</v-card>
 
 		<v-card class="micro-card fixed-card last-card ">
 			<h2>{{ t("help.support.title") }}</h2>
 			<v-list density="comfortable">
-				<v-list-item :title="'support@microdefis.com'" :subtitle="t('help.support.subtitle')" three-line
+				<v-list-item :title="supportEmail" :subtitle="t('help.support.subtitle')" three-line
 					@click="copyEmail" prepend-icon="mdi-email-fast" />
 			</v-list>
 		</v-card>
@@ -72,8 +72,10 @@ const filteredFaqs = computed(() => {
 	);
 });
 
+const supportEmail = computed(() => t("app.support_email"));
+
 const copyEmail = () => {
-	navigator.clipboard.writeText("support@microdefis.com");
+	navigator.clipboard.writeText(supportEmail.value);
 };
 </script>
 

@@ -144,7 +144,7 @@ async function generateImage() {
 	// ===== Logo/Titre =====
 	ctx.fillStyle = "#ffffff";
 	ctx.font = "bold 80px Arial";
-	ctx.fillText("MicroDéfis", w / 2, 100);
+	ctx.fillText(t("app.name"), w / 2, 100);
 
 	// ===== Pseudo =====
 	ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
@@ -205,7 +205,7 @@ async function generateImage() {
 
 	ctx.fillStyle = "#64748b";
 	ctx.font = "bold 40px Arial";
-	ctx.fillText("🔥 jours de streak", w / 2, streakY + 225);
+	ctx.fillText(t("share.streak_label"), w / 2, streakY + 225);
 
 	// ===== Petites cartes =====
 	const smallW = (w - 160) / 2;
@@ -361,7 +361,7 @@ function downloadImage() {
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement("a");
 		a.href = url;
-		a.download = "microdefis-stats.png";
+		a.download = t("share.filename_download");
 		a.click();
 		URL.revokeObjectURL(url);
 		infoMsg.value = `✅ ${t("share.image_downloaded")}`;
@@ -372,7 +372,7 @@ async function shareNow() {
 	if (!canvas.value) return;
 
 	canvas.value.toBlob(async (blob) => {
-		const file = new File([blob], "mes-stats-microdefis.png", {
+		const file = new File([blob], t("share.filename_share"), {
 			type: "image/png",
 		});
 

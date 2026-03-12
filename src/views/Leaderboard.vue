@@ -3,22 +3,22 @@
 
 		<div class="page-title mt-4 mb-4 title-with-icon">
 			<span class="title-emoji">🏆</span>
-			<span>Classement</span>
+			<span>{{ t("leaderboard.title") }}</span>
 		</div>
 
 		<!-- MODE SWITCH -->
 		<div class="leaderboard-tabs mb-4 text-center">
 			<v-btn-toggle v-model="mode" mandatory density="comfortable">
-				<v-btn value="global">🌍 Global</v-btn>
-				<v-btn value="league">🏆 Ligue Hebdo</v-btn>
+				<v-btn value="global">{{ t("leaderboard.tabs.global") }}</v-btn>
+				<v-btn value="league">{{ t("leaderboard.tabs.league") }}</v-btn>
 			</v-btn-toggle>
 		</div>
 
 		<!-- HEADER LIGUE -->
 		<div v-if="mode === 'league'" class="league-header mb-3 text-center">
-			<div class="league-title">🏆 Ligue {{ leagueName }}</div>
+			<div class="league-title">{{ t("leaderboard.league.title", { league: leagueNameLabel }) }}</div>
 			<div class="league-sub">
-				⏳ Reset dans {{ resetTime }} <!--• {{ leagueSubline }} -->
+				{{ t("leaderboard.league.reset_in", { time: resetTime }) }} <!--• {{ leagueSubline }} -->
 			</div>
 		</div>
 
@@ -30,15 +30,15 @@
 					:value="idx"
 					:class="`league-chip-${name.toLowerCase()}`"
 				>
-					{{ name }}
-					<span v-if="idx === autoLeagueIndex" class="my-league-tag">• Ma ligue</span>
+					{{ t(`leaderboard.leagues.${name}`) }}
+					<span v-if="idx === autoLeagueIndex" class="my-league-tag">• {{ t("leaderboard.league.my_league") }}</span>
 				</v-btn>
 			</v-btn-toggle>
 		</div>
 
 		<div v-if="mode === 'league'" class="league-zones mb-3">
-			<div class="zone-pill up">⬆ Top 5</div>
-			<div class="zone-pill down">⬇ Flop 5</div>
+			<div class="zone-pill up">{{ t("leaderboard.zones.up") }}</div>
+			<div class="zone-pill down">{{ t("leaderboard.zones.down") }}</div>
 		</div>
 
 		<!-- PODIUM -->
@@ -50,7 +50,7 @@
 					<div class="name">{{ user.name }}</div>
 
 					<div class="stats">
-						{{ user.xp }} XP · 🔥 {{ user.flames }}
+						{{ t("leaderboard.stats", { xp: user.xp, flames: user.flames }) }}
 					</div>
 				</div>
 			</div>
@@ -75,11 +75,11 @@
 					<v-list-item-title class="font-weight-bold">
 						{{ user.name }}
 
-						<span v-if="user.isMe" class="me-badge">Moi</span>
+						<span v-if="user.isMe" class="me-badge">{{ t("leaderboard.badges.me") }}</span>
 						<span v-if="mode === 'league' && getLeagueZone(user) === 'up'"
-							class="zone-badge up">Up</span>
+							class="zone-badge up">{{ t("leaderboard.badges.up") }}</span>
 						<span v-if="mode === 'league' && getLeagueZone(user) === 'down'"
-							class="zone-badge down">Down</span>
+							class="zone-badge down">{{ t("leaderboard.badges.down") }}</span>
 
 						<div v-if="user.isMe && meProgressMessage" class="progress-helper">
 							{{ meProgressMessage }}
@@ -89,7 +89,7 @@
 
 					<template #append>
 						<div class="row-stats">
-							<span>{{ user.xp }} XP</span>
+							<span>{{ user.xp }} {{ t("leaderboard.xp") }}</span>
 							<span>🔥 {{ user.flames }}</span>
 						</div>
 					</template>
@@ -98,9 +98,9 @@
 
 			</v-list>
 			<div v-if="shadowTarget" class="shadow-target">
-				🎯 Objectif : {{ shadowTarget.name }}
+				{{ t("leaderboard.shadow_target.title", { name: shadowTarget.name }) }}
 				<br>
-				Encore {{ shadowTarget.xpGap }} XP pour le dépasser
+				{{ t("leaderboard.shadow_target.subtitle", { xp: shadowTarget.xpGap }) }}
 			</div>
 		</v-card>
 
@@ -111,10 +111,11 @@
 import { onMounted, onUnmounted, ref, computed, watch } from "vue";
 import { fetchLeaderboard } from "@/services/leaderboardService";
 import { useUserStore } from "@/stores/userStore";
+import { useI18n } from "vue-i18n";
 
 const MIN_LEADERBOARD_SIZE = 20;
 const USERS_PER_LEAGUE = 20;
-const LEAGUES_TOP_TO_BOTTOM = ["Or", "Argent", "Bronze"];
+const LEAGUES_TOP_TO_BOTTOM = ["or", "argent", "bronze"];
 const USER_NAMES = [
 	"AlexPro", "MilaFit", "TheoX", "Movixx", "Maxxou67",
 	"EmmaRise", "Sprinter_22", "ChloeZen", "LucasBoost", "InesFlow",
@@ -252,7 +253,7 @@ async function loadLeaderboard() {
 				id: userId || `row-${index}`,
 				user_id: userId,
 				rank,
-				name: username || "Utilisateur",
+				name: username || t("leaderboard.default_user"),
 				xp: Number(row.xp || 0),
 				flames: Number(row.flames || 0),
 				isMe: row.isMe === true || (!!userId && userId === userStore.userId),
@@ -295,6 +296,7 @@ const mode = ref("global");
 const leaderboard = ref([]);
 const loading = ref(false);
 const userStore = useUserStore();
+const { t } = useI18n();
 const now = ref(new Date());
 const selectedLeagueIndex = ref(1);
 let resetTimer = null;
@@ -352,7 +354,8 @@ const relegationStartRank = computed(() =>
 
 const topThree = computed(() => rankedUsers.value.slice(0, 3));
 
-const leagueName = computed(() => leagueContext.value?.leagueName || "Argent");
+const leagueName = computed(() => leagueContext.value?.leagueName || "argent");
+const leagueNameLabel = computed(() => t(`leaderboard.leagues.${leagueName.value}`));
 //const leagueSubline = computed(() => {
 	//if (mode.value !== "league") return "";
 	//if (leagueName.value === "Or") {
@@ -378,8 +381,10 @@ const resetTime = computed(() => {
 	const days = Math.floor(totalHours / 24);
 	const hours = totalHours % 24;
 
-	if (days > 0) return `${days}j ${hours}h`;
-	return `${hours}h`;
+	const daySuffix = t("leaderboard.time.days_short");
+	const hourSuffix = t("leaderboard.time.hours_short");
+	if (days > 0) return `${days}${daySuffix} ${hours}${hourSuffix}`;
+	return `${hours}${hourSuffix}`;
 });
 
 const meProgressMessage = computed(() => {
@@ -396,7 +401,7 @@ const meProgressMessage = computed(() => {
 	const xpGap = prev.xp - me.xp + 1;
 	if (xpGap <= 0) return "";
 
-	return `Encore ${xpGap} XP pour le Top ${me.rank - 1}`;
+	return t("leaderboard.progress_helper", { xp: xpGap, rank: me.rank - 1 });
 });
 
 const shadowTarget = computed(() => {

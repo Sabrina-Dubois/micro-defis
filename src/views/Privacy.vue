@@ -4,7 +4,7 @@
 		<!-- Header -->
 		<div class="page-header">
 			<div class="page-title">{{ t("privacy.title") }}</div>
-			<div class="last-updated">Mis à jour le 1er février 2026</div>
+			<div class="last-updated">{{ t("privacy.last_updated") }}</div>
 		</div>
 
 		<!-- Navigation rapide -->

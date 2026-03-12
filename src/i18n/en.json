@@ -1,4 +1,21 @@
 {
+  "app": {
+    "name": "MicroDéfis",
+    "version": "1.0.0",
+    "support_email": "support@microdefis.com"
+  },
+  "common": {
+    "loading": "Loading...",
+    "no_results": "No results",
+    "confirm": "Are you sure?",
+    "not_implemented": "Not implemented yet",
+    "day_singular": "day",
+    "day_plural": "days",
+    "torch_singular": "torch",
+    "torch_plural": "torches",
+    "available_singular": "available",
+    "available_plural": "available"
+  },
   "landing": {
     "hero": {
       "subtitle": "One small challenge a day to become a better version of yourself.",
@@ -22,11 +39,30 @@
     },
     "examples": {
       "title": "🎯 Example challenges",
-      "intro": "Here are some examples of challenges you can do:"
+      "intro": "Here are some examples of challenges you can do:",
+      "list": [
+        { "emoji": "💪", "title": "Walk for 20 minutes", "cat": "Sport" },
+        { "emoji": "🧠", "title": "Read 5 pages of a book", "cat": "Mind" },
+        { "emoji": "🧘", "title": "Drink 2 glasses of water", "cat": "Well-being" },
+        { "emoji": "🎨", "title": "Draw for 10 minutes", "cat": "Creativity" },
+        { "emoji": "👥", "title": "Call a friend", "cat": "Social" },
+        { "emoji": "⚡️", "title": "Tidy one corner of your home", "cat": "Boost" }
+      ]
     },
     "categories": {
       "title": "📚 Challenges for every area",
-      "intro": "MicroDefis covers multiple categories to help you grow in all aspects of life:"
+      "intro": "MicroDefis covers multiple categories to help you grow in all aspects of life:",
+      "list": [
+        "💪 Sport",
+        "🧘 Well-being",
+        "🤪 Fun",
+        "⚡️ Boost",
+        "💻 Digital",
+        "🎨 Creativity",
+        "🌿 Nature",
+        "🧠 Mind",
+        "👥 Social"
+      ]
     },
     "science": {
       "title": "🧠 Why MicroDefis work",
@@ -92,6 +128,11 @@
     },
     "profil": {
       "member_since": "Member since",
+      "avatar_change": "Change avatar",
+      "rank_label": "Rank",
+      "premium_badge": "👑 Premium",
+      "premium_active": "👑 Premium subscription active",
+      "premium_lock": "🔒 Premium",
       "stats": {
         "streak": "Challenges",
         "completed": "Completed",
@@ -109,7 +150,34 @@
         "badges_30days": "30 Days",
         "badges_100": "100 Challenges",
         "badges_regular": "Regular",
-        "badges_champion": "Champion"
+        "badges_champion": "Champion",
+        "badges_unstoppable": "Unstoppable",
+        "badges_marathon": "Marathon",
+        "badges_comeback": "Comeback",
+        "badges_nightowl": "Night Owl",
+        "badges_earlybird": "Early Bird",
+        "badges_saved": "Saved",
+        "badges_loyal": "Loyal",
+        "badges_elite": "Elite",
+        "badges_guardian": "Guardian",
+        "badges_legend": "Legend",
+        "desc_first": "Complete your first challenge",
+        "desc_3days": "3-day streak",
+        "desc_7days": "7-day streak",
+        "desc_30days": "30-day streak",
+        "desc_100": "Reach 100 completed challenges",
+        "desc_regular": "Best 14-day streak",
+        "desc_champion": "Best 50-day streak",
+        "desc_unstoppable": "100-day streak",
+        "desc_marathon": "200 completed challenges",
+        "desc_comeback": "Come back after 7 days inactive",
+        "desc_nightowl": "Complete a challenge late at night",
+        "desc_earlybird": "Complete a challenge early in the morning",
+        "desc_saved": "1 day protected by torch",
+        "desc_loyal": "Premium for 30 days",
+        "desc_elite": "Premium for 60 days",
+        "desc_guardian": "Premium for 100 days",
+        "desc_legend": "Premium for 200 days"
       },
       "activity": {
         "title": "📊 7-Day Activity"
@@ -147,10 +215,27 @@
         "privacy_policy": "Privacy Policy",
         "version": "Version"
       },
+      "premium": {
+        "title": "👑 Premium Subscription",
+        "active_message": "Your Premium subscription is active",
+        "manage_button": "Manage my subscription",
+        "free_message": "You are using the free version",
+        "upgrade_button": "Upgrade to Premium"
+      },
       "account": {
         "logout": "Logout",
         "delete": "Delete Account"
-      }
+      },
+      "alerts": {
+        "profile_saved": "Profile saved!",
+        "profile_error": "Error while saving",
+        "preferences_saved": "Preferences saved!",
+        "preferences_error": "Error while saving",
+        "notification_sent": "Test local notification sent.",
+        "notification_error": "Unable to send test notification.",
+        "portal_error": "Error opening the portal. Please try again."
+      },
+      "version_footer": "MicroDéfis v{version}"
     },
     "help": {
       "title": "Help Center",
@@ -159,6 +244,8 @@
         "placeholder": "Search for a question..."
       },
       "faq_title": "❓ Frequently Asked Questions",
+      "no_results": "No results",
+      "loading": "Loading...",
       "support": {
         "title": "🆘 Support",
         "subtitle": "Reply within 24 to 48h"
@@ -194,7 +281,20 @@
       "level": "Level",
       "todo": "To do",
       "done": "Done!",
-      "share": "Share"
+      "share": "Share",
+      "shield_modal": {
+        "title": "Your flame is in danger!",
+        "desc_prefix": "You missed yesterday and your streak of",
+        "desc_suffix": "is threatened.",
+        "torch_prefix": "🕯️ You have",
+        "use_button": "Use a torch",
+        "decline_button": "Let my flame die"
+      },
+      "shield_toast": "🕯️ A torch protected your flame!",
+      "shields": {
+        "premium_locked": "🔒 Torches reserved for Premium",
+        "none": "No more torches · complete challenges to earn more"
+      }
     },
     "calendar": {
       "title": "Calendar",
@@ -202,7 +302,14 @@
       "days_completed": "Days Completed",
       "best_serie": "Best Series",
       "completed_streak": "My Completed Challenges",
-      "weekdays": ["M", "T", "W", "T", "F", "S", "S"]
+      "weekdays": ["M", "T", "W", "T", "F", "S", "S"],
+      "prev_month": "Previous month",
+      "next_month": "Next month",
+      "legend": {
+        "completed": "Completed",
+        "protected": "Protected by torch",
+        "missed": "Missed"
+      }
     },
     "share": {
       "download": "Download Image",
@@ -214,7 +321,7 @@
       "image_downloaded": "Image downloaded",
       "shared": "Shared",
       "share_title": "My MicroDéfis Stats",
-      "streak_label": "day streak 🔥",
+      "streak_label": "🔥 day streak",
       "record": "🏆 Record",
       "completed": "✅ Completed",
       "cta": "Join MicroDéfis",
@@ -222,10 +329,219 @@
       "scan_me": "Scan me",
       "opening_app": "Opening app...",
       "join_button": "🚀 Join MicroDéfis",
-      "share_text": "🔥 My MicroDefis today\n\n🏆 Check my score and start yours too!"
+    "share_text": "🔥 My MicroDefis today\n\n🏆 Check my score and start yours too!",
+    "filename_download": "microdefis-stats.png",
+    "filename_share": "my-microdefis-stats.png"
+    },
+    "premium": {
+      "hero": {
+        "title": "Premium Pass",
+        "subtitle": "Unlock all challenges and boost your progress",
+        "stats": {
+          "challenges": "Challenges",
+          "levels": "Levels",
+          "categories": "Categories"
+        }
+      },
+      "plans": {
+        "title": "Choose your plan",
+        "popular": "⭐ POPULAR",
+        "weekly": {
+          "name": "Weekly",
+          "price": "€0.99",
+          "period": "/week",
+          "desc": "Cancel anytime"
+        },
+        "monthly": {
+          "name": "Monthly",
+          "price": "€2.99",
+          "period": "/month",
+          "desc": "Only €0.10/day",
+          "save": "Most flexible"
+        },
+        "yearly": {
+          "name": "Yearly",
+          "price": "€19.99",
+          "period": "/year",
+          "desc": "Only €1.67/month",
+          "save": "Best value"
+        }
+      },
+      "trial": {
+        "highlight": "7-day free trial",
+        "suffix": "on all plans"
+      },
+      "cta": {
+        "start_trial": "Start free trial",
+        "guarantee": "No commitment · Cancel in 1 click",
+        "subscribe": "Subscribe now",
+        "final_guarantee": "Secure payment · Cancel in 1 click · 30-day guarantee"
+      },
+      "benefits": {
+        "title": "What you unlock",
+        "items": {
+          "challenges": { "title": "800+ challenges", "desc": "All levels, all categories" },
+          "levels": { "title": "Expert Levels", "desc": "Intermediate, Advanced, Expert" },
+          "shield": { "title": "Streak Shield", "desc": "Coming soon 🚧" },
+          "stats": { "title": "Advanced stats", "desc": "Coming soon 🚧" },
+          "badges": { "title": "Exclusive badges", "desc": "Coming soon 🚧" }
+        }
+      },
+      "comparison": {
+        "title": "Free vs Premium",
+        "free": "Free",
+        "premium": "Premium",
+        "items": {
+          "beginner": "Beginner challenges 🌱",
+          "all_levels": "All levels (500+ challenges)",
+          "all_categories": "All categories",
+          "shield": "Streak Shield 🛡️ (soon)",
+          "badges": "Exclusive badges (soon)",
+          "stats": "Advanced stats (soon)"
+        }
+      },
+      "testimonials": {
+        "title": "They are already Premium",
+        "items": {
+          "t1": {
+            "text": "Expert challenges completely changed my routine. I never get bored!",
+            "author": "Thomas, Premium for 1 year"
+          },
+          "t2": {
+            "text": "The Streak Shield saved me more than once. Totally worth it.",
+            "author": "Marie, Premium for 6 months"
+          },
+          "t3": {
+            "text": "I built real habits thanks to the variety of categories.",
+            "author": "Lucas, Premium for 3 months"
+          }
+        }
+      },
+      "faqs": {
+        "title": "Frequently asked questions",
+        "items": {
+          "q1": {
+            "q": "Can I cancel anytime?",
+            "a": "Yes, cancel in 1 click from settings. No commitment, no conditions."
+          },
+          "q2": {
+            "q": "What happens after the free trial?",
+            "a": "You will be charged only if you don't cancel. You'll get an email reminder 3 days before."
+          },
+          "q3": {
+            "q": "Is my data kept if I cancel?",
+            "a": "Yes, all your stats and progress remain saved. You can reactivate Premium anytime."
+          },
+          "q4": {
+            "q": "Are there hidden fees?",
+            "a": "No, the displayed price is final. No hidden fees."
+          }
+        }
+      },
+      "errors": {
+        "login_required": "Please log in",
+        "session_expired": "Session expired, please log in again",
+        "server_error": "Server error",
+        "missing_payment_url": "Missing payment URL",
+        "redirect_failed": "Error redirecting to payment. Please try again."
+      }
+    },
+    "premium_success": {
+      "title": "Welcome to Premium!",
+      "subtitle_line1": "Your 7-day free trial starts now.",
+      "subtitle_line2": "Enjoy unlimited challenges!",
+      "benefits": [
+        "800+ unlocked challenges",
+        "All levels available",
+        "All categories available",
+        "7-day free trial"
+      ],
+      "cta": "Discover my challenges"
+    },
+    "leaderboard": {
+      "title": "Leaderboard",
+      "tabs": {
+        "global": "🌍 Global",
+        "league": "🏆 Weekly League"
+      },
+      "league": {
+        "title": "🏆 League {league}",
+        "reset_in": "⏳ Reset in {time}",
+        "my_league": "My league"
+      },
+      "leagues": {
+        "or": "Gold",
+        "argent": "Silver",
+        "bronze": "Bronze"
+      },
+      "zones": {
+        "up": "⬆ Top 5",
+        "down": "⬇ Bottom 5"
+      },
+      "stats": "{xp} XP · 🔥 {flames}",
+      "badges": {
+        "me": "Me",
+        "up": "Up",
+        "down": "Down"
+      },
+      "xp": "XP",
+      "default_user": "User",
+      "time": {
+        "days_short": "d",
+        "hours_short": "h"
+      },
+      "progress_helper": "{xp} XP to reach Top {rank}",
+      "shadow_target": {
+        "title": "🎯 Target: {name}",
+        "subtitle": "{xp} XP to pass them"
+      }
+    },
+    "admin": {
+      "title": "Admin dashboard",
+      "subtitle": "Track signups, subscriptions, and activity.",
+      "range_label": "Period",
+      "loading": "Loading...",
+      "error": "Error: {error}",
+      "ranges": {
+        "7d": "7d",
+        "30d": "30d",
+        "3m": "3m",
+        "1y": "1y"
+      },
+      "kpi": {
+        "vs_previous": "vs previous period",
+        "new_users": "New signups",
+        "premium_subs": "Premium subscribers",
+        "active_week": "Active this week",
+        "inactive_month": "Inactive this month"
+      },
+      "panels": {
+        "user_split": { "title": "User split", "meta": "This month" },
+        "weekly_signups": { "title": "Weekly signups", "meta": "Last 4 weeks" },
+        "push": { "title": "Push notifications", "meta": "Real time" },
+        "recent_activity": { "title": "Recent activity", "meta": "Real time" }
+      },
+      "events": {
+        "new_user": "New user signup",
+        "new_premium": "New premium subscription",
+        "push_sent": "20:00 push campaign sent",
+        "unsub": "Notifications unsubscribed",
+        "time_2m": "2 min ago",
+        "time_8m": "8 min ago",
+        "time_14m": "14 min ago",
+        "time_35m": "35 min ago"
+      }
+    },
+    "pricing": {
+      "choose_plan": "Choose {name}",
+      "popular_badge": "⭐ POPULAR"
+    },
+    "ads": {
+      "sponsored": "Sponsored"
     },
     "terms": {
       "title": "Terms of Use",
+      "last_updated": "Last updated on February 1, 2026",
       "intro": {
         "title": "1. Introduction",
         "content": "MicroDéfis is an application offering daily challenges for well-being and personal growth. By using the app, you agree to these terms."
@@ -278,6 +594,7 @@
 
     "privacy": {
       "title": "Privacy Policy",
+      "last_updated": "Last updated on February 1, 2026",
 
       "intro_title": "1. Introduction",
       "intro_text1": "This policy explains how your personal data is collected and used.",

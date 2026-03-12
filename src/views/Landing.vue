@@ -3,7 +3,7 @@
         <!-- Hero -->
         <div class="hero">
             <div class="hero-emoji">🔥</div>
-            <h1 class="hero-title"> MicroDéfis</h1>
+            <h1 class="hero-title">{{ t("app.name") }}</h1>
             <p class="hero-subtitle">{{ t('landing.hero.subtitle') }}</p>
             <v-btn class="btn-primary mt-4" size="large" block @click="$router.push('/login')">
                 {{ t('landing.hero.cta') }}
@@ -79,22 +79,20 @@
 </template>
 
 <script setup>
-import { useI18n } from 'vue-i18n';
-const { t } = useI18n();
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 
-const examples = [
-    { emoji: '💪', title: 'Marche 20 minutes', cat: 'Sport' },
-    { emoji: '🧠', title: 'Lis 5 pages d’un livre', cat: 'Mentale' },
-    { emoji: '🧘', title: 'Bois 2 verres d’eau', cat: 'Bien-être' },
-    { emoji: '🎨', title: 'Dessine pendant 10 minutes', cat: 'Créativité' },
-    { emoji: '👥', title: 'Appelle un(e) ami(e)', cat: 'Social' },
-    { emoji: '⚡️', title: 'Nettoie un coin de ta maison', cat: 'Boost' }
-];
+const { t, tm } = useI18n();
 
-const categories = [
-    '💪 Sport', '🧘 Bien-être', '🤪 Insolite', '⚡️ Boost','💻 Digitale',
-    '🎨 Créativité', '🌿 Nature', '🧠 Mentale', '👥 Social'
-];
+const examples = computed(() => {
+    const items = tm("landing.examples.list");
+    return Array.isArray(items) ? items : [];
+});
+
+const categories = computed(() => {
+    const items = tm("landing.categories.list");
+    return Array.isArray(items) ? items : [];
+});
 </script>
 
 <style scoped>

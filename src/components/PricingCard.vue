@@ -4,10 +4,10 @@
         class="pricing-card"
         :class="{ selected: isSelected, popular: popular }"
         :aria-pressed="isSelected"
-        :aria-label="`Choisir ${name}`"
+        :aria-label="t('pricing.choose_plan', { name })"
         @click="$emit('select', id)"
     >
-        <div v-if="popular" class="popular-badge">⭐ POPULAIRE</div>
+        <div v-if="popular" class="popular-badge">{{ t("pricing.popular_badge") }}</div>
         <div class="plan-header">
             <div class="plan-name">{{ name }}</div>
             <div v-if="saveText" class="plan-save">{{ saveText }}</div>
@@ -22,6 +22,9 @@
 
 <script setup>
 import { defineProps } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps({
     id: String,             // identifiant du plan

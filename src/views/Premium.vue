@@ -4,85 +4,65 @@
 		<!-- Hero Section -->
 		<div class="hero-section">
 			<div class="crown-icon">👑</div>
-			<h1 class="hero-title">Pass Premium</h1>
+			<h1 class="hero-title">{{ t("premium.hero.title") }}</h1>
 			<p class="hero-subtitle">
-				Débloque tous les défis et accélère ta progression
+				{{ t("premium.hero.subtitle") }}
 			</p>
 			<div class="hero-stats">
 				<div class="hero-stat">
 					<span class="stat-val">800+</span>
-					<span class="stat-lbl">Défis</span>
+					<span class="stat-lbl">{{ t("premium.hero.stats.challenges") }}</span>
 				</div>
 				<div class="hero-divider"></div>
 				<div class="hero-stat">
 					<span class="stat-val">5</span>
-					<span class="stat-lbl">Niveaux</span>
+					<span class="stat-lbl">{{ t("premium.hero.stats.levels") }}</span>
 				</div>
 				<div class="hero-divider"></div>
 				<div class="hero-stat">
 					<span class="stat-val">∞</span>
-					<span class="stat-lbl">Catégories</span>
+					<span class="stat-lbl">{{ t("premium.hero.stats.categories") }}</span>
 				</div>
 			</div>
 		</div>
 
 		<!-- Pricing Cards -->
 		<v-card class="micro-card pa-5 mb-4">
-			<div class="page-subtitle mb-4 text-center">Choisis ton plan</div>
+			<div class="page-subtitle mb-4 text-center">{{ t("premium.plans.title") }}</div>
 			<div class="pricing-cards">
-				<div class="pricing-card" :class="{ selected: selectedPlan === 'weekly' }"
-					@click="selectPlan('weekly')">
+				<div
+					v-for="plan in plans"
+					:key="plan.id"
+					class="pricing-card"
+					:class="{ selected: selectedPlan === plan.id, popular: plan.popular }"
+					@click="selectPlan(plan.id)"
+				>
+					<div v-if="plan.popular" class="popular-badge">{{ t("premium.plans.popular") }}</div>
 					<div class="plan-header">
-						<div class="plan-name">Hebdomadaire</div>
+						<div class="plan-name">{{ t(plan.nameKey) }}</div>
+						<div v-if="plan.saveKey" class="plan-save">{{ t(plan.saveKey) }}</div>
 					</div>
 					<div class="plan-price">
-						<span class="price-amount">0,99€</span>
-						<span class="price-period">/semaine</span>
+						<span class="price-amount">{{ t(plan.priceKey) }}</span>
+						<span class="price-period">{{ t(plan.periodKey) }}</span>
 					</div>
-					<div class="plan-desc">Annule quand tu veux</div>
-				</div>
-
-				<div class="pricing-card popular" :class="{ selected: selectedPlan === 'monthly' }"
-					@click="selectPlan('monthly')">
-					<div class="popular-badge">⭐ POPULAIRE</div>
-					<div class="plan-header">
-						<div class="plan-name">Mensuel</div>
-						<div class="plan-save">Le plus flexible</div>
-					</div>
-					<div class="plan-price">
-						<span class="price-amount">2,99€</span>
-						<span class="price-period">/mois</span>
-					</div>
-					<div class="plan-desc">Soit 0,10€/jour</div>
-				</div>
-
-				<div class="pricing-card" :class="{ selected: selectedPlan === 'yearly' }"
-					@click="selectPlan('yearly')">
-					<div class="plan-header">
-						<div class="plan-name">Annuel</div>
-						<div class="plan-save">Meilleur prix</div>
-					</div>
-					<div class="plan-price">
-						<span class="price-amount">19,99€</span>
-						<span class="price-period">/an</span>
-					</div>
-					<div class="plan-desc">Soit 1,67€/mois</div>
+					<div class="plan-desc">{{ t(plan.descKey) }}</div>
 				</div>
 			</div>
 			<div class="trial-notice">
-				🎉 <strong>7 jours d'essai gratuit</strong> sur tous les plans
+				🎉 <strong>{{ t("premium.trial.highlight") }}</strong> {{ t("premium.trial.suffix") }}
 			</div>
 		</v-card>
 
 		<!-- CTA Principal -->
 		<v-btn class="btn-primary mb-2" block size="large" :loading="isLoading" @click="startTrial">
-			🚀 Commencer l'essai gratuit
+			🚀 {{ t("premium.cta.start_trial") }}
 		</v-btn>
-		<div class="guarantee mb-4">🔒 Sans engagement · Annulation en 1 clic</div>
+		<div class="guarantee mb-4">🔒 {{ t("premium.cta.guarantee") }}</div>
 
 		<!-- Ce que tu débloque -->
 		<v-card class="micro-card pa-5 mb-4">
-			<div class="page-subtitle mb-4 text-center">Ce que tu débloque</div>
+			<div class="page-subtitle mb-4 text-center">{{ t("premium.benefits.title") }}</div>
 			<div class="benefits-grid">
 				<div class="benefit-item" v-for="benefit in benefits" :key="benefit.title">
 					<div class="benefit-icon">{{ benefit.icon }}</div>
@@ -94,12 +74,12 @@
 
 		<!-- Comparaison Table -->
 		<v-card class="micro-card pa-5 mb-4">
-			<div class="page-subtitle mb-4 text-center">Gratuit vs Premium</div>
+			<div class="page-subtitle mb-4 text-center">{{ t("premium.comparison.title") }}</div>
 			<div class="comparison-table">
 				<div class="comparison-row header">
 					<div class="feature-name"></div>
-					<div class="plan-col">Gratuit</div>
-					<div class="plan-col premium">Premium</div>
+					<div class="plan-col">{{ t("premium.comparison.free") }}</div>
+					<div class="plan-col premium">{{ t("premium.comparison.premium") }}</div>
 				</div>
 				<div class="comparison-row" v-for="item in comparisonItems" :key="item.feature">
 					<div class="feature-name">{{ item.feature }}</div>
@@ -117,7 +97,7 @@
 
 		<!-- Social Proof -->
 		<v-card class="micro-card pa-5 mb-4">
-			<div class="page-subtitle mb-4 text-center">Ils sont déjà Premium</div>
+			<div class="page-subtitle mb-4 text-center">{{ t("premium.testimonials.title") }}</div>
 			<div class="testimonials">
 				<div class="testimonial" v-for="(test, i) in testimonials" :key="i">
 					<div class="stars">⭐⭐⭐⭐⭐</div>
@@ -129,7 +109,7 @@
 
 		<!-- FAQ -->
 		<v-card class="micro-card pa-5 mb-4">
-			<div class="page-subtitle mb-4 text-center">Questions fréquentes</div>
+			<div class="page-subtitle mb-4 text-center">{{ t("premium.faqs.title") }}</div>
 			<v-expansion-panels variant="accordion">
 				<v-expansion-panel v-for="(faq, i) in faqs" :key="i">
 					<v-expansion-panel-title>
@@ -142,24 +122,26 @@
 
 		<!-- CTA Final -->
 		<v-btn class="btn-primary mb-4" block size="large" :loading="isLoading" @click="startTrial">
-			👑 Souscrire maintenant
+			👑 {{ t("premium.cta.subscribe") }}
 		</v-btn>
 		<div class="guarantee">
-			🔒 Paiement sécurisé · Annulation en 1 clic · Garantie 30 jours
+			🔒 {{ t("premium.cta.final_guarantee") }}
 		</div>
 	</div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { supabase } from "@/lib/supabase";
 import { useUserStore } from "@/stores/userStore";
+import { useI18n } from "vue-i18n";
 
 const router = useRouter();
 const userStore = useUserStore();
 const isLoading = ref(false);
 const selectedPlan = ref("monthly");
+const { t } = useI18n();
 
 // IDs des prix Stripe (depuis .env)
 const priceIds = {
@@ -168,37 +150,65 @@ const priceIds = {
 	yearly: import.meta.env.VITE_STRIPE_PRICE_YEARLY,
 };
 
-const benefits = [
-	{ icon: "🎯", title: "800+ défis", desc: "Tous niveaux, toutes catégories" },
-	{ icon: "⚡", title: "Niveaux Expert", desc: "Intermédiaire, Avancé, Expert" },
-	{ icon: "🛡️", title: "Streak Shield", desc: "Bientôt disponible 🚧"}, //desc: "Protège ta série en cas d'oubli" },
-	{ icon: "📊", title: "Stats avancées", desc: "Bientôt disponible 🚧" }, //desc: "Suis ta progression en détail" },
-	//{ icon: "🎨", title: "Sans pub", desc: "Expérience 100% propre" },
-	{ icon: "🏆", title: "Badges exclusifs", desc: "Bientôt disponible 🚧" }, //desc: "Montre ton statut Premium" },
-];
+const plans = computed(() => [
+	{
+		id: "weekly",
+		nameKey: "premium.plans.weekly.name",
+		priceKey: "premium.plans.weekly.price",
+		periodKey: "premium.plans.weekly.period",
+		descKey: "premium.plans.weekly.desc",
+		saveKey: null,
+		popular: false,
+	},
+	{
+		id: "monthly",
+		nameKey: "premium.plans.monthly.name",
+		priceKey: "premium.plans.monthly.price",
+		periodKey: "premium.plans.monthly.period",
+		descKey: "premium.plans.monthly.desc",
+		saveKey: "premium.plans.monthly.save",
+		popular: true,
+	},
+	{
+		id: "yearly",
+		nameKey: "premium.plans.yearly.name",
+		priceKey: "premium.plans.yearly.price",
+		periodKey: "premium.plans.yearly.period",
+		descKey: "premium.plans.yearly.desc",
+		saveKey: "premium.plans.yearly.save",
+		popular: false,
+	},
+]);
 
-const comparisonItems = [
-	{ feature: "Défis Débutant 🌱", free: true },
-	{ feature: "Tous les niveaux (500+ défis)", free: false },
-	{ feature: "Toutes les catégories", free: false },
-	{ feature: "Streak Shield 🛡️ (bientôt)", free: false },
-	//{ feature: "Sans publicité", free: false },
-	{ feature: "Badges exclusifs (bientôt)", free: false },
-	{ feature: "Stats avancées (bientôt)", free: false },
-];
+const benefits = computed(() => [
+	{ icon: "🎯", title: t("premium.benefits.items.challenges.title"), desc: t("premium.benefits.items.challenges.desc") },
+	{ icon: "⚡", title: t("premium.benefits.items.levels.title"), desc: t("premium.benefits.items.levels.desc") },
+	{ icon: "🛡️", title: t("premium.benefits.items.shield.title"), desc: t("premium.benefits.items.shield.desc") },
+	{ icon: "📊", title: t("premium.benefits.items.stats.title"), desc: t("premium.benefits.items.stats.desc") },
+	{ icon: "🏆", title: t("premium.benefits.items.badges.title"), desc: t("premium.benefits.items.badges.desc") },
+]);
 
-const testimonials = [
-	{ text: "Les défis Expert ont complètement changé ma routine. Je ne m'ennuie plus jamais !", author: "Thomas, Premium depuis 1 an" },
-	{ text: "Le Streak Shield m'a sauvé plusieurs fois. Valait largement l'abonnement.", author: "Marie, Premium depuis 6 mois" },
-	{ text: "J'ai créé de vraies nouvelles habitudes grâce à la variété des catégories.", author: "Lucas, Premium depuis 3 mois" },
-];
+const comparisonItems = computed(() => [
+	{ feature: t("premium.comparison.items.beginner"), free: true },
+	{ feature: t("premium.comparison.items.all_levels"), free: false },
+	{ feature: t("premium.comparison.items.all_categories"), free: false },
+	{ feature: t("premium.comparison.items.shield"), free: false },
+	{ feature: t("premium.comparison.items.badges"), free: false },
+	{ feature: t("premium.comparison.items.stats"), free: false },
+]);
 
-const faqs = [
-	{ q: "Puis-je annuler quand je veux ?", a: "Oui, annulation en 1 clic depuis les paramètres. Aucun engagement, aucune condition." },
-	{ q: "Que se passe-t-il après l'essai gratuit ?", a: "Tu seras débité uniquement si tu ne résignes pas. Tu recevras un rappel par email 3 jours avant." },
-	{ q: "Mes données sont-elles conservées si j'annule ?", a: "Oui, toutes tes stats et progrès restent sauvegardés. Tu peux réactiver Premium à tout moment." },
-	{ q: "Y a-t-il des frais cachés ?", a: "Non, le prix affiché est le prix final. Aucun frais caché." },
-];
+const testimonials = computed(() => [
+	{ text: t("premium.testimonials.items.t1.text"), author: t("premium.testimonials.items.t1.author") },
+	{ text: t("premium.testimonials.items.t2.text"), author: t("premium.testimonials.items.t2.author") },
+	{ text: t("premium.testimonials.items.t3.text"), author: t("premium.testimonials.items.t3.author") },
+]);
+
+const faqs = computed(() => [
+	{ q: t("premium.faqs.items.q1.q"), a: t("premium.faqs.items.q1.a") },
+	{ q: t("premium.faqs.items.q2.q"), a: t("premium.faqs.items.q2.a") },
+	{ q: t("premium.faqs.items.q3.q"), a: t("premium.faqs.items.q3.a") },
+	{ q: t("premium.faqs.items.q4.q"), a: t("premium.faqs.items.q4.a") },
+]);
 
 function selectPlan(plan) {
 	selectedPlan.value = plan;
@@ -207,7 +217,7 @@ function selectPlan(plan) {
 async function startTrial() {
 	try {
 		if (!userStore.userId) {
-			alert("Veuillez vous connecter");
+			alert(t("premium.errors.login_required"));
 			router.push("/login");
 			return;
 		}
@@ -216,7 +226,7 @@ async function startTrial() {
 
 		// Récupère le token JWT de l'utilisateur connecté
 		const { data: { session } } = await supabase.auth.getSession();
-		if (!session) throw new Error("Session expirée, veuillez vous reconnecter");
+		if (!session) throw new Error(t("premium.errors.session_expired"));
 
 		// Appel direct avec fetch — évite que Supabase écrase le header Authorization
 		const response = await fetch(
@@ -235,14 +245,14 @@ async function startTrial() {
 		);
 
 		const data = await response.json();
-		if (!response.ok) throw new Error(data.error || "Erreur serveur");
-		if (!data?.url) throw new Error("URL de paiement manquante");
+		if (!response.ok) throw new Error(data.error || t("premium.errors.server_error"));
+		if (!data?.url) throw new Error(t("premium.errors.missing_payment_url"));
 
 		window.location.href = data.url;
 
 	} catch (error) {
 		console.error("❌ Erreur création session Stripe:", error);
-		alert("Erreur lors de la redirection vers le paiement. Réessayez.");
+		alert(t("premium.errors.redirect_failed"));
 	} finally {
 		isLoading.value = false;
 	}

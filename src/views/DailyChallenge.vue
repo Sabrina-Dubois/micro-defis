@@ -6,28 +6,35 @@
       <v-dialog v-model="showShieldModal" max-width="340" persistent>
         <v-card class="shield-modal pa-6 text-center">
           <div class="modal-fire">🔥</div>
-          <div class="modal-title">Ta flamme est en danger !</div>
+          <div class="modal-title">{{ t("daily.shield_modal.title") }}</div>
           <div class="modal-desc">
-            Tu as raté hier et ta série de
-            <strong>{{ statsStore.currentStreak }} jour{{ statsStore.currentStreak > 1 ? 's' : '' }}</strong>
-            est menacée.
+            {{ t("daily.shield_modal.desc_prefix") }}
+            <strong>
+              {{ statsStore.currentStreak }}
+              {{ statsStore.currentStreak > 1 ? t("common.day_plural") : t("common.day_singular") }}
+            </strong>
+            {{ t("daily.shield_modal.desc_suffix") }}
           </div>
           <div class="modal-torch-info">
-            🕯️ Tu as <strong>{{ streakShields }} torche{{ streakShields > 1 ? 's' : '' }}</strong> disponible{{
-              streakShields > 1 ? 's' : '' }}
+            {{ t("daily.shield_modal.torch_prefix") }}
+            <strong>
+              {{ streakShields }}
+              {{ streakShields > 1 ? t("common.torch_plural") : t("common.torch_singular") }}
+            </strong>
+            {{ streakShields > 1 ? t("common.available_plural") : t("common.available_singular") }}
           </div>
           <v-btn class="btn-primary mt-4" block :loading="shieldLoading" @click="activateShield">
-            🕯️ Utiliser une torche
+            🕯️ {{ t("daily.shield_modal.use_button") }}
           </v-btn>
           <v-btn variant="text" block class="mt-2 btn-decline" @click="declineShield">
-            Laisser mourir ma flamme
+            {{ t("daily.shield_modal.decline_button") }}
           </v-btn>
         </v-card>
       </v-dialog>
 
       <!-- Toast confirmation -->
       <v-snackbar v-model="showShieldToast" color="deep-orange" timeout="3000" location="top">
-        🕯️ Une torche a protégé ta flamme !
+        {{ t("daily.shield_toast") }}
       </v-snackbar>
 
       <!-- Top -->
@@ -105,14 +112,15 @@
             </div>
             <div class="shields-label">
               <template v-if="!isPremium">
-                🔒 Torches réservées au Premium
+                {{ t("daily.shields.premium_locked") }}
               </template>
               <template v-else-if="streakShields > 0">
-                {{ streakShields }} torche{{ streakShields > 1 ? 's' : '' }} disponible{{ streakShields > 1 ? 's' : ''
-                }}
+                {{ streakShields }}
+                {{ streakShields > 1 ? t("common.torch_plural") : t("common.torch_singular") }}
+                {{ streakShields > 1 ? t("common.available_plural") : t("common.available_singular") }}
               </template>
               <template v-else>
-                Plus de torches · complète des défis pour en gagner
+                {{ t("daily.shields.none") }}
               </template>
             </div>
           </div>

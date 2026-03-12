@@ -1,6 +1,6 @@
 <template>
 	<div class="ad-wrapper">
-		<div class="ad-label">Sponsorisé</div>
+		<div class="ad-label">{{ t("ads.sponsored") }}</div>
 		<div class="ad-container">
 			<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4871426633370312"
 				:data-ad-slot="adSlot" data-ad-format="auto" data-full-width-responsive="true">
@@ -11,6 +11,9 @@
 
 <script setup>
 import { onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 defineProps({
 	adSlot: { type: String, required: true }

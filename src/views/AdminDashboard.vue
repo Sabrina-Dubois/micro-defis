@@ -2,10 +2,10 @@
   <section class="admin-page">
     <header class="admin-header">
       <div class="header-left">
-        <h1 class="admin-title">Dashboard admin</h1>
-        <p class="admin-subtitle">Suivi des inscriptions, abonnements et activite.</p>
+        <h1 class="admin-title">{{ t("admin.title") }}</h1>
+        <p class="admin-subtitle">{{ t("admin.subtitle") }}</p>
       </div>
-      <div class="range-switch" role="group" aria-label="Periode">
+      <div class="range-switch" role="group" :aria-label="t('admin.range_label')">
         <button v-for="range in ranges" :key="range.value" class="range-btn"
           :class="{ active: selectedRange === range.value }" type="button" @click="selectedRange = range.value">
           {{ range.label }}
@@ -13,8 +13,8 @@
       </div>
     </header>
 
-    <div v-if="loading" class="loading">Chargement...</div>
-    <div v-else-if="error" class="error">Erreur : {{ error }}</div>
+    <div v-if="loading" class="loading">{{ t("admin.loading") }}</div>
+    <div v-else-if="error" class="error">{{ t("admin.error", { error }) }}</div>
 
     <template v-else>
       <div class="kpi-grid">
@@ -25,7 +25,7 @@
           <p class="kpi-delta" :class="card.direction">
             <span class="delta-arrow">{{ card.direction === 'up' ? '▲' : '▼' }}</span>
             <span>{{ card.delta }}</span>
-            <span class="kpi-period">vs periode prec.</span>
+            <span class="kpi-period">{{ t("admin.kpi.vs_previous") }}</span>
           </p>
         </article>
       </div>
@@ -33,8 +33,8 @@
       <div class="panel-grid">
         <article class="micro-card panel">
           <header class="panel-head">
-            <h2>Repartition utilisateurs</h2>
-            <span class="panel-meta">Ce mois</span>
+            <h2>{{ t("admin.panels.user_split.title") }}</h2>
+            <span class="panel-meta">{{ t("admin.panels.user_split.meta") }}</span>
           </header>
           <div class="split-list">
             <div v-for="segment in userSegments" :key="segment.label" class="split-row">
@@ -57,8 +57,8 @@
 
         <article class="micro-card panel">
           <header class="panel-head">
-            <h2>Inscriptions hebdo</h2>
-            <span class="panel-meta">4 dernieres semaines</span>
+            <h2>{{ t("admin.panels.weekly_signups.title") }}</h2>
+            <span class="panel-meta">{{ t("admin.panels.weekly_signups.meta") }}</span>
           </header>
           <div class="bars">
             <div v-for="week in weeklySignups" :key="week.label" class="bar-row">
@@ -74,8 +74,8 @@
       <div class="bottom-grid">
         <article class="micro-card panel push-panel">
           <header class="panel-head">
-            <h2><span class="push-icon">🔔</span> Push Notifications</h2>
-            <span class="panel-meta">En temps réel</span>
+            <h2><span class="push-icon">🔔</span> {{ t("admin.panels.push.title") }}</h2>
+            <span class="panel-meta">{{ t("admin.panels.push.meta") }}</span>
           </header>
           <div class="push-grid">
             <div v-for="stat in pushStats" :key="stat.label" class="push-stat">
@@ -93,8 +93,8 @@
         <!-- Activité récente hardcodée pour l'instant -->
         <article class="micro-card panel">
           <header class="panel-head">
-            <h2>Activite recente</h2>
-            <span class="panel-meta">Temps reel</span>
+            <h2>{{ t("admin.panels.recent_activity.title") }}</h2>
+            <span class="panel-meta">{{ t("admin.panels.recent_activity.meta") }}</span>
           </header>
           <ul class="activity-list">
             <li v-for="event in events" :key="event.id" class="activity-item">
@@ -112,8 +112,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { supabase } from "@/lib/supabase";
+import { useI18n } from "vue-i18n";
 
 // ─────────────────────────────────────────
 // STATE
@@ -121,13 +122,14 @@ import { supabase } from "@/lib/supabase";
 const selectedRange = ref("30d");
 const loading = ref(true);
 const error = ref(null);
+const { t } = useI18n();
 
-const ranges = [
-  { label: "7j", value: "7d" },
-  { label: "30j", value: "30d" },
-  { label: "3m", value: "3m" },
-  { label: "1a", value: "1y" },
-];
+const ranges = computed(() => [
+  { label: t("admin.ranges.7d"), value: "7d" },
+  { label: t("admin.ranges.30d"), value: "30d" },
+  { label: t("admin.ranges.3m"), value: "3m" },
+  { label: t("admin.ranges.1y"), value: "1y" },
+]);
 
 const kpiCards = ref([]);
 const userSegments = ref([]);
@@ -135,12 +137,13 @@ const weeklySignups = ref([]);
 const pushStats = ref([]);
 
 // Activité récente hardcodée — nécessite une table de logs pour être dynamique
-const events = ref([
-  { id: 1, type: "NEW", text: "Nouvel utilisateur inscrit", time: "Il y a 2 min" },
-  { id: 2, type: "PREM", text: "Nouvel abonnement premium", time: "Il y a 8 min" },
-  { id: 3, type: "PUSH", text: "Campagne notif 20:00 envoyee", time: "Il y a 14 min" },
-  { id: 4, type: "UNSUB", text: "Desabonnement notifications", time: "Il y a 35 min" },
+const defaultEvents = computed(() => [
+  { id: 1, type: "NEW", text: t("admin.events.new_user"), time: t("admin.events.time_2m") },
+  { id: 2, type: "PREM", text: t("admin.events.new_premium"), time: t("admin.events.time_8m") },
+  { id: 3, type: "PUSH", text: t("admin.events.push_sent"), time: t("admin.events.time_14m") },
+  { id: 4, type: "UNSUB", text: t("admin.events.unsub"), time: t("admin.events.time_35m") },
 ]);
+const events = ref([]);
 
 // ─────────────────────────────────────────
 // CHARGEMENT
@@ -169,7 +172,7 @@ async function loadDashboard() {
     kpiCards.value = [
       {
         id: "new",
-        label: "Nouveaux inscrits",
+        label: t("admin.kpi.new_users"),
         value: kpi.newUsers30d.toLocaleString("fr-FR"),
         delta: `${pct >= 0 ? "+" : ""}${pct}%`,
         direction: pct >= 0 ? "up" : "down",
@@ -177,7 +180,7 @@ async function loadDashboard() {
       },
       {
         id: "subs",
-        label: "Abonnés premium",
+        label: t("admin.kpi.premium_subs"),
         value: kpi.totalPremium.toLocaleString("fr-FR"),
         delta: "+0%",
         direction: "up",
@@ -185,7 +188,7 @@ async function loadDashboard() {
       },
       {
         id: "active",
-        label: "Actifs semaine",
+        label: t("admin.kpi.active_week"),
         value: kpi.activeWeek.toLocaleString("fr-FR"),
         delta: "+0%",
         direction: "up",
@@ -193,7 +196,7 @@ async function loadDashboard() {
       },
       {
         id: "inactive",
-        label: "Inactifs ce mois",
+        label: t("admin.kpi.inactive_month"),
         value: kpi.inactive.toLocaleString("fr-FR"),
         delta: "0%",
         direction: "down",
@@ -201,7 +204,7 @@ async function loadDashboard() {
       },
     ];
 
-    events.value = logs ?? [];
+    events.value = Array.isArray(logs) && logs.length ? logs : defaultEvents.value;
 
     // Les autres données viennent directement de l'Edge Function
     userSegments.value = segments;

@@ -1,4 +1,21 @@
 {
+  "app": {
+    "name": "MicroDéfis",
+    "version": "1.0.0",
+    "support_email": "support@microdefis.com"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "no_results": "Aucun résultat",
+    "confirm": "Êtes-vous sûr ?",
+    "not_implemented": "À implémenter",
+    "day_singular": "jour",
+    "day_plural": "jours",
+    "torch_singular": "torche",
+    "torch_plural": "torches",
+    "available_singular": "disponible",
+    "available_plural": "disponibles"
+  },
   "landing": {
     "hero": {
       "subtitle": "Un petit défi par jour pour devenir une meilleure version de toi-même.",
@@ -22,11 +39,30 @@
     },
     "examples": {
       "title": "🎯 Exemples de défis",
-      "intro": "Voici quelques exemples de défis que tu peux relever sur MicroDéfis :"
+      "intro": "Voici quelques exemples de défis que tu peux relever sur MicroDéfis :",
+      "list": [
+        { "emoji": "💪", "title": "Marche 20 minutes", "cat": "Sport" },
+        { "emoji": "🧠", "title": "Lis 5 pages d’un livre", "cat": "Mentale" },
+        { "emoji": "🧘", "title": "Bois 2 verres d’eau", "cat": "Bien-être" },
+        { "emoji": "🎨", "title": "Dessine pendant 10 minutes", "cat": "Créativité" },
+        { "emoji": "👥", "title": "Appelle un(e) ami(e)", "cat": "Social" },
+        { "emoji": "⚡️", "title": "Nettoie un coin de ta maison", "cat": "Boost" }
+      ]
     },
     "categories": {
       "title": "📚 Des défis pour chaque domaine",
-      "intro": "MicroDéfis couvre plusieurs catégories pour t'aider à progresser dans tous les aspects de ta vie :"
+      "intro": "MicroDéfis couvre plusieurs catégories pour t'aider à progresser dans tous les aspects de ta vie :",
+      "list": [
+        "💪 Sport",
+        "🧘 Bien-être",
+        "🤪 Insolite",
+        "⚡️ Boost",
+        "💻 Digitale",
+        "🎨 Créativité",
+        "🌿 Nature",
+        "🧠 Mentale",
+        "👥 Social"
+      ]
     },
     "science": {
       "title": "🧠 Pourquoi les MicroDéfis fonctionnent ?",
@@ -92,6 +128,11 @@
   },
   "profil": {
     "member_since": "Membre depuis",
+    "avatar_change": "Changer l'avatar",
+    "rank_label": "Rang",
+    "premium_badge": "👑 Premium",
+    "premium_active": "👑 Abonnement Premium actif",
+    "premium_lock": "🔒 Premium",
     "stats": {
       "streak": "Défis",
       "completed": "Validés",
@@ -109,7 +150,34 @@
       "badges_30days": "30 jours",
       "badges_100": "100 défis",
       "badges_regular": "Régulier",
-      "badges_champion": "Champion"
+      "badges_champion": "Champion",
+      "badges_unstoppable": "Inarrêtable",
+      "badges_marathon": "Marathon",
+      "badges_comeback": "Retour",
+      "badges_nightowl": "Noctambule",
+      "badges_earlybird": "Lève-tôt",
+      "badges_saved": "Sauvé",
+      "badges_loyal": "Fidèle",
+      "badges_elite": "Elite",
+      "badges_guardian": "Gardien",
+      "badges_legend": "Légende",
+      "desc_first": "Valider ton 1er défi",
+      "desc_3days": "Série de 3 jours",
+      "desc_7days": "Série de 7 jours",
+      "desc_30days": "Série de 30 jours",
+      "desc_100": "Atteindre 100 défis validés",
+      "desc_regular": "Meilleure série de 14 jours",
+      "desc_champion": "Meilleure série de 50 jours",
+      "desc_unstoppable": "Série de 100 jours",
+      "desc_marathon": "200 défis validés",
+      "desc_comeback": "Revenir après 7 jours d’inactivité.",
+      "desc_nightowl": "Valider un défi tard le soir",
+      "desc_earlybird": "Valider un défi tôt le matin",
+      "desc_saved": "1 jour protégé par torche",
+      "desc_loyal": "Premium depuis 30 jours",
+      "desc_elite": "Premium depuis 60 jours",
+      "desc_guardian": "Premium depuis 100 jours",
+      "desc_legend": "Premium depuis 200 jours"
     },
     "activity": {
       "title": "📊 Activité 7 jours"
@@ -147,10 +215,27 @@
       "privacy_policy": "Politique de confidentialité",
       "version": "Version"
     },
+    "premium": {
+      "title": "👑 Abonnement Premium",
+      "active_message": "Votre abonnement Premium est actif",
+      "manage_button": "Gérer mon abonnement",
+      "free_message": "Vous utilisez la version gratuite",
+      "upgrade_button": "Passer au Premium"
+    },
     "account": {
       "logout": " Déconnection",
       "delete": "Supprimer le compte"
-    }
+    },
+    "alerts": {
+      "profile_saved": "Profil enregistré !",
+      "profile_error": "Erreur lors de la sauvegarde",
+      "preferences_saved": "Préférences sauvegardées !",
+      "preferences_error": "Erreur lors de la sauvegarde",
+      "notification_sent": "Notification locale de test envoyée.",
+      "notification_error": "Impossible d'envoyer la notification de test.",
+      "portal_error": "Erreur lors de l'ouverture du portail. Réessayez."
+    },
+    "version_footer": "MicroDéfis v{version}"
   },
   "help": {
     "title": "Centre d'aide",
@@ -159,6 +244,8 @@
       "placeholder": "Rechercher une question..."
     },
     "faq_title": "❓ Questions fréquentes",
+    "no_results": "Aucun résultat",
+    "loading": "Chargement...",
     "support": {
       "title": "🆘 Support",
       "subtitle": "Réponse sous 24 à 48h"
@@ -194,7 +281,20 @@
     "level": "Niveau",
     "todo": "À faire",
     "done": "Fait !",
-    "share": "Partager"
+    "share": "Partager",
+    "shield_modal": {
+      "title": "Ta flamme est en danger !",
+      "desc_prefix": "Tu as raté hier et ta série de",
+      "desc_suffix": "est menacée.",
+      "torch_prefix": "🕯️ Tu as",
+      "use_button": "Utiliser une torche",
+      "decline_button": "Laisser mourir ma flamme"
+    },
+    "shield_toast": "🕯️ Une torche a protégé ta flamme !",
+    "shields": {
+      "premium_locked": "🔒 Torches réservées au Premium",
+      "none": "Plus de torches · complète des défis pour en gagner"
+    }
   },
   "calendar": {
     "title": "Calendrier",
@@ -202,7 +302,14 @@
     "days_completed": "Jours validés",
     "best_serie": "Meilleure série",
     "completed_streak": "Mes défis réalisés",
-    "weekdays": ["L", "M", "M", "J", "V", "S", "D"]
+    "weekdays": ["L", "M", "M", "J", "V", "S", "D"],
+    "prev_month": "Mois précédent",
+    "next_month": "Mois suivant",
+    "legend": {
+      "completed": "Complété",
+      "protected": "Protégé par torche",
+      "missed": "Manqué"
+    }
   },
   "share": {
     "download": "Télécharger l’image",
@@ -214,7 +321,7 @@
     "image_downloaded": "Image téléchargée",
     "shared": "Partagé",
     "share_title": "Mes stats MicroDéfis",
-    "streak_label": "jours de série 🔥",
+    "streak_label": "🔥 jours de streak",
     "record": "🏆 Record",
     "completed": "✅ Validés",
     "cta": "🚀 Rejoins MicroDéfis",
@@ -222,10 +329,219 @@
     "scan_me": "Scanne-moi",
     "opening_app": "Ouverture de l'app...",
     "join_button": "🚀 Rejoindre MicroDéfis",
-    "share_text": "🔥 Mes MicroDéfis du jour\n\n🏆 Check mon score et lance-toi aussi !"
+    "share_text": "🔥 Mes MicroDéfis du jour\n\n🏆 Check mon score et lance-toi aussi !",
+    "filename_download": "microdefis-stats.png",
+    "filename_share": "mes-stats-microdefis.png"
+  },
+  "premium": {
+    "hero": {
+      "title": "Pass Premium",
+      "subtitle": "Débloque tous les défis et accélère ta progression",
+      "stats": {
+        "challenges": "Défis",
+        "levels": "Niveaux",
+        "categories": "Catégories"
+      }
+    },
+    "plans": {
+      "title": "Choisis ton plan",
+      "popular": "⭐ POPULAIRE",
+      "weekly": {
+        "name": "Hebdomadaire",
+        "price": "0,99€",
+        "period": "/semaine",
+        "desc": "Annule quand tu veux"
+      },
+      "monthly": {
+        "name": "Mensuel",
+        "price": "2,99€",
+        "period": "/mois",
+        "desc": "Soit 0,10€/jour",
+        "save": "Le plus flexible"
+      },
+      "yearly": {
+        "name": "Annuel",
+        "price": "19,99€",
+        "period": "/an",
+        "desc": "Soit 1,67€/mois",
+        "save": "Meilleur prix"
+      }
+    },
+    "trial": {
+      "highlight": "7 jours d'essai gratuit",
+      "suffix": "sur tous les plans"
+    },
+    "cta": {
+      "start_trial": "Commencer l'essai gratuit",
+      "guarantee": "Sans engagement · Annulation en 1 clic",
+      "subscribe": "Souscrire maintenant",
+      "final_guarantee": "Paiement sécurisé · Annulation en 1 clic · Garantie 30 jours"
+    },
+    "benefits": {
+      "title": "Ce que tu débloque",
+      "items": {
+        "challenges": { "title": "800+ défis", "desc": "Tous niveaux, toutes catégories" },
+        "levels": { "title": "Niveaux Expert", "desc": "Intermédiaire, Avancé, Expert" },
+        "shield": { "title": "Streak Shield", "desc": "Bientôt disponible 🚧" },
+        "stats": { "title": "Stats avancées", "desc": "Bientôt disponible 🚧" },
+        "badges": { "title": "Badges exclusifs", "desc": "Bientôt disponible 🚧" }
+      }
+    },
+    "comparison": {
+      "title": "Gratuit vs Premium",
+      "free": "Gratuit",
+      "premium": "Premium",
+      "items": {
+        "beginner": "Défis Débutant 🌱",
+        "all_levels": "Tous les niveaux (500+ défis)",
+        "all_categories": "Toutes les catégories",
+        "shield": "Streak Shield 🛡️ (bientôt)",
+        "badges": "Badges exclusifs (bientôt)",
+        "stats": "Stats avancées (bientôt)"
+      }
+    },
+    "testimonials": {
+      "title": "Ils sont déjà Premium",
+      "items": {
+        "t1": {
+          "text": "Les défis Expert ont complètement changé ma routine. Je ne m'ennuie plus jamais !",
+          "author": "Thomas, Premium depuis 1 an"
+        },
+        "t2": {
+          "text": "Le Streak Shield m'a sauvé plusieurs fois. Valait largement l'abonnement.",
+          "author": "Marie, Premium depuis 6 mois"
+        },
+        "t3": {
+          "text": "J'ai créé de vraies nouvelles habitudes grâce à la variété des catégories.",
+          "author": "Lucas, Premium depuis 3 mois"
+        }
+      }
+    },
+    "faqs": {
+      "title": "Questions fréquentes",
+      "items": {
+        "q1": {
+          "q": "Puis-je annuler quand je veux ?",
+          "a": "Oui, annulation en 1 clic depuis les paramètres. Aucun engagement, aucune condition."
+        },
+        "q2": {
+          "q": "Que se passe-t-il après l'essai gratuit ?",
+          "a": "Tu seras débité uniquement si tu ne résignes pas. Tu recevras un rappel par email 3 jours avant."
+        },
+        "q3": {
+          "q": "Mes données sont-elles conservées si j'annule ?",
+          "a": "Oui, toutes tes stats et progrès restent sauvegardés. Tu peux réactiver Premium à tout moment."
+        },
+        "q4": {
+          "q": "Y a-t-il des frais cachés ?",
+          "a": "Non, le prix affiché est le prix final. Aucun frais caché."
+        }
+      }
+    },
+    "errors": {
+      "login_required": "Veuillez vous connecter",
+      "session_expired": "Session expirée, veuillez vous reconnecter",
+      "server_error": "Erreur serveur",
+      "missing_payment_url": "URL de paiement manquante",
+      "redirect_failed": "Erreur lors de la redirection vers le paiement. Réessayez."
+    }
+  },
+  "premium_success": {
+    "title": "Bienvenue Premium !",
+    "subtitle_line1": "Ton essai gratuit de 7 jours commence maintenant.",
+    "subtitle_line2": "Profite de tous les défis sans limite !",
+    "benefits": [
+      "800+ défis débloqués",
+      "Tous les niveaux accessibles",
+      "Toutes les catégories disponibles",
+      "7 jours d'essai gratuit"
+    ],
+    "cta": "Découvrir mes défis"
+  },
+  "leaderboard": {
+    "title": "Classement",
+    "tabs": {
+      "global": "🌍 Global",
+      "league": "🏆 Ligue Hebdo"
+    },
+    "league": {
+      "title": "🏆 Ligue {league}",
+      "reset_in": "⏳ Reset dans {time}",
+      "my_league": "Ma ligue"
+    },
+    "leagues": {
+      "or": "Or",
+      "argent": "Argent",
+      "bronze": "Bronze"
+    },
+    "zones": {
+      "up": "⬆ Top 5",
+      "down": "⬇ Flop 5"
+    },
+    "stats": "{xp} XP · 🔥 {flames}",
+    "badges": {
+      "me": "Moi",
+      "up": "Up",
+      "down": "Down"
+    },
+    "xp": "XP",
+    "default_user": "Utilisateur",
+    "time": {
+      "days_short": "j",
+      "hours_short": "h"
+    },
+    "progress_helper": "Encore {xp} XP pour le Top {rank}",
+    "shadow_target": {
+      "title": "🎯 Objectif : {name}",
+      "subtitle": "Encore {xp} XP pour le dépasser"
+    }
+  },
+  "admin": {
+    "title": "Dashboard admin",
+    "subtitle": "Suivi des inscriptions, abonnements et activite.",
+    "range_label": "Période",
+    "loading": "Chargement...",
+    "error": "Erreur : {error}",
+    "ranges": {
+      "7d": "7j",
+      "30d": "30j",
+      "3m": "3m",
+      "1y": "1a"
+    },
+    "kpi": {
+      "vs_previous": "vs periode prec.",
+      "new_users": "Nouveaux inscrits",
+      "premium_subs": "Abonnés premium",
+      "active_week": "Actifs semaine",
+      "inactive_month": "Inactifs ce mois"
+    },
+    "panels": {
+      "user_split": { "title": "Repartition utilisateurs", "meta": "Ce mois" },
+      "weekly_signups": { "title": "Inscriptions hebdo", "meta": "4 dernieres semaines" },
+      "push": { "title": "Push Notifications", "meta": "En temps réel" },
+      "recent_activity": { "title": "Activite recente", "meta": "Temps reel" }
+    },
+    "events": {
+      "new_user": "Nouvel utilisateur inscrit",
+      "new_premium": "Nouvel abonnement premium",
+      "push_sent": "Campagne notif 20:00 envoyee",
+      "unsub": "Desabonnement notifications",
+      "time_2m": "Il y a 2 min",
+      "time_8m": "Il y a 8 min",
+      "time_14m": "Il y a 14 min",
+      "time_35m": "Il y a 35 min"
+    }
+  },
+  "pricing": {
+    "choose_plan": "Choisir {name}",
+    "popular_badge": "⭐ POPULAIRE"
+  },
+  "ads": {
+    "sponsored": "Sponsorisé"
   },
   "terms": {
     "title": "Conditions d’utilisation",
+    "last_updated": "Mis à jour le 1er février 2026",
     "intro": {
       "title": "1. Introduction",
       "content": "MicroDéfis est une application proposant des défis quotidiens destinés au bien-être et au développement personnel. En utilisant l’application, vous acceptez les présentes conditions."
@@ -278,6 +594,7 @@
 
   "privacy": {
     "title": "Politique de confidentialité",
+    "last_updated": "Mis à jour le 1er février 2026",
 
     "intro_title": "1. Introduction",
     "intro_text1": "Cette politique explique comment vos données personnelles sont collectées et utilisées.",
